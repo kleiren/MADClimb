@@ -37,7 +37,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.txt_name.setText(zones.get(i).getName());
-        Picasso.with(context).load(zones.get(i).getResource()).resize(1600, 900).centerCrop().into(viewHolder.img);
+        Picasso.with(context).load(zones.get(i).getResource()).into(viewHolder.img);
 
     }
 
