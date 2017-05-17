@@ -1,13 +1,23 @@
 package es.kleiren.leviathan;
 
 /**
- * Created by Carlos on 11/05/2017.
+ * Created by carlos on 5/17/17.
  */
 
-public class Zone {
+public class Route {
 
     private String name;
     private int resource;
+    private int grade;
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
     public String getName() {
         return name;
     }
