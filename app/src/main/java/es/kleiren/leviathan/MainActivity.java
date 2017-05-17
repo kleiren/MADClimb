@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     mTextMessage.setText(R.string.title_home);
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.container, ListZoneFragment.newInstance())
+                            .replace(R.id.container, ZoneListFragment.newInstance())
                             .commit();
                     return true;
                 case R.id.navigation_dashboard:
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, ListZoneFragment.newInstance())
+                .replace(R.id.container, ZoneListFragment.newInstance())
                 .commit();
 
         mTextMessage = (TextView) findViewById(R.id.message);

@@ -1,9 +1,9 @@
 package es.kleiren.leviathan;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -15,16 +15,16 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 
-public class ListZoneFragment extends Fragment {
+public class RouteListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ListZoneFragment() {
+    public RouteListFragment() {
     }
 
 
-    public static ListZoneFragment newInstance() {
-        ListZoneFragment fragment = new ListZoneFragment();
+    public static RouteListFragment newInstance() {
+        RouteListFragment fragment = new RouteListFragment();
 
         return fragment;
     }
@@ -39,13 +39,13 @@ public class ListZoneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View zoneView = inflater.inflate(R.layout.fragment_zone, container, false);
+        View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
 
-        initViews(zoneView);
-        return zoneView;
+        initViews(routeView);
+        return routeView;
     }
 
-    private final String zone_names[] = {
+    private final String route_names[] = {
             "Donut",
             "Eclair",
             "Froyo",
@@ -59,32 +59,31 @@ public class ListZoneFragment extends Fragment {
     };
 
     private final int zone_image_resource[] = {
-            R.raw.yelmo,
-            R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo
+            5,5,5,5,5,5,5,5,5,5
 
     };
 
 
     private ArrayList prepareData() {
 
-        ArrayList aZone = new ArrayList<>();
-        for (int i = 0; i < zone_names.length; i++) {
-            Zone zone = new Zone();
-            zone.setName(zone_names[i]);
-            zone.setResource(zone_image_resource[i]);
-            aZone.add(zone);
+        ArrayList aRoute = new ArrayList<>();
+        for (int i = 0; i < route_names.length; i++) {
+            Route route = new Route();
+            route.setName(route_names[i]);
+            route.setGrade(zone_image_resource[i]);
+            aRoute.add(route);
         }
-        return aZone;
+        return aRoute;
     }
 
     private void initViews(View view) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_route_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList zones = prepareData();
-        DataAdapter adapter = new DataAdapter(zones, getActivity() );
+        ArrayList routes = prepareData();
+        RouteDataAdapter adapter = new RouteDataAdapter(routes, getActivity() );
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
