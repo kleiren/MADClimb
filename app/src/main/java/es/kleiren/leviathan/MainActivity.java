@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.container, ZoneListFragment.newInstance())
                 .commit();
 
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
