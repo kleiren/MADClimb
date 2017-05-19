@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 public class ZoneListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private ZoneDataAdapter adapter;
+    private SearchView searchView;
+    private RecyclerView recyclerView;
 
     public ZoneListFragment() {
     }
@@ -39,9 +43,15 @@ public class ZoneListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View zoneView = inflater.inflate(R.layout.fragment_zone, container, false);
+        View zoneView = inflater.inflate(R.layout.fragment_zones, container, false);
 
         initViews(zoneView);
+
+        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
+
+        search(searchView);
+
+
         return zoneView;
     }
 
@@ -77,14 +87,33 @@ public class ZoneListFragment extends Fragment {
         return aZone;
     }
 
+
+    private void search(SearchView searchView) {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
+
     private void initViews(View view) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
         ArrayList zones = prepareData();
-        ZoneDataAdapter adapter = new ZoneDataAdapter(zones, getActivity() );
+        adapter = new ZoneDataAdapter(zones, getActivity());
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
