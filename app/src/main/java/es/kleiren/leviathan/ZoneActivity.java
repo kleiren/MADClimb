@@ -18,9 +18,15 @@ import android.view.View;
 
 import android.widget.ImageView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-public class ZoneActivity extends AppCompatActivity {
+public class ZoneActivity extends AppCompatActivity  {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -31,6 +37,8 @@ public class ZoneActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -46,6 +54,7 @@ public class ZoneActivity extends AppCompatActivity {
         imgTitle = (ImageView) findViewById(R.id.imageView);
 
         Picasso.with(getApplicationContext()).load(R.raw.yelmo).into(imgTitle);
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -104,8 +113,6 @@ public class ZoneActivity extends AppCompatActivity {
     }
 
 
-
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -118,10 +125,17 @@ public class ZoneActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
 
-            return RouteListFragment.newInstance();
+            switch (position) {
+                case 0:
+                    return RouteListFragment.newInstance();
+                case 1:
+                    return MapsFragment.newInstance();
+                case 2:
+                    return RouteListFragment.newInstance();
+
+            }
+            return null;
         }
 
         @Override
@@ -135,11 +149,11 @@ public class ZoneActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
 
-                    return "SECTION 1";
+                    return "Vías";
                 case 1:
-                    return "SECTION 2";
+                    return "Mapa";
                 case 2:
-                    return "SECTION 3";
+                    return "Descripción";
             }
             return null;
         }
