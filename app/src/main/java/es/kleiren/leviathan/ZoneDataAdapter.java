@@ -43,6 +43,9 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         viewHolder.txt_name.setText(filteredZones.get(i).getName());
         Picasso.with(context).load(filteredZones.get(i).getResource()).into(viewHolder.img);
 
+
+
+
     }
 
     @Override

@@ -6,9 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/card"
     android:layout_marginTop="5dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    card_view:cardCornerRadius="5dp">
+    card_view:cardCornerRadius="0dp">
 
 
     <android.support.constraint.ConstraintLayout
@@ -17,11 +15,10 @@
 
         <ImageView
             android:id="@+id/img_android"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="-239dp"
             card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
@@ -30,20 +27,22 @@
 
         <TextView
             android:id="@+id/textRouteName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="0dp"
+            android:background="@color/colorSecondary_text"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="5dp"
             android:text="Sample Title"
             android:textAlignment="viewEnd"
+            android:textColor="@color/cardview_light_background"
             android:textSize="18sp"
             android:textStyle="bold"
-            card_view:layout_constraintHorizontal_bias="0.5"
+            card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
-            card_view:layout_constraintTop_toBottomOf="parent" />
+            card_view:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
