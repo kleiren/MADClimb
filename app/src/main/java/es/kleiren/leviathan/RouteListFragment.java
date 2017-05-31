@@ -99,14 +99,14 @@ public class RouteListFragment extends Fragment {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
 
-                View child = rv.findChildViewUnder(e.getX(), e.getY());
-                if (child != null && gestureDetector.onTouchEvent(e)) {
-                    int position = rv.getChildAdapterPosition(child);
-
-                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
-                    startActivity(intent);
-                    //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
-                }
+//                View child = rv.findChildViewUnder(e.getX(), e.getY());
+//                if (child != null && gestureDetector.onTouchEvent(e)) {
+//                    int position = rv.getChildAdapterPosition(child);
+//
+//                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
+//                    startActivity(intent);
+//                    //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
+//                }
 
                 return false;
             }
