@@ -5,6 +5,8 @@ package es.kleiren.leviathan;
  */
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +16,21 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static es.kleiren.leviathan.R.id.imageView;
 
 public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Zone> zones;
     private ArrayList<Zone> filteredZones;
     private Context context;
+    private StorageReference mStorageRef;
 
 
     public ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
@@ -33,16 +42,30 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     @Override
     public ZoneDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.zone_row, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ZoneDataAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.txt_name.setText(filteredZones.get(i).getName());
-        Picasso.with(context).load(filteredZones.get(i).getResource()).into(viewHolder.img);
 
+        StorageReference load = mStorageRef.child("images/img_cabeza.png");
+
+        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.with(context).load(uri.toString()).into(viewHolder.img);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
 
 
 
