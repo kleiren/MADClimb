@@ -15,10 +15,17 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
@@ -31,6 +38,9 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     private ArrayList<Zone> filteredZones;
     private Context context;
     private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
+// ...
+
 
 
     public ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
@@ -43,6 +53,8 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     public ZoneDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.zone_row, viewGroup, false);
         return new ViewHolder(view);
@@ -52,6 +64,21 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.txt_name.setText(filteredZones.get(i).getName());
+
+         mDatabase.child("zones").child("toledo").child("img").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Toast.makeText(context, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(context, databaseError.toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
 
         StorageReference load = mStorageRef.child("images/img_cabeza.png");
 
