@@ -6,7 +6,39 @@ package es.kleiren.leviathan;
 
 public class Route {
 
+
+    public Route(String zoneName,String sectorName,String name, int resource, int grade) {
+        this.name = name;
+        this.resource = resource;
+        this.grade = grade;
+        this.zoneName = zoneName;
+        this.sectorName = sectorName;
+
+
+    }
+
+    public  Route(){}
+
     private String name;
+    private String zoneName;
+
+    public String getZoneName() {
+        return zoneName;
+    }
+
+    public void setZoneName(String zoneName) {
+        this.zoneName = zoneName;
+    }
+
+    public String getSectorName() {
+        return sectorName;
+    }
+
+    public void setSectorName(String sectorName) {
+        this.sectorName = sectorName;
+    }
+
+    private String sectorName;
     private int resource;
     private int grade;
 

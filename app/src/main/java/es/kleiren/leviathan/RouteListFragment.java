@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
@@ -18,6 +21,9 @@ import java.util.ArrayList;
 public class RouteListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+
+    private Button btnAddRoute;
+    private DatabaseReference mDatabase;
 
     public RouteListFragment() {
     }
@@ -33,6 +39,8 @@ public class RouteListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
     }
 
     @Override
@@ -40,6 +48,17 @@ public class RouteListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
+
+        btnAddRoute = (Button) routeView.findViewById(R.id.btnAddRoute);
+
+        btnAddRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Route newRoute = new Route("Pedriza", "Placas del Halcon", "1", 3, 5);
+
+                UploadHelper.uploadRoute(newRoute, mDatabase );
+            }
+        });
 
         initViews(routeView);
         return routeView;

@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -26,6 +28,9 @@ public class ZoneListFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView recyclerView;
     private StorageReference mStorageRef;
+    private Button btnAddZone;
+    private DatabaseReference mDatabase;
+
 
     public ZoneListFragment() {
     }
@@ -40,6 +45,7 @@ public class ZoneListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        mStorageRef = FirebaseStorage.getInstance().getReference();
 
     }
 
@@ -48,6 +54,19 @@ public class ZoneListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View zoneView = inflater.inflate(R.layout.fragment_zones, container, false);
+
+        btnAddZone = (Button) zoneView.findViewById(R.id.btn_addZone);
+
+        btnAddZone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Zone newZone = new Zone("Pedriza", 3);
+
+                UploadHelper.uploadZone(newZone, mDatabase );
+
+            }
+        });
 
         initViews(zoneView);
 
@@ -90,6 +109,7 @@ public class ZoneListFragment extends Fragment {
         }
         return aZone;
     }
+
 
 
     private void search(SearchView searchView) {
@@ -186,4 +206,6 @@ public class ZoneListFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

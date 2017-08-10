@@ -6,6 +6,13 @@ package es.kleiren.leviathan;
 
 public class Zone {
 
+    public Zone (){}
+
+    public Zone(String name, int resource) {
+        this.name = name;
+        this.resource = resource;
+    }
+
     private String name;
     private int resource;
     public String getName() {
