@@ -13,6 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 
 
@@ -22,6 +25,7 @@ public class ZoneListFragment extends Fragment {
     private ZoneDataAdapter adapter;
     private SearchView searchView;
     private RecyclerView recyclerView;
+    private StorageReference mStorageRef;
 
     public ZoneListFragment() {
     }
