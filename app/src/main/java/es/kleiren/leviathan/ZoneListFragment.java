@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class ZoneListFragment extends Fragment {
         // Inflate the layout for this fragment
         View zoneView = inflater.inflate(R.layout.fragment_zones, container, false);
 
-        btnAddZone = (Button) zoneView.findViewById(R.id.btn_addZone);
+        btnAddZone = (Button) zoneView.findViewById(R.id.btn_addSectors);
 
         btnAddZone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,18 +62,14 @@ public class ZoneListFragment extends Fragment {
 
                 Zone newZone = new Zone("Pedriza", 3);
 
-                UploadHelper.uploadZone(newZone, mDatabase );
+                UploadHelper.uploadZone(newZone);
 
             }
         });
 
         initViews(zoneView);
-
         searchView = (SearchView) zoneView.findViewById(R.id.searchView);
-
         search(searchView);
-
-
         return zoneView;
     }
 

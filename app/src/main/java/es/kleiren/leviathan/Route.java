@@ -14,14 +14,11 @@ public class Route {
         this.zoneName = zoneName;
         this.sectorName = sectorName;
 
-
     }
 
     public  Route(){}
-
     private String name;
     private String zoneName;
-
     public String getZoneName() {
         return zoneName;
     }

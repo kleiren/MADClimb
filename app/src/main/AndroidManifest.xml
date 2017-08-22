@@ -28,7 +28,11 @@
         </activity>
         <activity
             android:name=".ZoneActivity"
-            android:label="@string/title_activity_zone_acticity"
+            android:label="@string/title_activity_zone_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SectorActivity"
+            android:label="@string/title_activity_sector_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
