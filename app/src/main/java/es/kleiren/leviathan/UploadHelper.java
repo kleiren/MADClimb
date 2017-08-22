@@ -10,19 +10,28 @@ import com.google.firebase.database.FirebaseDatabase;
 public class UploadHelper {
 
 
-    public static void uploadZone(Zone zone, DatabaseReference mDatabase){
+    public static void uploadZone(Zone zone){
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.child("zones").child(zone.getName()).setValue(zone);
 
     }
 
-    public static void uploadRoute(Route route, DatabaseReference mDatabase){
+    public static void uploadSector(Sector sector){
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("zones").child(sector.getZoneName()).child(sector.getName()).setValue(sector);
 
-        mDatabase.child("zones").child(route.getZoneName()).child(route.getName()).setValue(route);
+
+    }
+
+
+    public static void uploadRoute(Route route){
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.child("zones").child(route.getZoneName()).child(route.getSectorName()).child(route.getName()).setValue(route);
 
     }
 }

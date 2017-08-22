@@ -1,32 +1,23 @@
 package es.kleiren.leviathan;
 
-import android.support.design.widget.TabLayout;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.ImageView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-public class ZoneActivity extends AppCompatActivity  {
+public class SectorActivity extends AppCompatActivity  {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -37,8 +28,6 @@ public class ZoneActivity extends AppCompatActivity  {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -55,15 +44,13 @@ public class ZoneActivity extends AppCompatActivity  {
 
         Picasso.with(getApplicationContext()).load(R.raw.yelmo).into(imgTitle);
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZoneActivity.super.onBackPressed();
+                SectorActivity.super.onBackPressed();
             }
         });
 
@@ -128,7 +115,7 @@ public class ZoneActivity extends AppCompatActivity  {
 
             switch (position) {
                 case 0:
-                    return SectorListFragment.newInstance();
+                    return RouteListFragment.newInstance();
                 case 1:
                     return MapsFragment.newInstance();
                 case 2:

@@ -1,10 +1,12 @@
 package es.kleiren.leviathan;
 
 import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,23 +15,28 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
 
-public class RouteListFragment extends Fragment {
+public class SectorListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
-    private Button btnAddRoute;
+    private SectorDataAdapter adapter;
+    private SearchView searchView;
+    private RecyclerView recyclerView;
+    private StorageReference mStorageRef;
+    private Button btnAddSector;
     private DatabaseReference mDatabase;
 
-    public RouteListFragment() {
+
+    public SectorListFragment() {
     }
 
 
-    public static RouteListFragment newInstance() {
-        RouteListFragment fragment = new RouteListFragment();
+    public static SectorListFragment newInstance() {
+        SectorListFragment fragment = new SectorListFragment();
 
         return fragment;
     }
@@ -37,8 +44,7 @@ public class RouteListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+//        mStorageRef = FirebaseStorage.getInstance().getReference();
 
     }
 
@@ -46,24 +52,32 @@ public class RouteListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
+        View zoneView = inflater.inflate(R.layout.fragment_sectors, container, false);
 
-        btnAddRoute = (Button) routeView.findViewById(R.id.btnAddRoute);
+        btnAddSector = (Button) zoneView.findViewById(R.id.btn_addSectors);
 
-        btnAddRoute.setOnClickListener(new View.OnClickListener() {
+        btnAddSector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Route newRoute = new Route("Pedriza", "Placas del Halcon", "1", 3, 5);
 
-                UploadHelper.uploadRoute(newRoute);
+                Sector newSector = new Sector("Placas del Halcon", "Pedriza", 3, 3);
+
+                UploadHelper.uploadSector(newSector);
+
             }
         });
 
-        initViews(routeView);
-        return routeView;
+        initViews(zoneView);
+
+        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
+
+        search(searchView);
+
+
+        return zoneView;
     }
 
-    private final String route_names[] = {
+    private final String zone_names[] = {
             "Donut",
             "Eclair",
             "Froyo",
@@ -77,31 +91,53 @@ public class RouteListFragment extends Fragment {
     };
 
     private final int zone_image_resource[] = {
-            5,5,5,5,5,5,5,5,5,5
+            R.raw.yelmo,
+            R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo
 
     };
 
 
     private ArrayList prepareData() {
 
-        ArrayList aRoute = new ArrayList<>();
-        for (int i = 0; i < route_names.length; i++) {
-            Route route = new Route();
-            route.setName(route_names[i]);
-            route.setGrade(zone_image_resource[i]);
-            aRoute.add(route);
+        ArrayList aSector = new ArrayList<>();
+        for (int i = 0; i < zone_names.length; i++) {
+            Sector sector = new Sector();
+            sector.setName(zone_names[i]);
+            sector.setResource(zone_image_resource[i]);
+            aSector.add(sector);
+
         }
-        return aRoute;
+        return aSector;
+    }
+
+
+
+    private void search(SearchView searchView) {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
     private void initViews(View view) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_route_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList routes = prepareData();
-        RouteDataAdapter adapter = new RouteDataAdapter(routes, getActivity() );
+        ArrayList sectors = prepareData();
+        adapter = new SectorDataAdapter(sectors, getActivity());
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -117,14 +153,14 @@ public class RouteListFragment extends Fragment {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
 
-//                View child = rv.findChildViewUnder(e.getX(), e.getY());
-//                if (child != null && gestureDetector.onTouchEvent(e)) {
-//                    int position = rv.getChildAdapterPosition(child);
-//
-//                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
-//                    startActivity(intent);
-//                    //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
-//                }
+                View child = rv.findChildViewUnder(e.getX(), e.getY());
+                if (child != null && gestureDetector.onTouchEvent(e)) {
+                    int position = rv.getChildAdapterPosition(child);
+
+                    Intent intent = new Intent(getActivity(), SectorActivity.class);
+                    startActivity(intent);
+                    //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
+                }
 
                 return false;
             }
@@ -170,4 +206,6 @@ public class RouteListFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }
