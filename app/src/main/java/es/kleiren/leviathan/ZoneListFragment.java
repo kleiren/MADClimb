@@ -1,19 +1,29 @@
 package es.kleiren.leviathan;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 
@@ -27,8 +37,10 @@ public class ZoneListFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView recyclerView;
     private StorageReference mStorageRef;
-    private Button btnAddZone;
+    private FloatingActionButton fabAddZone;
     private DatabaseReference mDatabase;
+    private AlertDialog dialog;
+    private PullRefreshLayout pullLayout;
 
 
     public ZoneListFragment() {
@@ -44,6 +56,8 @@ public class ZoneListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
 //        mStorageRef = FirebaseStorage.getInstance().getReference();
 
     }
@@ -51,25 +65,46 @@ public class ZoneListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the pullLayout for this fragment
         View zoneView = inflater.inflate(R.layout.fragment_zones, container, false);
 
-        btnAddZone = (Button) zoneView.findViewById(R.id.btn_addSectors);
+        fabAddZone = (FloatingActionButton) zoneView.findViewById(R.id.fab_addZone);
 
-        btnAddZone.setOnClickListener(new View.OnClickListener() {
+        fabAddZone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Zone newZone = new Zone("Pedriza", 3);
-
-                UploadHelper.uploadZone(newZone);
+                showNewZoneDialog(getActivity());
 
             }
         });
 
+        pullLayout = (PullRefreshLayout) zoneView.findViewById(R.id.pullLayout);
+
+// listen refresh event
+        pullLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pullLayout.setRefreshing(false);
+
+                searchView.setFocusableInTouchMode(true);
+                searchView.setVisibility(View.VISIBLE);
+                searchView.requestFocus();
+                searchView.onActionViewExpanded();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+                // start refresh
+
+            }
+        });
+
+// refresh complete
+
         initViews(zoneView);
         searchView = (SearchView) zoneView.findViewById(R.id.searchView);
         search(searchView);
+
+        searchView.setVisibility(View.GONE);
         return zoneView;
     }
 
@@ -180,6 +215,36 @@ public class ZoneListFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            if (searchView.getVisibility() == View.VISIBLE)
+            searchView.setVisibility(View.GONE);
+            else if (searchView.getVisibility() == View.GONE) {
+                searchView.setFocusableInTouchMode(true);
+                searchView.setVisibility(View.VISIBLE);
+                searchView.requestFocus();
+                searchView.onActionViewExpanded();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onDetach() {
@@ -200,6 +265,42 @@ public class ZoneListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+
+
+    public void showNewZoneDialog(final Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                LayoutInflater inflater = activity.getLayoutInflater();
+                final View notifyView = inflater.inflate(R.layout.dialog_new_zone, null);
+
+                builder.setPositiveButton("Upload Zone", null);
+                builder.setView(notifyView);
+                dialog = builder.create();
+                dialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Zone newZone = new Zone("Pedriza", 3);
+
+                                UploadHelper.uploadZone(newZone);
+
+                                    dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+                dialog.show();
+            }
+        });
     }
 
 
