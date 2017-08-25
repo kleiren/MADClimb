@@ -1,5 +1,7 @@
 package es.kleiren.leviathan;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,7 +38,7 @@ public class ZoneActivity extends AppCompatActivity  {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+  //  private SectionsPagerAdapter mSectionsPagerAdapter;
 
 
 
@@ -45,6 +47,7 @@ public class ZoneActivity extends AppCompatActivity  {
      */
     private ViewPager mViewPager;
     private ImageView imgTitle;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +57,6 @@ public class ZoneActivity extends AppCompatActivity  {
         imgTitle = (ImageView) findViewById(R.id.imageView);
 
         Picasso.with(getApplicationContext()).load(R.raw.yelmo).into(imgTitle);
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,14 +79,6 @@ public class ZoneActivity extends AppCompatActivity  {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
     }
 
