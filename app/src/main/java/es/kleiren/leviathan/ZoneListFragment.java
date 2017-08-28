@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,12 +23,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 
 public class ZoneListFragment extends Fragment {
@@ -41,6 +50,7 @@ public class ZoneListFragment extends Fragment {
     private DatabaseReference mDatabase;
     private AlertDialog dialog;
     private PullRefreshLayout pullLayout;
+    private ArrayList<Zone> zonesFromFirebase;
 
 
     public ZoneListFragment() {
@@ -58,6 +68,8 @@ public class ZoneListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+
+
 //        mStorageRef = FirebaseStorage.getInstance().getReference();
 
     }
@@ -68,6 +80,10 @@ public class ZoneListFragment extends Fragment {
         // Inflate the pullLayout for this fragment
         View zoneView = inflater.inflate(R.layout.fragment_zones, container, false);
 
+
+        zonesFromFirebase = new ArrayList<>();
+
+        prepareData(zoneView);
         fabAddZone = (FloatingActionButton) zoneView.findViewById(R.id.fab_addZone);
 
         fabAddZone.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +116,6 @@ public class ZoneListFragment extends Fragment {
 
 // refresh complete
 
-        initViews(zoneView);
         searchView = (SearchView) zoneView.findViewById(R.id.searchView);
         search(searchView);
 
@@ -109,35 +124,50 @@ public class ZoneListFragment extends Fragment {
     }
 
     private final String zone_names[] = {
-            "Donut",
-            "Eclair",
-            "Froyo",
-            "Gingerbread",
-            "Honeycomb",
-            "Ice Cream Sandwich",
-            "Jelly Bean",
-            "KitKat",
-            "Lollipop",
-            "Marshmallow"
+
     };
 
     private final int zone_image_resource[] = {
-            R.raw.yelmo,
-            R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo
 
     };
 
 
-    private ArrayList prepareData() {
+    private void prepareData(final View zoneView) {
 
-        ArrayList aZone = new ArrayList<>();
-        for (int i = 0; i < zone_names.length; i++) {
-            Zone zone = new Zone();
-            zone.setName(zone_names[i]);
-            zone.setResource(zone_image_resource[i]);
-            aZone.add(zone);
-        }
-        return aZone;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+        // Attach a listener to read the data at our posts reference
+        mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Zone zone = postSnapshot.getValue(Zone.class);
+
+                    Log.i("FIREBASE", "=======name: "+postSnapshot.child("name").getValue());
+                    Log.i("FIREBASE", "=======resource: "+postSnapshot.child("resource").getValue());
+
+                    Log.i("FIREBASE", "=======zonename: "+zone.getName());
+                    Log.i("FIREBASE", "=======zoneres: "+zone.getResource());
+
+                    zonesFromFirebase.add(zone);
+
+                    adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
+                    initViews(zoneView);
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
+            }
+        });
+
+
     }
 
 
@@ -166,8 +196,6 @@ public class ZoneListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList zones = prepareData();
-        adapter = new ZoneDataAdapter(zones, getActivity());
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -275,10 +303,10 @@ public class ZoneListFragment extends Fragment {
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 LayoutInflater inflater = activity.getLayoutInflater();
-                final View notifyView = inflater.inflate(R.layout.dialog_new_zone, null);
+                final View newZoneView = inflater.inflate(R.layout.dialog_new_zone, null);
 
                 builder.setPositiveButton("Upload Zone", null);
-                builder.setView(notifyView);
+                builder.setView(newZoneView);
                 dialog = builder.create();
                 dialog.getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -289,9 +317,12 @@ public class ZoneListFragment extends Fragment {
                         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Zone newZone = new Zone("Pedriza", 3);
 
-                                UploadHelper.uploadZone(newZone);
+                                Zone zone = new Zone();
+
+                                zone.setName(((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString());
+
+                                UploadHelper.uploadZone(zone);
 
                                     dialog.dismiss();
                             }

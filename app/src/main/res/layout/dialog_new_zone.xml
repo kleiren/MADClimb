@@ -42,13 +42,14 @@
                 <TextView
                     android:id="@+id/textView4"
                     android:layout_width="0dp"
+                    android:text="Zone name"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="right"/>
 
                 <EditText
-                    android:id="@+id/dia_txtName"
+                    android:id="@+id/dia_zoneName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
