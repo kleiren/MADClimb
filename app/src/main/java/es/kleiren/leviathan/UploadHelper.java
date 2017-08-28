@@ -13,7 +13,6 @@ public class UploadHelper {
     public static void uploadZone(Zone zone){
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
         mDatabase.child("zones").child(zone.getName()).setValue(zone);
 
     }
@@ -30,7 +29,6 @@ public class UploadHelper {
     public static void uploadRoute(Route route){
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
         mDatabase.child("zones").child(route.getZoneName()).child(route.getSectorName()).child(route.getName()).setValue(route);
 
     }
