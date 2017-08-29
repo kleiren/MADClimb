@@ -80,19 +80,23 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
 
 
 
-        StorageReference load = mStorageRef.child("images/img_cabeza.png");
+        try {
+            StorageReference load = mStorageRef.child(filteredZones.get(i).getImage());
 
-        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(context).load(uri.toString()).into(viewHolder.img);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(context).load(uri.toString()).into(viewHolder.img);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        }catch (Exception e){
+
+        }
 
 
 

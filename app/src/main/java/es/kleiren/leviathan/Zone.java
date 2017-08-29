@@ -13,7 +13,16 @@ public class Zone {
         this.resource = resource;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     private String name;
+    private String image;
     private int resource;
     public String getName() {
         return name;

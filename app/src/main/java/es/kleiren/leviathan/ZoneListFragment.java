@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
@@ -33,10 +34,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 
 public class ZoneListFragment extends Fragment {
@@ -51,6 +51,9 @@ public class ZoneListFragment extends Fragment {
     private AlertDialog dialog;
     private PullRefreshLayout pullLayout;
     private ArrayList<Zone> zonesFromFirebase;
+    private Uri fileToUploadUri;
+    private TextView txtFileToUpload;
+    private UploadTask uploadTask;
 
 
     public ZoneListFragment() {
@@ -69,8 +72,7 @@ public class ZoneListFragment extends Fragment {
         setHasOptionsMenu(true);
 
 
-
-//        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
     }
 
@@ -146,11 +148,11 @@ public class ZoneListFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
 
-                    Log.i("FIREBASE", "=======name: "+postSnapshot.child("name").getValue());
-                    Log.i("FIREBASE", "=======resource: "+postSnapshot.child("resource").getValue());
+                    Log.i("FIREBASE", "=======name: " + postSnapshot.child("name").getValue());
+                    Log.i("FIREBASE", "=======resource: " + postSnapshot.child("image").getValue());
 
-                    Log.i("FIREBASE", "=======zonename: "+zone.getName());
-                    Log.i("FIREBASE", "=======zoneres: "+zone.getResource());
+                    Log.i("FIREBASE", "=======zonename: " + zone.getName());
+                    Log.i("FIREBASE", "=======zoneres: " + zone.getImage());
 
                     zonesFromFirebase.add(zone);
 
@@ -169,7 +171,6 @@ public class ZoneListFragment extends Fragment {
 
 
     }
-
 
 
     private void search(SearchView searchView) {
@@ -259,7 +260,7 @@ public class ZoneListFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             if (searchView.getVisibility() == View.VISIBLE)
-            searchView.setVisibility(View.GONE);
+                searchView.setVisibility(View.GONE);
             else if (searchView.getVisibility() == View.GONE) {
                 searchView.setFocusableInTouchMode(true);
                 searchView.setVisibility(View.VISIBLE);
@@ -295,7 +296,19 @@ public class ZoneListFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
 
+        // super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1001) {
+            Uri currFileURI = data.getData();
+            fileToUploadUri = currFileURI;
+            txtFileToUpload.setText(fileToUploadUri.getPath());
+        }
+    }
 
     public void showNewZoneDialog(final Activity activity) {
         activity.runOnUiThread(new Runnable() {
@@ -311,6 +324,22 @@ public class ZoneListFragment extends Fragment {
                 dialog.getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
+                Button btnFile = (Button) newZoneView.findViewById(R.id.dia_btnFile);
+
+                txtFileToUpload = (TextView) newZoneView.findViewById(R.id.dia_txtFile);
+
+                btnFile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        // Set your required file type
+                        intent.setType("*/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "DEMO"), 1001);
+                    }
+                });
+
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialogInterface) {
@@ -322,9 +351,14 @@ public class ZoneListFragment extends Fragment {
 
                                 zone.setName(((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString());
 
+                                zone.setImage("images/"+ zone.getName());
+
+
                                 UploadHelper.uploadZone(zone);
 
-                                    dialog.dismiss();
+                                UploadHelper.uploadFile(fileToUploadUri,((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString(),  uploadTask, mStorageRef);
+
+                                dialog.dismiss();
                             }
                         });
                     }
