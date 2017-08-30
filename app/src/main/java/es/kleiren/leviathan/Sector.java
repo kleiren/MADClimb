@@ -20,6 +20,26 @@ public class Sector {
     private String zoneName;
     private int numOfRoutes;
     private int resource;
+    public String getCroquis() {
+        return croquis;
+    }
+
+    public void setCroquis(String croquis) {
+        this.croquis = croquis;
+    }
+
+    private String croquis;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    private String image;
+
 
     public String getZoneName() {
         return zoneName;

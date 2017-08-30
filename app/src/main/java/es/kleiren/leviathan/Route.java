@@ -7,7 +7,7 @@ package es.kleiren.leviathan;
 public class Route {
 
 
-    public Route(String zoneName,String sectorName,String name, int resource, int grade) {
+    public Route(String zoneName,String sectorName,String name, int resource, String grade) {
         this.name = name;
         this.resource = resource;
         this.grade = grade;
@@ -37,13 +37,13 @@ public class Route {
 
     private String sectorName;
     private int resource;
-    private int grade;
+    private String grade;
 
-    public int getGrade() {
+    public String getGrade() {
         return grade;
     }
 
-    public void setGrade(int grade) {
+    public void setGrade(String grade) {
         this.grade = grade;
     }
 

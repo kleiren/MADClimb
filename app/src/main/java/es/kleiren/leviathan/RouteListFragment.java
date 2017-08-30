@@ -1,18 +1,23 @@
 package es.kleiren.leviathan;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -21,8 +26,10 @@ public class RouteListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Button btnAddRoute;
+    private FloatingActionButton btnAddRoute;
     private DatabaseReference mDatabase;
+    private ArrayList<Route> routesFromFirebase;
+    private RouteDataAdapter adapter;
 
     public RouteListFragment() {
     }
@@ -48,14 +55,15 @@ public class RouteListFragment extends Fragment {
         // Inflate the layout for this fragment
         View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
 
-        btnAddRoute = (Button) routeView.findViewById(R.id.btnAddRoute);
+        routesFromFirebase = new ArrayList<>();
+        prepareData(routeView);
+
+        btnAddRoute = (FloatingActionButton) routeView.findViewById(R.id.fab_addRoute);
 
         btnAddRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Route newRoute = new Route("Pedriza", "Placas del Halcon", "1", 3, 5);
 
-                UploadHelper.uploadRoute(newRoute);
             }
         });
 
@@ -63,35 +71,40 @@ public class RouteListFragment extends Fragment {
         return routeView;
     }
 
-    private final String route_names[] = {
-            "Donut",
-            "Eclair",
-            "Froyo",
-            "Gingerbread",
-            "Honeycomb",
-            "Ice Cream Sandwich",
-            "Jelly Bean",
-            "KitKat",
-            "Lollipop",
-            "Marshmallow"
-    };
 
-    private final int zone_image_resource[] = {
-            5,5,5,5,5,5,5,5,5,5
+    private void prepareData(final View view) {
 
-    };
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
-    private ArrayList prepareData() {
+        // Attach a listener to read the data at our posts reference
+        mDatabase.child("zones/"+ MainActivity.currentZone.getName() + "/sectors/" + MainActivity.currentSector.getName() + "/routes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("FIREBASE", dataSnapshot.getValue().toString());
 
-        ArrayList aRoute = new ArrayList<>();
-        for (int i = 0; i < route_names.length; i++) {
-            Route route = new Route();
-            route.setName(route_names[i]);
-            route.setGrade(zone_image_resource[i]);
-            aRoute.add(route);
-        }
-        return aRoute;
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Route route = postSnapshot.getValue(Route.class);
+
+                    Log.i("FIREBASE", "=======zonename: " + route.getName());
+                    Log.i("FIREBASE", "=======zoneres: " + route.getGrade());
+
+                    routesFromFirebase.add(route);
+
+                    adapter = new RouteDataAdapter(routesFromFirebase, getActivity());
+
+                }
+                initViews(view);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
+            }
+        });
+
+
     }
 
     private void initViews(View view) {
@@ -100,8 +113,6 @@ public class RouteListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList routes = prepareData();
-        RouteDataAdapter adapter = new RouteDataAdapter(routes, getActivity() );
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
