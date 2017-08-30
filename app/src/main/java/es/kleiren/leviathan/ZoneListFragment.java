@@ -97,31 +97,31 @@ public class ZoneListFragment extends Fragment {
             }
         });
 
-        pullLayout = (PullRefreshLayout) zoneView.findViewById(R.id.pullLayout);
-
-// listen refresh event
-        pullLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pullLayout.setRefreshing(false);
-
-                searchView.setFocusableInTouchMode(true);
-                searchView.setVisibility(View.VISIBLE);
-                searchView.requestFocus();
-                searchView.onActionViewExpanded();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
-                // start refresh
-
-            }
-        });
+//        pullLayout = (PullRefreshLayout) zoneView.findViewById(R.id.pullLayout);
+//
+//// listen refresh event
+//        pullLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                pullLayout.setRefreshing(false);
+//
+//                searchView.setFocusableInTouchMode(true);
+//                searchView.setVisibility(View.VISIBLE);
+//                searchView.requestFocus();
+//                searchView.onActionViewExpanded();
+//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+//                // start refresh
+//
+//            }
+//        });
 
 // refresh complete
 
-        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
-        search(searchView);
-
-        searchView.setVisibility(View.GONE);
+//        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
+//        search(searchView);
+//
+//        searchView.setVisibility(View.GONE);
         return zoneView;
     }
 
@@ -157,10 +157,10 @@ public class ZoneListFragment extends Fragment {
                     zonesFromFirebase.add(zone);
 
                     adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
-                    initViews(zoneView);
-
 
                 }
+                initViews(zoneView);
+
             }
 
             @Override
@@ -216,9 +216,10 @@ public class ZoneListFragment extends Fragment {
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
 
+                    MainActivity.currentZone = zonesFromFirebase.get(position);
+
                     Intent intent = new Intent(getActivity(), ZoneActivity.class);
-                    startActivity(intent);
-                    //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
+                    startActivityForResult(intent,1);
                 }
 
                 return false;
@@ -237,17 +238,22 @@ public class ZoneListFragment extends Fragment {
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Do something that differs the Activity's menu here
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem searchViewMenuItem = menu.findItem(R.id.search);
+        searchView = (SearchView) searchViewMenuItem.getActionView();
+
+search(searchView);
+
+
     }
 
     @Override
@@ -258,7 +264,7 @@ public class ZoneListFragment extends Fragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search) {
+        if (id == R.id.search) {
             if (searchView.getVisibility() == View.VISIBLE)
                 searchView.setVisibility(View.GONE);
             else if (searchView.getVisibility() == View.GONE) {

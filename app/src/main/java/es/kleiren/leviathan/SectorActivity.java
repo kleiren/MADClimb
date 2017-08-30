@@ -1,6 +1,8 @@
 package es.kleiren.leviathan;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -15,6 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 public class SectorActivity extends AppCompatActivity  {
@@ -34,6 +40,7 @@ public class SectorActivity extends AppCompatActivity  {
      */
     private ViewPager mViewPager;
     private ImageView imgTitle;
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,27 @@ public class SectorActivity extends AppCompatActivity  {
 
         imgTitle = (ImageView) findViewById(R.id.imageView);
 
-        Picasso.with(getApplicationContext()).load(R.raw.yelmo).into(imgTitle);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        try {
+            StorageReference load = mStorageRef.child(MainActivity.currentSector.getCroquis());
+
+            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(getApplicationContext()).load(uri.toString()).into(imgTitle);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        }catch (Exception e){
+
+        }
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,6 +80,10 @@ public class SectorActivity extends AppCompatActivity  {
                 SectorActivity.super.onBackPressed();
             }
         });
+
+
+        getSupportActionBar().setTitle(MainActivity.currentSector.getName());
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

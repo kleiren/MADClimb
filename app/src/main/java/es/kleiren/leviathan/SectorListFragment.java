@@ -1,5 +1,6 @@
 package es.kleiren.leviathan;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,7 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -27,8 +33,9 @@ public class SectorListFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView recyclerView;
     private StorageReference mStorageRef;
-    private Button btnAddSector;
+    private FloatingActionButton btnAddSector;
     private DatabaseReference mDatabase;
+    private ArrayList<Sector> sectorsFromFirebase;
 
 
     public SectorListFragment() {
@@ -40,6 +47,8 @@ public class SectorListFragment extends Fragment {
 
         return fragment;
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +63,11 @@ public class SectorListFragment extends Fragment {
         // Inflate the layout for this fragment
         View zoneView = inflater.inflate(R.layout.fragment_sectors, container, false);
 
-        btnAddSector = (Button) zoneView.findViewById(R.id.btn_addSectors);
+        btnAddSector = (FloatingActionButton) zoneView.findViewById(R.id.fab_addSector);
+
+        prepareData(zoneView);
+
+        sectorsFromFirebase = new ArrayList<>();
 
         btnAddSector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +80,6 @@ public class SectorListFragment extends Fragment {
             }
         });
 
-        initViews(zoneView);
 
         searchView = (SearchView) zoneView.findViewById(R.id.searchView);
 
@@ -77,39 +89,46 @@ public class SectorListFragment extends Fragment {
         return zoneView;
     }
 
-    private final String zone_names[] = {
-            "Donut",
-            "Eclair",
-            "Froyo",
-            "Gingerbread",
-            "Honeycomb",
-            "Ice Cream Sandwich",
-            "Jelly Bean",
-            "KitKat",
-            "Lollipop",
-            "Marshmallow"
-    };
-
-    private final int zone_image_resource[] = {
-            R.raw.yelmo,
-            R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo, R.raw.yelmo
-
-    };
 
 
-    private ArrayList prepareData() {
 
-        ArrayList aSector = new ArrayList<>();
-        for (int i = 0; i < zone_names.length; i++) {
-            Sector sector = new Sector();
-            sector.setName(zone_names[i]);
-            sector.setResource(zone_image_resource[i]);
-            aSector.add(sector);
+    private void prepareData(final View sectorView) {
 
-        }
-        return aSector;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+        // Attach a listener to read the data at our posts reference
+        mDatabase.child("zones/"+ MainActivity.currentZone.getName() + "/sectors").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Sector sector = postSnapshot.getValue(Sector.class);
+
+                    Log.i("FIREBASE", "=======name: " + postSnapshot.child("name").getValue());
+                    Log.i("FIREBASE", "=======resource: " + postSnapshot.child("image").getValue());
+
+                    Log.i("FIREBASE", "=======zonename: " + sector.getName());
+                    Log.i("FIREBASE", "=======zoneres: " + sector.getImage());
+
+                    sectorsFromFirebase.add(sector);
+
+                    adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
+
+                }
+                initViews(sectorView);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
+            }
+        });
+
+
     }
-
 
 
     private void search(SearchView searchView) {
@@ -136,8 +155,6 @@ public class SectorListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList sectors = prepareData();
-        adapter = new SectorDataAdapter(sectors, getActivity());
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -156,6 +173,7 @@ public class SectorListFragment extends Fragment {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
+                    MainActivity.currentSector = sectorsFromFirebase.get(position);
 
                     Intent intent = new Intent(getActivity(), SectorActivity.class);
                     startActivity(intent);
@@ -184,6 +202,8 @@ public class SectorListFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
+
 
 
     @Override

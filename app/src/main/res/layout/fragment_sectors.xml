@@ -38,16 +38,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
-    <Button
-        android:id="@+id/btn_addSectors"
-        android:layout_width="91dp"
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_addSector"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Zone"
-        app:layout_constraintBottom_toBottomOf="@+id/card_recycler_view"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/card_recycler_view" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/ic_add"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

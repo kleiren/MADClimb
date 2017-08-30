@@ -23,6 +23,9 @@ public class Zone {
 
     private String name;
     private String image;
+
+
+
     private int resource;
     public String getName() {
         return name;

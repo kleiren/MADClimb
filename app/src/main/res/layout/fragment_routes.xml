@@ -25,19 +25,15 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
-    <Button
-        android:id="@+id/btnAddRoute"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_addRoute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="8dp"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="463dp"
-        android:text="AddRoute"
-        app:layout_constraintBottom_toBottomOf="@+id/card_route_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/card_route_view"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/ic_add"
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -37,7 +37,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
 
         viewHolder.txtName.setText(routes.get(i).getName());
-        viewHolder.txtGrade.setText(Integer.toString(routes.get(i).getGrade()));
+        viewHolder.txtGrade.setText(routes.get(i).getGrade());
 
         final boolean isExpanded = i==mExpandedPosition;
         viewHolder.details.setVisibility(isExpanded?View.VISIBLE:View.GONE);
