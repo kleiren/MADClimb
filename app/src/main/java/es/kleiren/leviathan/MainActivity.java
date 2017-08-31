@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    public static Zone currentZone;
-    public static Sector currentSector;
+    public static Zone currentZone = new Zone("sainz", 1);
+    public static Sector currentSector = new Sector("cabeza", "toledo", 0, 0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -26,7 +26,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.baoyz.widget.PullRefreshLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,7 +48,6 @@ public class ZoneListFragment extends Fragment {
     private FloatingActionButton fabAddZone;
     private DatabaseReference mDatabase;
     private AlertDialog dialog;
-    private PullRefreshLayout pullLayout;
     private ArrayList<Zone> zonesFromFirebase;
     private Uri fileToUploadUri;
     private TextView txtFileToUpload;
@@ -92,7 +90,9 @@ public class ZoneListFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                showNewZoneDialog(getActivity());
+                Intent intent = new Intent(getActivity(), FlexibleSpaceWithImageWithViewPagerTab2Activity.class);
+                startActivityForResult(intent,1);
+               // showNewZoneDialog(getActivity());
 
             }
         });
@@ -192,7 +192,7 @@ public class ZoneListFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view_zones);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
