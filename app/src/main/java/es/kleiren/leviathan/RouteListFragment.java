@@ -1,5 +1,6 @@
 package es.kleiren.leviathan;
 
+import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.net.Uri;
@@ -13,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class RouteListFragment extends Fragment {
+public class RouteListFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -30,6 +33,7 @@ public class RouteListFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ArrayList<Route> routesFromFirebase;
     private RouteDataAdapter adapter;
+    private Activity parentActivity;
 
     public RouteListFragment() {
     }
@@ -45,6 +49,7 @@ public class RouteListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        parentActivity = getActivity();
 
 
     }
@@ -67,7 +72,6 @@ public class RouteListFragment extends Fragment {
             }
         });
 
-        initViews(routeView);
         return routeView;
     }
 
@@ -75,6 +79,8 @@ public class RouteListFragment extends Fragment {
     private void prepareData(final View view) {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        Sector sector = MainActivity.currentSector;
 
 
         // Attach a listener to read the data at our posts reference
@@ -108,10 +114,15 @@ public class RouteListFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_route_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+
+        final ObservableRecyclerView recyclerView = (ObservableRecyclerView) view.findViewById(R.id.card_route_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
+
+        if (parentActivity instanceof ObservableScrollViewCallbacks) {
+            recyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
+        }
 
         recyclerView.setAdapter(adapter);
 

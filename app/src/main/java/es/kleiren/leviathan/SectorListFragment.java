@@ -1,5 +1,6 @@
 package es.kleiren.leviathan;
 
+import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,16 +29,17 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 
-public class SectorListFragment extends Fragment {
+public class SectorListFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private SectorDataAdapter adapter;
     private SearchView searchView;
-    private RecyclerView recyclerView;
+    private ObservableRecyclerView recyclerView;
     private StorageReference mStorageRef;
     private FloatingActionButton btnAddSector;
     private DatabaseReference mDatabase;
     private ArrayList<Sector> sectorsFromFirebase;
+    private Activity parentActivity;
 
 
     public SectorListFragment() {
@@ -54,6 +58,7 @@ public class SectorListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        mStorageRef = FirebaseStorage.getInstance().getReference();
+        parentActivity = getActivity();
 
     }
 
@@ -61,29 +66,30 @@ public class SectorListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View zoneView = inflater.inflate(R.layout.fragment_sectors, container, false);
+        View zoneView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
 
-        btnAddSector = (FloatingActionButton) zoneView.findViewById(R.id.fab_addSector);
+
+    //    btnAddSector = (FloatingActionButton) zoneView.findViewById(R.id.fab_addSector);
 
         prepareData(zoneView);
 
         sectorsFromFirebase = new ArrayList<>();
 
-        btnAddSector.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        btnAddSector.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Sector newSector = new Sector("Placas del Halcon", "Pedriza", 3, 3);
+//
+//                UploadHelper.uploadSector(newSector);
+//
+//            }
+//        });
 
-                Sector newSector = new Sector("Placas del Halcon", "Pedriza", 3, 3);
-
-                UploadHelper.uploadSector(newSector);
-
-            }
-        });
-
-
-        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
-
-        search(searchView);
+//
+//        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
+//
+//        search(searchView);
 
 
         return zoneView;
@@ -150,11 +156,16 @@ public class SectorListFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
 
+        recyclerView = (ObservableRecyclerView) view.findViewById(R.id.scroll);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(false);
+
+        recyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
+
+        if (parentActivity instanceof ObservableScrollViewCallbacks) {
+            recyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
+        }
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {

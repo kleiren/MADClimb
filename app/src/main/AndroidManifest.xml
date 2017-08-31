@@ -30,6 +30,10 @@
             android:label="@string/title_activity_zone_activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".FlexibleSpaceWithImageWithViewPagerTab2Activity"
+            android:label="@string/title_activity_zone_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".SectorActivity"
             android:label="@string/title_activity_sector_activity"
             android:theme="@style/AppTheme.NoActionBar" />
