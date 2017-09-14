@@ -13,13 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    style="@style/ThemeOverlay.AppCompat.Light"
-    android:layout_width="wrap_content"
-    android:layout_height="48dp"
-    android:gravity="center"
-    android:paddingLeft="16dp"
-    android:textColor="@color/tab_text_color"
-    android:paddingRight="16dp"
-    android:textSize="14sp" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:color="#fff" android:state_selected="true" />
+    <item android:color="#9fff" />
+
+</selector>
