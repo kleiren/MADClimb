@@ -30,15 +30,15 @@ public class Sector {
 
     private String croquis;
 
-    public String getImage() {
-        return image;
+    public String getImg() {
+        return img;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImg(String img) {
+        this.img = img;
     }
 
-    private String image;
+    private String img;
 
 
     public String getZoneName() {

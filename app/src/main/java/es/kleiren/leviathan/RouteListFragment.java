@@ -28,6 +28,7 @@ import java.util.ArrayList;
 public class RouteListFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
+    private ObservableRecyclerView recyclerView;
 
     private FloatingActionButton btnAddRoute;
     private DatabaseReference mDatabase;
@@ -58,19 +59,19 @@ public class RouteListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
+        View routeView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
 
         routesFromFirebase = new ArrayList<>();
         prepareData(routeView);
 
-        btnAddRoute = (FloatingActionButton) routeView.findViewById(R.id.fab_addRoute);
-
-        btnAddRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        btnAddRoute = (FloatingActionButton) routeView.findViewById(R.id.fab_addRoute);
+//
+//        btnAddRoute.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         return routeView;
     }
@@ -115,7 +116,7 @@ public class RouteListFragment extends BaseFragment {
 
     private void initViews(View view) {
 
-        final ObservableRecyclerView recyclerView = (ObservableRecyclerView) view.findViewById(R.id.card_route_view);
+        recyclerView = (ObservableRecyclerView) view.findViewById(R.id.scroll);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(false);
         recyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));

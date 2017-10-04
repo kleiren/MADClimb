@@ -36,7 +36,9 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary">
 
-        <ImageView
+
+
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/imageZone"
             android:layout_width="match_parent"
             android:layout_height="@dimen/flexible_space_image_height"
@@ -54,10 +56,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar" />
-
+            app:popupTheme="@style/Theme.AppCompat.Light" />
+        <es.kleiren.leviathan.SlidingTabLayout
+            android:id="@+id/sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_height"
+            android:background="@color/colorTranslucent" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/flexible_space_image_height">
@@ -73,7 +78,11 @@
                 android:maxLines="1"
                 android:minHeight="?attr/actionBarSize"
                 android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -81,11 +90,7 @@
                 android:background="@android:color/transparent" />
         </RelativeLayout>
 
-        <es.kleiren.leviathan.SlidingTabLayout
-            android:id="@+id/sliding_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
-            android:background="@android:color/transparent" />
+
     </FrameLayout>
 
 </com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout>

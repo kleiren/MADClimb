@@ -1,11 +1,6 @@
 package es.kleiren.leviathan;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -17,27 +12,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
-import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 public class ZoneActivity extends AppCompatActivity  {
 
@@ -96,7 +81,7 @@ public class ZoneActivity extends AppCompatActivity  {
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         try {
-            StorageReference load = mStorageRef.child(MainActivity.currentZone.getImage());
+            StorageReference load = mStorageRef.child(MainActivity.currentZone.getImg());
 
             load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override

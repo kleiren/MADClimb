@@ -65,12 +65,10 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
          mDatabase.child("zones").child("toledo").child("img").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(context, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -82,7 +80,10 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
         load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.with(context).load(uri.toString()).into(viewHolder.img);
+                Picasso.with(context).load(uri.toString())
+                        .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
+                        .centerCrop()
+                        .into(viewHolder.img);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

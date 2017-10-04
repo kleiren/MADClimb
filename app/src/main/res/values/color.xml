@@ -8,4 +8,5 @@
     <color name="colorSecondary_text">#c82e2e2e</color>
     <color name="colorIcons">#212121</color>
     <color name="colorDivider">#BDBDBD</color>
+    <color name="colorTranslucent">#50000000</color>
 </resources>

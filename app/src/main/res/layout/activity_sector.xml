@@ -29,7 +29,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="200dp"
                 android:layout_weight="1"
-                app:srcCompat="@raw/yelmo" />
+                android:foregroundGravity="center"
+
+                app:srcCompat="@drawable/mountain_placeholder" />
 
             <android.support.v7.widget.Toolbar
                 app:navigationIcon="?attr/homeAsUpIndicator"

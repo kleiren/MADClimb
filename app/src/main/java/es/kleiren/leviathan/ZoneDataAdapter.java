@@ -31,8 +31,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import static es.kleiren.leviathan.R.id.imageView;
-
 public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Zone> zones;
     private ArrayList<Zone> filteredZones;
@@ -40,7 +38,6 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 // ...
-
 
 
     public ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
@@ -65,28 +62,31 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
 
         viewHolder.txt_name.setText(filteredZones.get(i).getName());
 
-         mDatabase.child("zones").child("toledo").child("img").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("zones").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(context, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(context, databaseError.toString(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, databaseError.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });
 
 
-
         try {
-            StorageReference load = mStorageRef.child(filteredZones.get(i).getImage());
+            StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
 
             load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Picasso.with(context).load(uri.toString()).into(viewHolder.img);
+                    Picasso.with(context)
+                            .load(uri.toString())
+                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
+                            .centerCrop()
+                            .into(viewHolder.img);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -94,10 +94,9 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
                     // Handle any errors
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
-
 
 
     }

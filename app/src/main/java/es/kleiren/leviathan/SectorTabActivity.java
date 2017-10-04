@@ -53,18 +53,8 @@ import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
 
-/**
- * <p>This uses TouchInterceptionFrameLayout to move Fragments.</p>
- *
- * <p>There is an unsolved problem: it doesn't scroll smoothly
- * when the flexible space is changing.<br>
- * If it's a big problem to you, please also check
- * FlexibleSpaceWithImageWithViewPagerTabActivity.</p>
- *
- * <p>SlidingTabLayout and SlidingTabStrip are from google/iosched:<br>
- * https://github.com/google/iosched</p>
- */
-public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivity implements ObservableScrollViewCallbacks {
+
+public class SectorTabActivity extends BaseActivity implements ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final int INVALID_POINTER = -1;
@@ -85,12 +75,13 @@ public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivit
     private int mTabHeight;
     private boolean mScrolled;
     private StorageReference mStorageRef;
+    private Sector sector;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_flexiblespacewithimagewithviewpagertab2);
+        setContentView(R.layout.activity_zone_tabbed);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         mImageView = findViewById(R.id.imageZone);
@@ -98,8 +89,18 @@ public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivit
         setupWindowAnimations();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+        sector = MainActivity.currentSector;
+
+
+        ( (Toolbar)(findViewById(R.id.toolbar))).setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SectorTabActivity.super.onBackPressed();
+            }
+        });
+
         try {
-            StorageReference load = mStorageRef.child(MainActivity.currentZone.getImage());
+            StorageReference load = mStorageRef.child(sector.getCroquis());
 
             load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -112,7 +113,8 @@ public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivit
                     // Handle any errors
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
+
 
         }
 
@@ -127,7 +129,7 @@ public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivit
         mTabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
         findViewById(R.id.pager_wrapper).setPadding(0, mFlexibleSpaceHeight, 0, 0);
         mTitleView = (TextView) findViewById(R.id.title);
-        mTitleView.setText(MainActivity.currentZone.getName());
+        mTitleView.setText(MainActivity.currentSector.getName());
         setTitle(null);
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -166,16 +168,19 @@ public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivit
 
 
                 Intent intent = new Intent(getApplicationContext(), ImageViewer.class);
-                startActivityForResult(intent,1);
+                intent.putExtra("image", sector.getCroquis());
+                startActivityForResult(intent, 1);
             }
         });
     }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setupWindowAnimations() {
         Slide slide = new Slide();
         slide.setDuration(1000);
         getWindow().setExitTransition(slide);
     }
+
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
     }
@@ -350,7 +355,7 @@ public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivit
      */
     private static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private static final String[] TITLES = new String[]{"Applepie", "Butter Cookie", "Cupcake", "Donut", "Eclair", "Froyo", "Gingerbread", "Honeycomb", "Ice Cream Sandwich", "Jelly Bean", "KitKat", "Lollipop"};
+        private static final String[] TITLES = new String[]{"SubSector1", "SubSector2"};
 
         public NavigationAdapter(FragmentManager fm) {
             super(fm);
@@ -362,18 +367,13 @@ public class FlexibleSpaceWithImageWithViewPagerTab2Activity extends BaseActivit
             final int pattern = position % 5;
             switch (pattern) {
                 case 0:
-                    f = new SectorListFragment();
+                default:
+                    f = new RouteListFragment();
                     break;
                 case 1:
                     f = new RouteListFragment();
                     break;
-                case 2:
-                    f = new ViewPagerTabFragmentRecyclerViewFragment();
-                    break;
-                case 3:
-                    default:
-                    f = new SectorListFragment();
-                    break;
+
 
             }
             return f;

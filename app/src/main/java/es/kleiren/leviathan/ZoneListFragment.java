@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -90,8 +90,8 @@ public class ZoneListFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), FlexibleSpaceWithImageWithViewPagerTab2Activity.class);
-                startActivityForResult(intent,1);
+//                Intent intent = new Intent(getActivity(), ZoneTabActivity.class);
+//                startActivityForResult(intent,1);
                // showNewZoneDialog(getActivity());
 
             }
@@ -152,7 +152,7 @@ public class ZoneListFragment extends Fragment {
                     Log.i("FIREBASE", "=======resource: " + postSnapshot.child("image").getValue());
 
                     Log.i("FIREBASE", "=======zonename: " + zone.getName());
-                    Log.i("FIREBASE", "=======zoneres: " + zone.getImage());
+                    Log.i("FIREBASE", "=======zoneres: " + zone.getImg());
 
                     zonesFromFirebase.add(zone);
 
@@ -217,8 +217,11 @@ public class ZoneListFragment extends Fragment {
                     int position = rv.getChildAdapterPosition(child);
 
                     MainActivity.currentZone = zonesFromFirebase.get(position);
+//
+//                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
+//                    startActivityForResult(intent,1);
 
-                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
+                    Intent intent = new Intent(getActivity(), ZoneTabActivity.class);
                     startActivityForResult(intent,1);
                 }
 
@@ -357,7 +360,7 @@ search(searchView);
 
                                 zone.setName(((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString());
 
-                                zone.setImage("images/"+ zone.getName());
+                                zone.setImg("images/"+ zone.getName());
 
 
                                 UploadHelper.uploadZone(zone);
