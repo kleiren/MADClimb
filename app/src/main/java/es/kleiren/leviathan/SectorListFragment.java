@@ -2,7 +2,6 @@ package es.kleiren.leviathan;
 
 import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -116,7 +114,7 @@ public class SectorListFragment extends BaseFragment {
                     Log.i("FIREBASE", "=======resource: " + postSnapshot.child("image").getValue());
 
                     Log.i("FIREBASE", "=======zonename: " + sector.getName());
-                    Log.i("FIREBASE", "=======zoneres: " + sector.getImage());
+                    Log.i("FIREBASE", "=======zoneres: " + sector.getImg());
 
                     sectorsFromFirebase.add(sector);
 
@@ -186,7 +184,7 @@ public class SectorListFragment extends BaseFragment {
                     int position = rv.getChildAdapterPosition(child);
                     MainActivity.currentSector = sectorsFromFirebase.get(position);
 
-                    Intent intent = new Intent(getActivity(), SectorActivity.class);
+                    Intent intent = new Intent(getActivity(), SectorTabActivity.class);
                     startActivity(intent);
                     //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
                 }

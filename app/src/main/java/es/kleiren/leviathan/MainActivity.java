@@ -3,9 +3,9 @@ package es.kleiren.leviathan;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,7 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
+
 
 
 // https://www.learn2crack.com/2017/03/searchview-with-recyclerview.html
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, ZoneListFragment.newInstance())
                 .commit();
 
@@ -56,13 +57,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (item.getItemId()) {
             case R.id.navigation_home:
-                getFragmentManager().beginTransaction()
+                getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, ZoneListFragment.newInstance())
                         .commit();
                 return true;
             case R.id.navigation_dashboard:
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.container, SearchFragment.newInstance())
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, InfoFragment.newInstance(currentZone.getName()))
                         .commit();
                 return true;
 
