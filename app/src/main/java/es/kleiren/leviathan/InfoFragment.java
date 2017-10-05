@@ -46,7 +46,9 @@ public class InfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.map_container, MapsFragment.newInstance())
+                .commit();
         try {
 
             ((TextView) view.findViewById(R.id.txtInfo)).setText(       new WikipediaParser("en").execute(MainActivity.currentZone.getName()).get()     );
