@@ -8,18 +8,37 @@ public class Sector {
 
     public Sector(){}
 
-    public Sector(String name, String zoneName, int numOfRoutes, int resource) {
+    public Sector(String name, String zoneName, int numOfRoutes) {
         this.name = name;
         this.zoneName = zoneName;
         this.numOfRoutes = numOfRoutes;
-        this.resource = resource;
     }
 
 
     private String name;
     private String zoneName;
     private int numOfRoutes;
-    private int resource;
+
+    private String loc;
+
+    public String getLoc() {
+        return loc;
+    }
+
+    public void setLoc(String loc) {
+        this.loc = loc;
+    }
+
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getCroquis() {
         return croquis;
     }
@@ -65,11 +84,4 @@ public class Sector {
         this.name = name;
     }
 
-    public int getResource() {
-        return resource;
-    }
-
-    public void setResource(int resource) {
-        this.resource = resource;
-    }
 }

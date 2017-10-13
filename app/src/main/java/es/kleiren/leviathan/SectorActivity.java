@@ -140,8 +140,8 @@ public class SectorActivity extends AppCompatActivity  {
             switch (position) {
                 case 0:
                     return RouteListFragment.newInstance();
-                case 1:
-                    return MapsFragment.newInstance();
+//                case 1:
+//                    return MapsFragment.newInstance();
                 case 2:
                     return RouteListFragment.newInstance();
 
