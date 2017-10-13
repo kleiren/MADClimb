@@ -350,7 +350,7 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
      */
     private static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private static final String[] TITLES = new String[]{"Sectores", "Información"};
+        private static final String[] TITLES = new String[]{"Sectores", "Información", "Ubicación"};
 
         public NavigationAdapter(FragmentManager fm) {
             super(fm);
@@ -366,7 +366,10 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
                     f = new SectorListFragment();
                     break;
                 case 1:
-                    f = InfoFragment.newInstance(MainActivity.currentZone.getName());
+                    f = new InfoFragment();
+                    break;
+                case 2:
+                    f = new MapsFragment();
                     break;
 
 

@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class RouteListFragment extends BaseFragment {
+public class RouteListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private ObservableRecyclerView recyclerView;

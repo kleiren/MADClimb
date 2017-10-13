@@ -1,6 +1,7 @@
 package es.kleiren.leviathan;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
 import android.content.Intent;
 import android.net.Uri;
@@ -27,7 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 
-public class SectorListFragment extends BaseFragment {
+public class SectorListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private SectorDataAdapter adapter;
@@ -102,7 +103,7 @@ public class SectorListFragment extends BaseFragment {
 
 
         // Attach a listener to read the data at our posts reference
-        mDatabase.child("zones/"+ MainActivity.currentZone.getName() + "/sectors").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/"+ MainActivity.currentZone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("FIREBASE", dataSnapshot.getValue().toString());

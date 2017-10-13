@@ -167,8 +167,8 @@ public class ZoneActivity extends AppCompatActivity  {
                 case 0:
                     return SectorListFragment.newInstance();
 
-                case 1:
-                return MapsFragment.newInstance();
+//                case 1:
+//                return MapsFragment.newInstance();
 
                 case 2:
                     return SectorListFragment.newInstance();

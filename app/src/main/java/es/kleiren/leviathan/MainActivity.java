@@ -21,8 +21,8 @@ import android.support.v4.app.Fragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    public static Zone currentZone = new Zone("sainz", 1);
-    public static Sector currentSector = new Sector("cabeza", "toledo", 0, 0);
+    public static Zone currentZone = new Zone("sainz");
+    public static Sector currentSector = new Sector("cabeza", "toledo", 0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .replace(R.id.container, ZoneListFragment.newInstance())
                         .commit();
                 return true;
-            case R.id.navigation_dashboard:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, InfoFragment.newInstance(currentZone.getName()))
-                        .commit();
-                return true;
+//            case R.id.navigation_dashboard:
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.container, InfoFragment.newInstance(currentZone.getName()))
+//                        .commit();
+//                return true;
 
             case R.id.nav_github:
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/kleiren/Leviathan"));

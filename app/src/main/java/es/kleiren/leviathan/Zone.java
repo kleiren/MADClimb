@@ -8,9 +8,8 @@ public class Zone {
 
     public Zone (){}
 
-    public Zone(String name, int resource) {
+    public Zone(String name) {
         this.name = name;
-        this.resource = resource;
     }
 
     public String getImg() {
@@ -25,8 +24,26 @@ public class Zone {
     private String img;
 
 
+    private String id;
 
-    private int resource;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String loc;
+
+    public String getLoc() {
+        return loc;
+    }
+
+    public void setLoc(String loc) {
+        this.loc = loc;
+    }
+
     public String getName() {
         return name;
     }
@@ -35,11 +52,5 @@ public class Zone {
         this.name = name;
     }
 
-    public int getResource() {
-        return resource;
-    }
 
-    public void setResource(int resource) {
-        this.resource = resource;
-    }
 }
