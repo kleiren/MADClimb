@@ -85,7 +85,7 @@ public class RouteListFragment extends Fragment {
 
 
         // Attach a listener to read the data at our posts reference
-        mDatabase.child("zones/"+ MainActivity.currentZone.getName() + "/sectors/" + MainActivity.currentSector.getName() + "/routes").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/"+ MainActivity.currentZone.getId() + "/sectors/" + MainActivity.currentSector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("FIREBASE", dataSnapshot.getValue().toString());
