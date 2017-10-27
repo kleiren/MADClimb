@@ -62,7 +62,7 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
 
         viewHolder.txt_name.setText(filteredSectors.get(i).getName());
 
-         mDatabase.child("zones").child("toledo").child("img").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+         mDatabase.child("zones").child(filteredSectors.get(i).getId()).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
             }
@@ -73,24 +73,28 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
             }
         });
 
+        try {
+            StorageReference load = mStorageRef.child(filteredSectors.get(i).getCroquis());
 
+            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(context)
+                            .load(uri.toString())
+                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
+                            .centerCrop()
+                            .into(viewHolder.img);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch (Exception e) {
 
-        StorageReference load = mStorageRef.child("images/img_cabeza.png");
+        }
 
-        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(context).load(uri.toString())
-                        .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
-                        .centerCrop()
-                        .into(viewHolder.img);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
 
 
 
