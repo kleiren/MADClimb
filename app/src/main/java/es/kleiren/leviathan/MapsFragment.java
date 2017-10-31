@@ -17,6 +17,8 @@
 package es.kleiren.leviathan;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,6 +36,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Locale;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
@@ -43,6 +47,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        final String [] latlon =MainActivity.currentZone.getLoc().split(",");
+        final LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
+
 
         final ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scroll);
         Activity parentActivity = getActivity();
@@ -72,13 +79,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
                 // For dropping a marker at a point on the Map
 
-                String [] latlon =MainActivity.currentZone.getLoc().split(",");
-                LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
                 mMap.addMarker(new MarkerOptions().position(loc));
 
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
+
+        view.findViewById(R.id.openMaps).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("geo:0,0?q=" + loc.latitude + "," + loc.longitude + " (" + MainActivity.currentSector.getName() + ")");
+                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                startActivity(intent);
+
             }
         });
 

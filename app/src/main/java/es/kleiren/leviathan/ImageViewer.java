@@ -55,25 +55,29 @@ public class ImageViewer extends AppCompatActivity {
 
 
 
-        try {
 
             StorageReference load = mStorageRef.child(imageRef);
+        GlideApp.with(getApplicationContext())
+                .load(load)
+                .into((ImageView) findViewById(R.id.imageView));
+//            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri) {
+//
+//                   // PicassoHelper.showImageNormal(getApplicationContext(), uri.toString(), (ImageView) findViewById(R.id.imageView));
+//                    GlideApp.with(getApplicationContext())
+//                            .load(uri.toString())
+//                            .into((ImageView) findViewById(R.id.imageView));
+//
+//                    //Picasso.with(getApplicationContext()).load(uri.toString()).into((ImageView) findViewById(R.id.imageView));
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception exception) {
+//                    // Handle any errors
+//                }
+//            });
 
-            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.with(getApplicationContext()).load(uri.toString()).into((ImageView) findViewById(R.id.imageView));
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        } catch (Exception e) {
-
-
-        }
 
 
 

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +52,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.keepSynced(true);
 
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.zone_row, viewGroup, false);
@@ -76,27 +78,40 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         });
 
 
-        try {
-            StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
+        StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
 
-            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.with(context)
-                            .load(uri.toString())
-                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
-                            .centerCrop()
-                            .into(viewHolder.img);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        } catch (Exception e) {
+        GlideApp.with(context)
+                .load(load).centerCrop()
+                .into(viewHolder.img);
 
-        }
+//        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//
+//                    GlideApp.with(context)
+//                            .load("https://firebasestorage.googleapis.com/v0/b/leviathan-d57d8.appspot.com/o/images%2Fimg_sanmartin.jpg?alt=media&token=cc8f26b5-9315-4ebd-be0d-d3ef606eca55")
+//                            .centerCrop()
+//                            .placeholder(R.drawable.mountain_placeholder)
+//                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+//
+//                            .into(viewHolder.img);
+//                PicassoHelper.showImageCropped(context, "https://firebasestorage.googleapis.com/v0/b/leviathan-d57d8.appspot.com/o/images%2Fcroq_cabeza.jpg?alt=media&token=ba1232bb-d657-43fc-9674-566749275b68", viewHolder.img);
+//
+//                //  PicassoHelper.showImageCropped(context, uri.toString(), viewHolder.img);
+////                    Picasso.with(context)
+////                            .load(uri.toString())
+////                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
+////
+////                            .centerCrop()
+////                            .into(viewHolder.img);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
 
     }
