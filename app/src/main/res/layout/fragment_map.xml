@@ -23,17 +23,40 @@
     android:fillViewport="true"
     android:overScrollMode="never">
 
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:id="@+id/openMaps"
+            android:drawableTop="@mipmap/maps_icon"
+            android:text="Open in Maps"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+
 </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>

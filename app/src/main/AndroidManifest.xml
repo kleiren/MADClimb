@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".Global"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -35,12 +36,10 @@
             android:name=".SectorActivity"
             android:label="@string/title_activity_sector_activity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ZoneTabActivity"
             android:label="@string/title_activity_sector_activity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".SectorTabActivity"
             android:label="@string/title_activity_sector_activity"
@@ -61,9 +60,11 @@
             android:name=".ImageViewer"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image_viewer"
-            android:theme="@style/Theme.Transparent"
-
-            />
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name=".SectorSimpleTabActivity"
+            android:label="@string/title_activity_sector_simple_tab"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -31,6 +31,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -39,7 +40,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -48,6 +52,7 @@ import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
@@ -93,25 +98,36 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
         });
 
         setupWindowAnimations();
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        try {
-            StorageReference load = mStorageRef.child(MainActivity.currentZone.getImg());
 
-            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.with(getApplicationContext()).load(uri.toString()).into((ImageView) mImageView);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        } catch (Exception e) {
+        Toast.makeText(this, MainActivity.currentZone.getImg(), Toast.LENGTH_SHORT).show();
 
-        }
+        StorageReference load = mStorageRef.child(MainActivity.currentZone.getImg());
+        GlideApp.with(getApplicationContext())
+                .load(load).into((ImageView) mImageView);
+
+//            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri) {
+//                    //Picasso.with(getApplicationContext()).load(uri.toString()).into((ImageView) mImageView);
+//                    PicassoHelper.showImageNormal(getApplicationContext(), uri.toString(), (ImageView) mImageView);
+//
+//                    GlideApp.with(getApplicationContext())
+//                            .load("https://firebasestorage.googleapis.com/v0/b/leviathan-d57d8.appspot.com/o/images%2Fimg_sanmartin.jpg?alt=media&token=cc8f26b5-9315-4ebd-be0d-d3ef606eca55")
+//                            .into((ImageView)mImageView);
+//
+//
+//
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Log.e("Failure",e.toString());
+//                }
+//            });
+
 
         ViewCompat.setElevation(findViewById(R.id.header), getResources().getDimension(R.dimen.toolbar_elevation));
         mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());

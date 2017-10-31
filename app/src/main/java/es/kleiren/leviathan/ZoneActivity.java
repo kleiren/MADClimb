@@ -187,7 +187,6 @@ public class ZoneActivity extends AppCompatActivity  {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-
                     return "Sectores";
                 case 1:
                     return "Mapa";

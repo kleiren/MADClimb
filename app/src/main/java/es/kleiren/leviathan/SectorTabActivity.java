@@ -48,6 +48,7 @@ import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
@@ -87,36 +88,39 @@ public class SectorTabActivity extends BaseActivity implements ObservableScrollV
         mImageView = findViewById(R.id.imageZone);
 
         setupWindowAnimations();
+
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         sector = MainActivity.currentSector;
 
 
-        ( (Toolbar)(findViewById(R.id.toolbar))).setNavigationOnClickListener(new View.OnClickListener() {
+        ((Toolbar) (findViewById(R.id.toolbar))).setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SectorTabActivity.super.onBackPressed();
             }
         });
 
-        try {
-            StorageReference load = mStorageRef.child(sector.getCroquis());
+        StorageReference load = mStorageRef.child(sector.getCroquis());
+        GlideApp.with(getApplicationContext())
+                .load(load).into((ImageView) mImageView);
+//
+//            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri) {
+//                    //Picasso.with(getApplicationContext()).load(uri.toString()).into((ImageView) mImageView);
+//                    PicassoHelper.showImageNormal(getApplicationContext(), uri.toString(), (ImageView) mImageView);
+//
+//
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception exception) {
+//                    // Handle any errors
+//                }
+//            });
 
-            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.with(getApplicationContext()).load(uri.toString()).into((ImageView) mImageView);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        } catch (Exception e) {
-
-
-        }
 
         ViewCompat.setElevation(findViewById(R.id.header), getResources().getDimension(R.dimen.toolbar_elevation));
         mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
@@ -355,7 +359,7 @@ public class SectorTabActivity extends BaseActivity implements ObservableScrollV
      */
     private static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private static final String[] TITLES = new String[]{"SubSector1", "SubSector2"};
+        private static final String[] TITLES = new String[]{"Routes", "Map", "Info"};
 
         public NavigationAdapter(FragmentManager fm) {
             super(fm);
@@ -371,7 +375,10 @@ public class SectorTabActivity extends BaseActivity implements ObservableScrollV
                     f = new RouteListFragment();
                     break;
                 case 1:
-                    f = new RouteListFragment();
+                    f = new MapsFragment();
+                    break;
+                case 2:
+                    f = new InfoFragment();
                     break;
 
 

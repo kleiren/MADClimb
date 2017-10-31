@@ -39,7 +39,6 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
 // ...
 
 
-
     public SectorDataAdapter(ArrayList<Sector> sectors, Context context) {
         this.context = context;
         this.sectors = sectors;
@@ -51,6 +50,7 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.keepSynced(true);
 
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.sector_row, viewGroup, false);
@@ -62,7 +62,7 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
 
         viewHolder.txt_name.setText(filteredSectors.get(i).getName());
 
-         mDatabase.child("zones").child(filteredSectors.get(i).getId()).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("zones").child(filteredSectors.get(i).getId()).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
             }
@@ -73,29 +73,34 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
             }
         });
 
-        try {
-            StorageReference load = mStorageRef.child(filteredSectors.get(i).getCroquis());
+        StorageReference load = mStorageRef.child(filteredSectors.get(i).getCroquis());
 
-            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.with(context)
-                            .load(uri.toString())
-                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
-                            .centerCrop()
-                            .into(viewHolder.img);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        } catch (Exception e) {
-
-        }
-
-
+        GlideApp.with(context)
+                .load(load)
+                .centerCrop()
+                .into(viewHolder.img);
+//
+//            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri) {
+//
+//
+//
+//                    PicassoHelper.showImageCropped(context, uri.toString(), viewHolder.img);
+//
+////                    Picasso.with(context)
+////                            .load(uri.toString())
+////                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
+////                            .centerCrop()
+////                            .into(viewHolder.img);
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception exception) {
+//                    // Handle any errors
+//                }
+//            });
+//
 
 
     }
