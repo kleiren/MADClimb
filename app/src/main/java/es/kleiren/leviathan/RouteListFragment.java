@@ -1,6 +1,7 @@
 package es.kleiren.leviathan;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -21,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -29,12 +33,14 @@ public class RouteListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private ObservableRecyclerView recyclerView;
+    private StorageReference mStorageRef;
 
     private FloatingActionButton btnAddRoute;
     private DatabaseReference mDatabase;
     private ArrayList<Route> routesFromFirebase;
     private RouteDataAdapter adapter;
     private Activity parentActivity;
+    private Sector sector;
 
     public RouteListFragment() {
     }
@@ -59,8 +65,24 @@ public class RouteListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View routeView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
+        View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        sector = MainActivity.currentSector;
 
+        StorageReference load = mStorageRef.child(sector.getCroquis());
+        GlideApp.with(getActivity())
+                .load(load).into((ImageView) routeView.findViewById(R.id.croquisView));
+
+        routeView.findViewById(R.id.croquisView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent intent = new Intent(getActivity(), ImageViewer.class);
+                intent.putExtra("image", sector.getCroquis());
+                startActivityForResult(intent, 1);
+            }
+        });
         routesFromFirebase = new ArrayList<>();
         prepareData(routeView);
 
@@ -116,7 +138,7 @@ public class RouteListFragment extends Fragment {
 
     private void initViews(View view) {
 
-        recyclerView = (ObservableRecyclerView) view.findViewById(R.id.scroll);
+        recyclerView = (ObservableRecyclerView) view.findViewById(R.id.card_route_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(false);
         recyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
