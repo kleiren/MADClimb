@@ -1,5 +1,6 @@
 package es.kleiren.leviathan;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -50,6 +52,8 @@ public class SectorSimpleTabActivity extends AppCompatActivity {
 
     private ArrayList<String> sectorTitles = new ArrayList<>();
 
+    Button btnInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +62,14 @@ public class SectorSimpleTabActivity extends AppCompatActivity {
         int currentSectorPosition = getIntent().getIntExtra("currentSectorPosition", 0);
         sectorsFromFirebase = (ArrayList<Sector>) getIntent().getSerializableExtra("sectors");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sector);
         setSupportActionBar(toolbar);
 
         for (Sector sector : sectorsFromFirebase) sectorTitles.add(sector.getName());
 
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
 
 
         // Set up the ViewPager with the sections adapter.
@@ -105,7 +110,16 @@ public class SectorSimpleTabActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.info) {
+
+
+            Intent intent = new Intent(this, InfoActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+
     }
 
 

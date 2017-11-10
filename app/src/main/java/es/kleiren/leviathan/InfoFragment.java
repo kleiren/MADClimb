@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.google.android.gms.maps.MapFragment;
 
 import java.util.concurrent.ExecutionException;
 
@@ -34,6 +35,10 @@ public class InfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
 
+        getFragmentManager().beginTransaction()
+                .replace(R.id.map_container, new MapsFragment())
+                .commit();
+
         final ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scroll);
         Activity parentActivity = getActivity();
         scrollView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
@@ -41,13 +46,13 @@ public class InfoFragment extends Fragment {
             scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
 
-        try {
-            ((TextView) view.findViewById(R.id.txtInfo)).setText(new WikipediaParser("en").execute(MainActivity.currentZone.getName()).get());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            ((TextView) view.findViewById(R.id.txtInfo)).setText(new WikipediaParser("en").execute(MainActivity.currentZone.getName()).get());
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
 
         return view;
     }
