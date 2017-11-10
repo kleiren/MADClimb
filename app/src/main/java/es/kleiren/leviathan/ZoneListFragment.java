@@ -148,12 +148,6 @@ public class ZoneListFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
 
-                    Log.i("FIREBASE", "=======name: " + postSnapshot.child("name").getValue());
-                    Log.i("FIREBASE", "=======resource: " + postSnapshot.child("image").getValue());
-
-                    Log.i("FIREBASE", "=======zonename: " + zone.getName());
-                    Log.i("FIREBASE", "=======zoneres: " + zone.getImg());
-
                     zonesFromFirebase.add(zone);
 
                     adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
