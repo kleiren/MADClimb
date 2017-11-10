@@ -28,6 +28,7 @@ public class WikipediaParser extends AsyncTask<String, Void, String> {
         Elements paragraphs = doc.select(".mw-content-ltr p");
 
         Element firstParagraph = paragraphs.first();
+
         return firstParagraph.text();
     }
 

@@ -28,32 +28,49 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
     @Override
     public RouteDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view;
+        if (i == 1) {
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_row, viewGroup, false);
+            return new ViewHolder(view, 0);
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.route_row, viewGroup, false);
-        return new ViewHolder(view);
+        } else {
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.route_row, viewGroup, false);
+            return new ViewHolder(view, 1);
+
+        }
     }
 
     @Override
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
+        if (i == 0) {
 
-        viewHolder.txtName.setText(routes.get(i).getName());
-        viewHolder.txtGrade.setText(routes.get(i).getGrade());
+        } else {
 
-        final boolean isExpanded = i==mExpandedPosition;
-        viewHolder.details.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+            viewHolder.txtName.setText(routes.get(i).getName());
+            viewHolder.txtGrade.setText(routes.get(i).getGrade());
 
-        viewHolder.itemView.setActivated(isExpanded);
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1:i;
-               // viewHolder.recyclerView.animate();
-                TransitionManager.beginDelayedTransition(viewHolder.recyclerView);
-                notifyDataSetChanged();
-            }
-        });
+            final boolean isExpanded = i == mExpandedPosition;
+            viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
+            viewHolder.itemView.setActivated(isExpanded);
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mExpandedPosition = isExpanded ? -1 : i;
+                    // viewHolder.recyclerView.animate();
+                    TransitionManager.beginDelayedTransition(viewHolder.recyclerView);
+                    notifyDataSetChanged();
+                }
+            });
+        }
 
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) return 1;
+        else return 2;
     }
 
     @Override
@@ -61,21 +78,27 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         return routes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txtName, txtGrade;
         public View details, idle;
         public ViewGroup recyclerView;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, int type) {
             super(view);
 
-            recyclerView = (ViewGroup) view.findViewById(R.id.card);
-            details = (View) view.findViewById(R.id.details);
+            if (type == 0){
 
-            details.setVisibility(View.GONE);
-            txtName = (TextView)view.findViewById(R.id.textRouteName);
-            txtGrade = (TextView)view.findViewById(R.id.textRouteGrade);
+            }else {
+                recyclerView = (ViewGroup) view.findViewById(R.id.card);
+                details = (View) view.findViewById(R.id.details);
+
+                details.setVisibility(View.GONE);
+                txtName = (TextView) view.findViewById(R.id.textRouteName);
+                txtGrade = (TextView) view.findViewById(R.id.textRouteGrade);
+            }
         }
     }
+
+
 
 }

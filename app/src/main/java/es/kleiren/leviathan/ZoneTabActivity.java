@@ -108,26 +108,6 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
         GlideApp.with(getApplicationContext())
                 .load(load).into((ImageView) mImageView);
 
-//            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//                    //Picasso.with(getApplicationContext()).load(uri.toString()).into((ImageView) mImageView);
-//                    PicassoHelper.showImageNormal(getApplicationContext(), uri.toString(), (ImageView) mImageView);
-//
-//                    GlideApp.with(getApplicationContext())
-//                            .load("https://firebasestorage.googleapis.com/v0/b/leviathan-d57d8.appspot.com/o/images%2Fimg_sanmartin.jpg?alt=media&token=cc8f26b5-9315-4ebd-be0d-d3ef606eca55")
-//                            .into((ImageView)mImageView);
-//
-//
-//
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Log.e("Failure",e.toString());
-//                }
-//            });
-
 
         ViewCompat.setElevation(findViewById(R.id.header), getResources().getDimension(R.dimen.toolbar_elevation));
         mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());

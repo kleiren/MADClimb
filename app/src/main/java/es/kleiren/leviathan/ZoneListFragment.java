@@ -92,7 +92,7 @@ public class ZoneListFragment extends Fragment {
 
 //                Intent intent = new Intent(getActivity(), ZoneTabActivity.class);
 //                startActivityForResult(intent,1);
-               // showNewZoneDialog(getActivity());
+                // showNewZoneDialog(getActivity());
 
             }
         });
@@ -216,7 +216,7 @@ public class ZoneListFragment extends Fragment {
 //                    startActivityForResult(intent,1);
 
                     Intent intent = new Intent(getActivity(), ZoneTabActivity.class);
-                    startActivityForResult(intent,1);
+                    startActivityForResult(intent, 1);
                 }
 
                 return false;
@@ -235,7 +235,6 @@ public class ZoneListFragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Do something that differs the Activity's menu here
@@ -248,7 +247,7 @@ public class ZoneListFragment extends Fragment {
         MenuItem searchViewMenuItem = menu.findItem(R.id.search);
         searchView = (SearchView) searchViewMenuItem.getActionView();
 
-search(searchView);
+        search(searchView);
 
 
     }
@@ -354,12 +353,12 @@ search(searchView);
 
                                 zone.setName(((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString());
 
-                                zone.setImg("images/"+ zone.getName());
+                                zone.setImg("images/" + zone.getName());
 
 
                                 UploadHelper.uploadZone(zone);
 
-                                UploadHelper.uploadFile(fileToUploadUri,((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString(),  uploadTask, mStorageRef);
+                                UploadHelper.uploadFile(fileToUploadUri, ((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString(), uploadTask, mStorageRef);
 
                                 dialog.dismiss();
                             }

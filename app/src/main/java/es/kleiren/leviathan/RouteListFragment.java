@@ -1,6 +1,7 @@
 package es.kleiren.leviathan;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -11,9 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
@@ -124,10 +127,6 @@ public class RouteListFragment extends Fragment {
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
-
-                    Log.i("FIREBASE", "=======zonename: " + route.getName());
-                    Log.i("FIREBASE", "=======zoneres: " + route.getGrade());
-
                     routesFromFirebase.add(route);
 
                     adapter = new RouteDataAdapter(routesFromFirebase, getActivity());
@@ -225,4 +224,11 @@ public class RouteListFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+
+
+
+
+
 }

@@ -28,30 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ZoneActivity"
-            android:label="@string/title_activity_zone_activity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SectorActivity"
-            android:label="@string/title_activity_sector_activity"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".ZoneTabActivity"
             android:label="@string/title_activity_sector_activity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SectorTabActivity"
-            android:label="@string/title_activity_sector_activity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        -->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -60,15 +42,17 @@
             android:name=".ImageViewer"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image_viewer"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".InfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_image_viewer"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".SectorSimpleTabActivity"
             android:label="@string/title_activity_sector_simple_tab"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Main2Activity"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
