@@ -1,10 +1,12 @@
 package es.kleiren.leviathan;
 
+import java.io.Serializable;
+
 /**
  * Created by Carlos on 11/05/2017.
  */
 
-public class Sector {
+public class Sector implements Serializable {
 
     public Sector(){}
 
@@ -30,6 +32,17 @@ public class Sector {
     }
 
     private String id;
+
+    public String getZone_id() {
+        return zone_id;
+    }
+
+    public void setZone_id(String zone_id) {
+        this.zone_id = zone_id;
+    }
+
+    private String zone_id;
+
 
     public String getId() {
         return id;

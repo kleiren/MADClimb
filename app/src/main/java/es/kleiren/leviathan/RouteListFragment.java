@@ -46,16 +46,28 @@ public class RouteListFragment extends Fragment {
     }
 
 
-    public static RouteListFragment newInstance() {
-        RouteListFragment fragment = new RouteListFragment();
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_SECTOR = "sector";
 
+
+
+
+    public static RouteListFragment newInstance(Sector sector) {
+        RouteListFragment fragment = new RouteListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_SECTOR, sector);
+        fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            sector = (Sector) getArguments().getSerializable(ARG_SECTOR);
+        }
         parentActivity = getActivity();
 
 
@@ -67,7 +79,6 @@ public class RouteListFragment extends Fragment {
         // Inflate the layout for this fragment
         View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        sector = MainActivity.currentSector;
 
         StorageReference load = mStorageRef.child(sector.getCroquis());
         GlideApp.with(getActivity())
@@ -103,11 +114,10 @@ public class RouteListFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        Sector sector = MainActivity.currentSector;
 
 
         // Attach a listener to read the data at our posts reference
-        mDatabase.child("zones/"+ MainActivity.currentZone.getId() + "/sectors/" + MainActivity.currentSector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/"+ sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("FIREBASE", dataSnapshot.getValue().toString());

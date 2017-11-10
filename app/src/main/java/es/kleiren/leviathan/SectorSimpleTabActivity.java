@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,14 @@ import android.view.ViewGroup;
 
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class SectorSimpleTabActivity extends AppCompatActivity {
 
@@ -31,33 +40,48 @@ public class SectorSimpleTabActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ArrayList<Sector> sectorsFromFirebase;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private DatabaseReference mDatabase;
+
+    private ArrayList<String> sectorTitles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sector_simple_tab);
 
+        int currentSectorPosition = getIntent().getIntExtra("currentSectorPosition", 0);
+        sectorsFromFirebase = (ArrayList<Sector>) getIntent().getSerializableExtra("sectors");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+
+        for (Sector sector : sectorsFromFirebase) sectorTitles.add(sector.getName());
+
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(currentSectorPosition);
+//
+//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+//
+//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-
+        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        slidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
+        slidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorAccent));
+        slidingTabLayout.setDistributeEvenly(true);
+        slidingTabLayout.setViewPager(mViewPager);
 
     }
 
@@ -96,32 +120,23 @@ public class SectorSimpleTabActivity extends AppCompatActivity {
         }
 
 
+        @Override
+        public int getCount() {
+            return sectorTitles.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return sectorTitles.get(position);
+        }
 
         @Override
         public Fragment getItem(int position) {
             Fragment f;
-
-            switch (position) {
-                case 0:
-                default:
-                    f = new RouteListFragment();
-                    break;
-                case 1:
-                    f = new MapsFragment();
-                    break;
-                case 2:
-                    f = new InfoFragment();
-                    break;
-
-
-            }
+            f = RouteListFragment.newInstance(sectorsFromFirebase.get(position));
             return f;
         }
 
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
+
     }
 }

@@ -110,17 +110,8 @@ public class SectorListFragment extends Fragment {
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
-
-                    Log.i("FIREBASE", "=======name: " + postSnapshot.child("name").getValue());
-                    Log.i("FIREBASE", "=======resource: " + postSnapshot.child("image").getValue());
-
-                    Log.i("FIREBASE", "=======zonename: " + sector.getName());
-                    Log.i("FIREBASE", "=======zoneres: " + sector.getImg());
-
                     sectorsFromFirebase.add(sector);
-
                     adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
-
                 }
                 initViews(sectorView);
 
@@ -186,6 +177,8 @@ public class SectorListFragment extends Fragment {
                     MainActivity.currentSector = sectorsFromFirebase.get(position);
 
                     Intent intent = new Intent(getActivity(), SectorSimpleTabActivity.class);
+                    intent.putExtra("sectors", sectorsFromFirebase);
+                    intent.putExtra("currentSectorPosition", position);
                     startActivity(intent);
                     //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
                 }
