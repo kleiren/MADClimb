@@ -177,6 +177,7 @@ public class SectorListFragment extends Fragment {
                     MainActivity.currentSector = sectorsFromFirebase.get(position);
 
                     Intent intent = new Intent(getActivity(), SectorActivity.class);
+                    intent.putExtra("zone", MainActivity.currentZone);
                     intent.putExtra("sectors", sectorsFromFirebase);
                     intent.putExtra("currentSectorPosition", position);
                     startActivity(intent);

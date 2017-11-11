@@ -1,9 +1,6 @@
 package es.kleiren.leviathan;
 
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -12,35 +9,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import android.view.View;
-import android.view.ViewGroup;
-
 import android.widget.Button;
-import android.widget.Switch;
-import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class SectorActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ArrayList<Sector> sectorsFromFirebase;
 
@@ -53,34 +33,36 @@ public class SectorActivity extends AppCompatActivity {
     private ArrayList<String> sectorTitles = new ArrayList<>();
 
     Button btnInfo;
+    private Zone zone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sector_simple_tab);
+        setContentView(R.layout.activity_sector);
 
+        zone = (Zone) getIntent().getSerializableExtra("zone");
         int currentSectorPosition = getIntent().getIntExtra("currentSectorPosition", 0);
         sectorsFromFirebase = (ArrayList<Sector>) getIntent().getSerializableExtra("sectors");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sector);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tlb_sector);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        setTitle(zone.getName());
 
         for (Sector sector : sectorsFromFirebase) sectorTitles.add(sector.getName());
 
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(currentSectorPosition);
-//
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-//
-//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-//        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         slidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
@@ -112,8 +94,8 @@ public class SectorActivity extends AppCompatActivity {
 
         if (id == R.id.info) {
 
-
             Intent intent = new Intent(this, InfoActivity.class);
+            intent.putExtra("title", zone.getName());
             startActivity(intent);
             return true;
         }

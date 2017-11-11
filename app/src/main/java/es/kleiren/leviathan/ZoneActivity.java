@@ -79,7 +79,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zone_tabbed);
+        setContentView(R.layout.activity_zone);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         mImageView = findViewById(R.id.imageZone);
@@ -151,9 +151,9 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
             @Override
             public void onClick(View v) {
 
-
-                Intent intent = new Intent(getApplicationContext(), ImageViewer.class);
+                Intent intent = new Intent(getApplicationContext(), ImageViewerActivity.class);
                 intent.putExtra("image", MainActivity.currentZone.getImg());
+                intent.putExtra("title",  MainActivity.currentZone.getName());
                 startActivityForResult(intent, 1);
             }
         });

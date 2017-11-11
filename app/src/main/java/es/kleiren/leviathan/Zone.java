@@ -1,10 +1,12 @@
 package es.kleiren.leviathan;
 
+import java.io.Serializable;
+
 /**
  * Created by Carlos on 11/05/2017.
  */
 
-public class Zone {
+public class Zone implements Serializable{
 
     public Zone (){}
 

@@ -4,34 +4,45 @@ package es.kleiren.leviathan;
  * Created by Carlos on 11/05/2017.
  */
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.transition.TransitionManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.ViewHolder> {
     private ArrayList<Route> routes;
+    private Sector sector;
     private Context context;
     private int mExpandedPosition = -1;
+    private ColumnChartData data;
 
-
-    public RouteDataAdapter(ArrayList<Route> routes, Context context) {
+    public RouteDataAdapter(ArrayList<Route> routes, Context context, Sector sector) {
         this.context = context;
         this.routes = routes;
+        this.sector = sector;
     }
 
     @Override
@@ -40,11 +51,9 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         if (i == 1) {
             view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_row, viewGroup, false);
             return new ViewHolder(view, 0);
-
         } else {
             view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.route_row, viewGroup, false);
             return new ViewHolder(view, 1);
-
         }
     }
 
@@ -52,19 +61,17 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
         if (i == 0) {
 
-            List<PointValue> values = new ArrayList<PointValue>();
-            values.add(new PointValue(0, 2));
-            values.add(new PointValue(1, 4));
-            values.add(new PointValue(2, 3));
-            values.add(new PointValue(3, 4));
-
-            ColumnChartData data = ColumnChartData.generateDummyData();
-
+            generateData();
             viewHolder.chart.setColumnChartData(data);
+            viewHolder.btnInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-
-
-
+                    Intent intent = new Intent(context, InfoActivity.class);
+                    intent.putExtra("title", sector.getName());
+                    context.startActivity(intent);
+                }
+            });
         } else {
 
             viewHolder.txtName.setText(routes.get(i).getName());
@@ -85,7 +92,32 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 }
             });
         }
+    }
 
+
+    private void generateData() {
+        int numSubcolumns = 1;
+        int numColumns = 8;
+        // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
+        List<Column> columns = new ArrayList<Column>();
+        List<SubcolumnValue> values;
+        for (int i = 0; i < numColumns; ++i) {
+
+            values = new ArrayList<SubcolumnValue>();
+            for (int j = 0; j < numSubcolumns; ++j) {
+                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
+            }
+
+            Column column = new Column(values);
+            column.setHasLabels(true);
+            //column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            columns.add(column);
+        }
+
+        data = new ColumnChartData(columns);
+
+        data.setAxisXBottom(null);
+        data.setAxisYLeft(null);
 
     }
 
@@ -105,16 +137,19 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         View details, idle;
         ViewGroup recyclerView;
         ColumnChartView chart;
+        ImageButton btnInfo;
 
 
         ViewHolder(View view, int type) {
             super(view);
 
-            if (type == 0){
+            if (type == 0) {
 
                 chart = (ColumnChartView) view.findViewById(R.id.gradeChart);
+                chart.setZoomEnabled(false);
+                btnInfo = (ImageButton) view.findViewById(R.id.btnInfo);
 
-            }else {
+            } else {
                 recyclerView = (ViewGroup) view.findViewById(R.id.card);
                 details = (View) view.findViewById(R.id.details);
 
@@ -126,7 +161,4 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             }
         }
     }
-
-
-
 }
