@@ -176,7 +176,7 @@ public class SectorListFragment extends Fragment {
                     int position = rv.getChildAdapterPosition(child);
                     MainActivity.currentSector = sectorsFromFirebase.get(position);
 
-                    Intent intent = new Intent(getActivity(), SectorSimpleTabActivity.class);
+                    Intent intent = new Intent(getActivity(), SectorActivity.class);
                     intent.putExtra("sectors", sectorsFromFirebase);
                     intent.putExtra("currentSectorPosition", position);
                     startActivity(intent);

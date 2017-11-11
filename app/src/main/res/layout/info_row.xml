@@ -34,6 +34,11 @@
             android:layout_marginBottom="8dp"
             card_view:layout_constraintTop_toTopOf="parent" />
 
+        <lecho.lib.hellocharts.view.ColumnChartView
+            android:id="@+id/gradeChart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

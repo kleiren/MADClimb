@@ -19,19 +19,19 @@ package es.kleiren.leviathan;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -42,24 +42,18 @@ import android.widget.OverScroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
-import com.squareup.picasso.Picasso;
 
 
-public class ZoneTabActivity extends BaseActivity implements ObservableScrollViewCallbacks {
+public class ZoneActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final int INVALID_POINTER = -1;
@@ -93,7 +87,7 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
         ((Toolbar) (findViewById(R.id.toolbar))).setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZoneTabActivity.super.onBackPressed();
+                ZoneActivity.super.onBackPressed();
             }
         });
 
@@ -346,7 +340,7 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
      */
     private static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private static final String[] TITLES = new String[]{"Sectores", "Información", "Ubicación"};
+        private static final String[] TITLES = new String[]{"Sectores", "Información"};
 
         public NavigationAdapter(FragmentManager fm) {
             super(fm);
@@ -364,11 +358,6 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
                 case 1:
                     f = new InfoFragment();
                     break;
-                case 2:
-                    f = new MapsFragment();
-                    break;
-
-
             }
             return f;
         }
@@ -383,4 +372,19 @@ public class ZoneTabActivity extends BaseActivity implements ObservableScrollVie
             return TITLES[position];
         }
     }
+
+    protected int getActionBarSize() {
+        TypedValue typedValue = new TypedValue();
+        int[] textSizeAttr = new int[]{R.attr.actionBarSize};
+        int indexOfAttrTextSize = 0;
+        TypedArray a = obtainStyledAttributes(typedValue.data, textSizeAttr);
+        int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
+        a.recycle();
+        return actionBarSize;
+    }
+
+    protected int getScreenHeight() {
+        return findViewById(android.R.id.content).getHeight();
+    }
+
 }

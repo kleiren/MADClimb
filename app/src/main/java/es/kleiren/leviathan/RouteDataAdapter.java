@@ -5,6 +5,7 @@ package es.kleiren.leviathan;
  */
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.ViewHolder> {
     private ArrayList<Route> routes;
@@ -44,10 +52,24 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
         if (i == 0) {
 
+            List<PointValue> values = new ArrayList<PointValue>();
+            values.add(new PointValue(0, 2));
+            values.add(new PointValue(1, 4));
+            values.add(new PointValue(2, 3));
+            values.add(new PointValue(3, 4));
+
+            ColumnChartData data = ColumnChartData.generateDummyData();
+
+            viewHolder.chart.setColumnChartData(data);
+
+
+
+
         } else {
 
             viewHolder.txtName.setText(routes.get(i).getName());
             viewHolder.txtGrade.setText(routes.get(i).getGrade());
+            viewHolder.txtDetails.setText(routes.get(i).getDescription());
 
             final boolean isExpanded = i == mExpandedPosition;
             viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -78,19 +100,25 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         return routes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txtName, txtGrade;
-        public View details, idle;
-        public ViewGroup recyclerView;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView txtName, txtGrade, txtDetails;
+        View details, idle;
+        ViewGroup recyclerView;
+        ColumnChartView chart;
 
-        public ViewHolder(View view, int type) {
+
+        ViewHolder(View view, int type) {
             super(view);
 
             if (type == 0){
 
+                chart = (ColumnChartView) view.findViewById(R.id.gradeChart);
+
             }else {
                 recyclerView = (ViewGroup) view.findViewById(R.id.card);
                 details = (View) view.findViewById(R.id.details);
+
+                txtDetails = (TextView) view.findViewById(R.id.txtDetails);
 
                 details.setVisibility(View.GONE);
                 txtName = (TextView) view.findViewById(R.id.textRouteName);
