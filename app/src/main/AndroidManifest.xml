@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="es.kleiren.leviathan">
-
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
-    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -39,7 +33,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ImageViewer"
+            android:name=".ImageViewerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_image_viewer"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -47,8 +41,8 @@
         <activity
             android:name=".InfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_image_viewer"
-            android:theme="@style/AppTheme" />
+            android:label="@string/title_activity_info_viewer"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SectorActivity"
             android:label="@string/title_activity_sector_simple_tab"
