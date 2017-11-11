@@ -90,7 +90,7 @@ public class ZoneListFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-//                Intent intent = new Intent(getActivity(), ZoneTabActivity.class);
+//                Intent intent = new Intent(getActivity(), ZoneActivity.class);
 //                startActivityForResult(intent,1);
                 // showNewZoneDialog(getActivity());
 
@@ -215,7 +215,7 @@ public class ZoneListFragment extends Fragment {
 //                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
 //                    startActivityForResult(intent,1);
 
-                    Intent intent = new Intent(getActivity(), ZoneTabActivity.class);
+                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
                     startActivityForResult(intent, 1);
                 }
 
