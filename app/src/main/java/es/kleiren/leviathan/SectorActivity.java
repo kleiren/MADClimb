@@ -76,7 +76,7 @@ public class SectorActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_sector_simple_tab, menu);
+        getMenuInflater().inflate(R.menu.menu_sector_activity, menu);
         return true;
     }
 
@@ -87,15 +87,12 @@ public class SectorActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         if (id == R.id.info) {
 
             Intent intent = new Intent(this, InfoActivity.class);
             intent.putExtra("title", zone.getName());
+            intent.putExtra("location", zone.getLoc());
             startActivity(intent);
             return true;
         }

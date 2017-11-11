@@ -74,6 +74,8 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private int mTabHeight;
     private boolean mScrolled;
     private StorageReference mStorageRef;
+    private Zone zone;
+    private Sector sector;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -83,6 +85,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         mImageView = findViewById(R.id.imageZone);
+        zone = (Zone) getIntent().getSerializableExtra("zone");
 
         ((Toolbar) (findViewById(R.id.toolbar))).setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,9 +99,9 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
-        Toast.makeText(this, MainActivity.currentZone.getImg(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, zone.getImg(), Toast.LENGTH_SHORT).show();
 
-        StorageReference load = mStorageRef.child(MainActivity.currentZone.getImg());
+        StorageReference load = mStorageRef.child(zone.getImg());
         GlideApp.with(getApplicationContext())
                 .load(load).into((ImageView) mImageView);
 
@@ -114,7 +117,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         mTabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
         findViewById(R.id.pager_wrapper).setPadding(0, mFlexibleSpaceHeight, 0, 0);
         mTitleView = (TextView) findViewById(R.id.title);
-        mTitleView.setText(MainActivity.currentZone.getName());
+        mTitleView.setText(zone.getName());
         setTitle(null);
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -152,8 +155,8 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
             public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(), ImageViewerActivity.class);
-                intent.putExtra("image", MainActivity.currentZone.getImg());
-                intent.putExtra("title",  MainActivity.currentZone.getName());
+                intent.putExtra("image", zone.getImg());
+                intent.putExtra("title",  zone.getName());
                 startActivityForResult(intent, 1);
             }
         });
@@ -338,9 +341,9 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
      * This adapter provides two types of fragments as an example.
      * {@linkplain #createItem(int)} should be modified if you use this example for your app.
      */
-    private static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
+    private class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private static final String[] TITLES = new String[]{"Sectores", "Información"};
+        private final String[] TITLES = new String[]{"Sectores", "Información"};
 
         public NavigationAdapter(FragmentManager fm) {
             super(fm);
@@ -353,10 +356,10 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
             switch (pattern) {
                 case 0:
                 default:
-                    f = new SectorListFragment();
+                    f = SectorListFragment.newInstance(zone);
                     break;
                 case 1:
-                    f = new InfoFragment();
+                    f = InfoFragment.newInstance(zone.getLoc(),zone.getName());
                     break;
             }
             return f;

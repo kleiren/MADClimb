@@ -30,8 +30,8 @@ import com.google.firebase.storage.FirebaseStorage;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    public static Zone currentZone = new Zone("sainz");
-    public static Sector currentSector = new Sector("cabeza", "toledo", 0);
+    //public static Zone currentZone = new Zone("sainz");
+    //public static Sector currentSector = new Sector("cabeza", "toledo", 0);
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
@@ -107,10 +107,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

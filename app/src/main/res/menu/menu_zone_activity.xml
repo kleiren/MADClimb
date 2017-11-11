@@ -2,9 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="es.kleiren.leviathan.ZoneActivity">
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/error"
+        android:icon="@android:drawable/stat_notify_error"
+        android:title="info"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/addRoute"
+        android:icon="@drawable/ic_add"
+        android:title="info"
+        app:showAsAction="always" />
 </menu>

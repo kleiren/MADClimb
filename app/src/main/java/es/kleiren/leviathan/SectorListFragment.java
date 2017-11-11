@@ -39,18 +39,21 @@ public class SectorListFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ArrayList<Sector> sectorsFromFirebase;
     private Activity parentActivity;
-
+    private Zone zone;
+    private static final String ARG_ZONE = "zone";
 
     public SectorListFragment() {
     }
 
 
-    public static SectorListFragment newInstance() {
-        SectorListFragment fragment = new SectorListFragment();
 
+    public static SectorListFragment newInstance(Zone zone) {
+        SectorListFragment fragment = new SectorListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_ZONE, zone);
+        fragment.setArguments(args);
         return fragment;
     }
-
 
 
     @Override
@@ -58,6 +61,10 @@ public class SectorListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 //        mStorageRef = FirebaseStorage.getInstance().getReference();
         parentActivity = getActivity();
+        if (getArguments() != null) {
+            zone = (Zone) getArguments().getSerializable(ARG_ZONE);
+
+        }
 
     }
 
@@ -103,7 +110,7 @@ public class SectorListFragment extends Fragment {
 
 
         // Attach a listener to read the data at our posts reference
-        mDatabase.child("zones/"+ MainActivity.currentZone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/"+ zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("FIREBASE", dataSnapshot.getValue().toString());
@@ -174,10 +181,9 @@ public class SectorListFragment extends Fragment {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-                    MainActivity.currentSector = sectorsFromFirebase.get(position);
 
                     Intent intent = new Intent(getActivity(), SectorActivity.class);
-                    intent.putExtra("zone", MainActivity.currentZone);
+                    intent.putExtra("zone", zone);
                     intent.putExtra("sectors", sectorsFromFirebase);
                     intent.putExtra("currentSectorPosition", position);
                     startActivity(intent);

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,18 +37,45 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Locale;
-
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
 
     MapView mMapView;
     private GoogleMap mMap;
+    String location, name;
+
+
+    private static final String ARG_LOC = "location";
+    private static final String ARG_NAME = "name";
+
+
+    public static MapsFragment newInstance(String location, String name) {
+        MapsFragment fragment = new MapsFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_LOC, location);
+        args.putString(ARG_NAME, name);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            location =  getArguments().getString(ARG_LOC);
+            name =  getArguments().getString(ARG_NAME);
+
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        final String [] latlon =MainActivity.currentZone.getLoc().split(",");
+
+
+        final String [] latlon =location.split(",");
         final LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
 
 
@@ -90,7 +118,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         view.findViewById(R.id.openMaps).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("geo:0,0?q=" + loc.latitude + "," + loc.longitude + " (" + MainActivity.currentSector.getName() + ")");
+                Uri uri = Uri.parse("geo:0,0?q=" + loc.latitude + "," + loc.longitude + " (" + name + ")");
                 Intent intent = new Intent(Intent.ACTION_VIEW,uri);
                 startActivity(intent);
 
@@ -106,7 +134,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        String [] latlon =MainActivity.currentZone.getLoc().split(",");
+        String [] latlon =location.split(",");
         LatLng loc = new LatLng(Long.parseLong(latlon[0]),Long.parseLong(latlon[1]));
         mMap.addMarker(new MarkerOptions().position(loc));
     }
