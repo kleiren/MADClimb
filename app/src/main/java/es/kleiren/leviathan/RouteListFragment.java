@@ -45,12 +45,7 @@ public class RouteListFragment extends Fragment {
     public RouteListFragment() {
     }
 
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTOR = "sector";
-
-
 
 
     public static RouteListFragment newInstance(Sector sector) {
@@ -87,7 +82,6 @@ public class RouteListFragment extends Fragment {
         routeView.findViewById(R.id.croquisView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
                 intent.putExtra("image", sector.getCroquis());

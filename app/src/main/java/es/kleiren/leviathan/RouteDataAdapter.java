@@ -69,6 +69,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
                     Intent intent = new Intent(context, InfoActivity.class);
                     intent.putExtra("title", sector.getName());
+                    intent.putExtra("location", sector.getLoc());
                     context.startActivity(intent);
                 }
             });

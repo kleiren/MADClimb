@@ -45,13 +45,14 @@ public class ZoneListFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView recyclerView;
     private StorageReference mStorageRef;
-    private FloatingActionButton fabAddZone;
+    //private FloatingActionButton fabAddZone;
     private DatabaseReference mDatabase;
     private AlertDialog dialog;
     private ArrayList<Zone> zonesFromFirebase;
     private Uri fileToUploadUri;
     private TextView txtFileToUpload;
     private UploadTask uploadTask;
+    private Zone zone;
 
 
     public ZoneListFragment() {
@@ -84,18 +85,18 @@ public class ZoneListFragment extends Fragment {
         zonesFromFirebase = new ArrayList<>();
 
         prepareData(zoneView);
-        fabAddZone = (FloatingActionButton) zoneView.findViewById(R.id.fab_addZone);
-
-        fabAddZone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-//                Intent intent = new Intent(getActivity(), ZoneActivity.class);
-//                startActivityForResult(intent,1);
-                // showNewZoneDialog(getActivity());
-
-            }
-        });
+//        fabAddZone = (FloatingActionButton) zoneView.findViewById(R.id.fab_addZone);
+//
+//        fabAddZone.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+////                Intent intent = new Intent(getActivity(), ZoneActivity.class);
+////                startActivityForResult(intent,1);
+//                // showNewZoneDialog(getActivity());
+//
+//            }
+//        });
 
 //        pullLayout = (PullRefreshLayout) zoneView.findViewById(R.id.pullLayout);
 //
@@ -210,12 +211,10 @@ public class ZoneListFragment extends Fragment {
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
 
-                    MainActivity.currentZone = zonesFromFirebase.get(position);
-//
-//                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
-//                    startActivityForResult(intent,1);
+                    zone = zonesFromFirebase.get(position);
 
                     Intent intent = new Intent(getActivity(), ZoneActivity.class);
+                    intent.putExtra("zone", zone);
                     startActivityForResult(intent, 1);
                 }
 

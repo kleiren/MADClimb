@@ -18,6 +18,7 @@ package es.kleiren.leviathan;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +32,39 @@ import com.google.android.gms.maps.MapFragment;
 import java.util.concurrent.ExecutionException;
 
 public class InfoFragment extends Fragment {
+    String location, name;
+
+    private static final String ARG_LOC = "location";
+    private static final String ARG_NAME = "name";
+
+
+    public static InfoFragment newInstance(String location, String name) {
+        InfoFragment fragment = new InfoFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_LOC, location);
+        args.putString(ARG_NAME, name);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            location =  getArguments().getString(ARG_LOC);
+            name =  getArguments().getString(ARG_NAME);
+
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
 
+
         getFragmentManager().beginTransaction()
-                .replace(R.id.map_container, new MapsFragment())
+                .replace(R.id.map_container, MapsFragment.newInstance(location, name))
                 .commit();
 
         final ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scroll);

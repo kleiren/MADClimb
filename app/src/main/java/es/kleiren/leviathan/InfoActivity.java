@@ -19,12 +19,14 @@ import com.google.firebase.storage.StorageReference;
 public class InfoActivity extends AppCompatActivity {
 
     String title;
+    String location;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-
+        location = getIntent().getStringExtra("location");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tlb_infoActivity);
         setSupportActionBar(toolbar);
@@ -38,9 +40,8 @@ public class InfoActivity extends AppCompatActivity {
             }
         });
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new InfoFragment())
+                .replace(R.id.container, InfoFragment.newInstance(location, title))
                 .commit();
-
 
     }
 
