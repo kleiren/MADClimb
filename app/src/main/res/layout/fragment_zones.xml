@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
-    tools:context="es.kleiren.leviathan.ZoneListFragment">
+    tools:context="es.kleiren.leviathan.main.ZoneListFragment">
 
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab_addZone"-->

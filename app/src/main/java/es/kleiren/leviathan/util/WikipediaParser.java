@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.util;
 
 
 import android.os.AsyncTask;

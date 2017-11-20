@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.sector_activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +18,12 @@ import android.widget.Button;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
+
+import es.kleiren.leviathan.extra_activities.InfoActivity;
+import es.kleiren.leviathan.R;
+import es.kleiren.leviathan.data_classes.Sector;
+import es.kleiren.leviathan.util.SlidingTabLayout;
+import es.kleiren.leviathan.data_classes.Zone;
 
 public class SectorActivity extends AppCompatActivity {
 

@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
             app:popupTheme="@style/Theme.AppCompat.Light" />
-        <es.kleiren.leviathan.SlidingTabLayout
+        <es.kleiren.leviathan.util.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height"

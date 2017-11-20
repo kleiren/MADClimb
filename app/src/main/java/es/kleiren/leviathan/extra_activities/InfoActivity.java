@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.extra_activities;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -8,12 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.AutoTransition;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import es.kleiren.leviathan.R;
 
 
 public class InfoActivity extends AppCompatActivity {

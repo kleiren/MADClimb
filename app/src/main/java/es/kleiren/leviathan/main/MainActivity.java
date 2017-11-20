@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.main;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,15 +15,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
+
+import es.kleiren.leviathan.R;
 
 
 // https://www.learn2crack.com/2017/03/searchview-with-recyclerview.html

@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.main;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -36,6 +35,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+
+import es.kleiren.leviathan.R;
+import es.kleiren.leviathan.data_classes.Zone;
+import es.kleiren.leviathan.zone_activity.ZoneActivity;
+import es.kleiren.leviathan.util.UploadHelper;
 
 
 public class ZoneListFragment extends Fragment {

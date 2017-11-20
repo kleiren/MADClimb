@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.zone_activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -40,7 +40,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -51,6 +50,14 @@ import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameL
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
+
+import es.kleiren.leviathan.extra_activities.ImageViewerActivity;
+import es.kleiren.leviathan.extra_activities.InfoFragment;
+import es.kleiren.leviathan.R;
+import es.kleiren.leviathan.data_classes.Sector;
+import es.kleiren.leviathan.root.GlideApp;
+import es.kleiren.leviathan.util.SlidingTabLayout;
+import es.kleiren.leviathan.data_classes.Zone;
 
 
 public class ZoneActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
