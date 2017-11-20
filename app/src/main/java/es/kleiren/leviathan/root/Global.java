@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.root;
 
 /**
  * Created by carlos on 31/10/17.

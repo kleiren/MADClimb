@@ -1,33 +1,30 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.sector_activity;
 
 /**
  * Created by Carlos on 11/05/2017.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.transition.TransitionManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import lecho.lib.hellocharts.model.Axis;
+import es.kleiren.leviathan.extra_activities.InfoActivity;
+import es.kleiren.leviathan.R;
+import es.kleiren.leviathan.data_classes.Route;
+import es.kleiren.leviathan.data_classes.Sector;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
@@ -38,6 +35,13 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private Context context;
     private int mExpandedPosition = -1;
     private ColumnChartData data;
+    private ArrayList<String> grades;
+
+    Map<String, Integer> map = new HashMap<String, Integer>() {{put("3", 1); put("3+", 1);put("IV", 1);put("IV+", 1);put("V", 1);put("V+", 1);put("6a", 2);put("6a+", 2);
+        put("6b", 2);put("6b+", 2);put("6c", 2);put("6c+", 2);put("7a", 3);put("7a+", 3);put("7b", 3);put("7b+", 2);put("7c", 3);put("7c+", 3);}};
+    private Integer[] gradesFiltered = new Integer[]{0,0,0,0};
+    private Integer[] colors;
+    private String[] labels;
 
     public RouteDataAdapter(ArrayList<Route> routes, Context context, Sector sector) {
         this.context = context;
@@ -73,7 +77,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                     context.startActivity(intent);
                 }
             });
-        } else {
+        }else {
 
             viewHolder.txtName.setText(routes.get(i).getName());
             viewHolder.txtGrade.setText(routes.get(i).getGrade());
@@ -93,25 +97,45 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 }
             });
         }
+
     }
 
 
     private void generateData() {
-        int numSubcolumns = 1;
-        int numColumns = 8;
+        grades = new ArrayList<>();
+        gradesFiltered = new Integer[]{0,0,0,0};
+
+        colors = new Integer[]{ChartUtils.COLOR_GREEN,ChartUtils.COLOR_BLUE,ChartUtils.COLOR_VIOLET,ChartUtils.COLOR_RED};
+        labels = new String []{"3 - V+","6a - 6c+", "7a - 7c+", "8+ - 9c" };
+        gradesFiltered = new Integer[]{0,0,0,0};
+
+        for (Route route : routes){
+            grades.add(route.getGrade());
+            if (map.get(route.getGrade()) == 1) gradesFiltered[0]++;
+            if (map.get(route.getGrade()) == 2) gradesFiltered[1]++;
+            if (map.get(route.getGrade()) == 3) gradesFiltered[2]++;
+            if (map.get(route.getGrade()) == 4) gradesFiltered[3]++;
+
+        }
+
+        int numSubColumns = 1;
+        int numColumns = 4;
         // Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
         for (int i = 0; i < numColumns; ++i) {
 
             values = new ArrayList<SubcolumnValue>();
-            for (int j = 0; j < numSubcolumns; ++j) {
-                values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
+            for (int j = 0; j < numSubColumns; ++j) {
+                SubcolumnValue temp = new SubcolumnValue(gradesFiltered[i], colors[i]);
+                temp.setLabel(labels[i]);
+                values.add(temp);
             }
 
             Column column = new Column(values);
-            column.setHasLabels(true);
-            //column.setHasLabelsOnlyForSelected(hasLabelForSelected);
+
+            //column.setHasLabels(true);
+            column.setHasLabelsOnlyForSelected(true);
             columns.add(column);
         }
 

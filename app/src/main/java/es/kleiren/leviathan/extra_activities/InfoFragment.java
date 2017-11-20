@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.extra_activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,13 +23,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.google.android.gms.maps.MapFragment;
 
-import java.util.concurrent.ExecutionException;
+import es.kleiren.leviathan.R;
 
 public class InfoFragment extends Fragment {
     String location, name;

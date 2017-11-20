@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.util;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -10,7 +10,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
+import es.kleiren.leviathan.data_classes.Route;
+import es.kleiren.leviathan.data_classes.Sector;
+import es.kleiren.leviathan.data_classes.Zone;
 
 /**
  * Created by carlos on 10/08/17.

@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.extra_activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -26,6 +26,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import es.kleiren.leviathan.R;
+import es.kleiren.leviathan.root.GlideApp;
 
 
 public class ImageViewerActivity extends AppCompatActivity {

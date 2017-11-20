@@ -1,4 +1,4 @@
-package es.kleiren.leviathan;
+package es.kleiren.leviathan.data_classes;
 
 import java.io.Serializable;
 
