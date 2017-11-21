@@ -123,7 +123,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         mFlexibleSpaceHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mTabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
         findViewById(R.id.pager_wrapper).setPadding(0, mFlexibleSpaceHeight, 0, 0);
-        mTitleView = (TextView) findViewById(R.id.title);
+        mTitleView = findViewById(R.id.title);
         mTitleView.setText(zone.getName());
         setTitle(null);
 
@@ -143,11 +143,6 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         ScrollUtils.addOnGlobalLayoutListener(mInterceptionLayout, new Runnable() {
             @Override
             public void run() {
-                // Extra space is required to move mInterceptionLayout when it's scrolled.
-                // It's better to adjust its height when it's laid out
-                // than to adjust the height when scroll events (onMoveMotionEvent) occur
-                // because it causes lagging.
-                // See #87: https://github.com/ksoichiro/Android-ObservableScrollView/issues/87
                 FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mInterceptionLayout.getLayoutParams();
                 lp.height = getScreenHeight() + mFlexibleSpaceHeight;
                 mInterceptionLayout.requestLayout();
