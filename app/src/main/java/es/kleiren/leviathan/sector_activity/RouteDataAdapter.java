@@ -6,6 +6,7 @@ package es.kleiren.leviathan.sector_activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,13 +53,12 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     @Override
     public RouteDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view;
-        if (i == 1) {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_row, viewGroup, false);
-            return new ViewHolder(view, 0);
-        } else {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.route_row, viewGroup, false);
+        view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.route_row, viewGroup, false);
+        if (i == 1)
+        return new ViewHolder(view, 0);
+        else
             return new ViewHolder(view, 1);
-        }
+
     }
 
     @Override
@@ -77,7 +77,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                     context.startActivity(intent);
                 }
             });
-        }else {
+        }
 
             viewHolder.txtName.setText(routes.get(i).getName());
             viewHolder.txtGrade.setText(routes.get(i).getGrade());
@@ -96,7 +96,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                     notifyDataSetChanged();
                 }
             });
-        }
+
 
     }
 
@@ -149,7 +149,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     @Override
     public int getItemViewType(int position) {
         if (position == 0) return 1;
-        else return 2;
+        else return 0;
     }
 
     @Override
@@ -163,6 +163,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         ViewGroup recyclerView;
         ColumnChartView chart;
         ImageButton btnInfo;
+        ConstraintLayout infoLayout;
 
 
         ViewHolder(View view, int type) {
@@ -174,7 +175,11 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 chart.setZoomEnabled(false);
                 btnInfo = (ImageButton) view.findViewById(R.id.btnInfo);
 
-            } else {
+            }else{
+                infoLayout = (ConstraintLayout) view.findViewById(R.id.infoLayout);
+                infoLayout.setVisibility(View.GONE);
+            }
+
                 recyclerView = (ViewGroup) view.findViewById(R.id.card);
                 details = (View) view.findViewById(R.id.details);
 
@@ -183,7 +188,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 details.setVisibility(View.GONE);
                 txtName = (TextView) view.findViewById(R.id.textRouteName);
                 txtGrade = (TextView) view.findViewById(R.id.textRouteGrade);
-            }
+
         }
     }
 }

@@ -18,6 +18,7 @@
     style="@style/ThemeOverlay.AppCompat.Light"
     android:layout_width="wrap_content"
     android:layout_height="48dp"
+    android:singleLine="true"
     android:gravity="center"
     android:paddingLeft="16dp"
     android:textColor="@color/tab_text_color"
