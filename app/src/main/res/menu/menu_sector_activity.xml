@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="es.kleiren.madclimb.sector_activity.SectorActivity">
+
+
+    <item
+        android:id="@+id/info"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="info"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/error"
+        android:icon="@android:drawable/stat_notify_error"
+        android:title="info"
+        app:showAsAction="always" />
+
+</menu>
