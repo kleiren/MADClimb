@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package es.kleiren.leviathan.extra_activities;
+package es.kleiren.madclimb.extra_activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,7 +37,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import es.kleiren.leviathan.R;
+import es.kleiren.madclimb.R;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 

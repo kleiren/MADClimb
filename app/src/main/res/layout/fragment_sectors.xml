@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
-    tools:context="es.kleiren.leviathan.main.ZoneListFragment"
+    tools:context="es.kleiren.madclimb.main.ZoneListFragment"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
 

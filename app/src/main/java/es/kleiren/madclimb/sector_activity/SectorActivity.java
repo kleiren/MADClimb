@@ -1,6 +1,7 @@
-package es.kleiren.leviathan.sector_activity;
+package es.kleiren.madclimb.sector_activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -19,11 +20,11 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
-import es.kleiren.leviathan.extra_activities.InfoActivity;
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Sector;
-import es.kleiren.leviathan.util.SlidingTabLayout;
-import es.kleiren.leviathan.data_classes.Zone;
+import es.kleiren.madclimb.extra_activities.InfoActivity;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Sector;
+import es.kleiren.madclimb.util.SlidingTabLayout;
+import es.kleiren.madclimb.data_classes.Zone;
 
 public class SectorActivity extends AppCompatActivity {
 
@@ -101,6 +102,15 @@ public class SectorActivity extends AppCompatActivity {
             intent.putExtra("datum", zone);
             startActivity(intent);
             return true;
+        }
+
+        if (id == R.id.error){
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","madclimb@gmail.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);

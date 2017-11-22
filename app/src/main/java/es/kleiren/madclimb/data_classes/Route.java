@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.data_classes;
+package es.kleiren.madclimb.data_classes;
 
 import java.io.Serializable;
 

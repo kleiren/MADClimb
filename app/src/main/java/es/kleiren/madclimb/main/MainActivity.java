@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.main;
+package es.kleiren.madclimb.main;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.kleiren.leviathan.R;
+import es.kleiren.madclimb.R;
 
 
 // https://www.learn2crack.com/2017/03/searchview-with-recyclerview.html
@@ -61,11 +61,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.navigation_home:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, ZoneListFragment.newInstance())
-                        .commit();
-                return true;
 
             case R.id.nav_share:
                     Intent i = new Intent(Intent.ACTION_SEND);

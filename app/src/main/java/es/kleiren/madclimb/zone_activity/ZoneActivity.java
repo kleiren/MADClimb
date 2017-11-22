@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package es.kleiren.leviathan.zone_activity;
+package es.kleiren.madclimb.zone_activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -51,13 +51,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
 
-import es.kleiren.leviathan.extra_activities.ImageViewerActivity;
-import es.kleiren.leviathan.extra_activities.InfoFragment;
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Sector;
-import es.kleiren.leviathan.root.GlideApp;
-import es.kleiren.leviathan.util.SlidingTabLayout;
-import es.kleiren.leviathan.data_classes.Zone;
+import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
+import es.kleiren.madclimb.extra_activities.InfoFragment;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Sector;
+import es.kleiren.madclimb.root.GlideApp;
+import es.kleiren.madclimb.util.SlidingTabLayout;
+import es.kleiren.madclimb.data_classes.Zone;
 
 
 public class ZoneActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {

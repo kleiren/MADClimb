@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.zone_activity;
+package es.kleiren.madclimb.zone_activity;
 
 /**
  * Created by Carlos on 11/05/2017.
@@ -24,9 +24,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Sector;
-import es.kleiren.leviathan.root.GlideApp;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Sector;
+import es.kleiren.madclimb.root.GlideApp;
 
 public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Sector> sectors;

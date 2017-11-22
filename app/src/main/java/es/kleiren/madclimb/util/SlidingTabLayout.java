@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package es.kleiren.leviathan.util;
+package es.kleiren.madclimb.util;
 
 import android.content.Context;
 import android.graphics.Typeface;

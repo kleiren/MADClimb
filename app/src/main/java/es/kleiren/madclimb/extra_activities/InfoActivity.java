@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.extra_activities;
+package es.kleiren.madclimb.extra_activities;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -9,8 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.transition.AutoTransition;
 import android.view.View;
 
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Datum;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Datum;
 
 
 public class InfoActivity extends AppCompatActivity {

@@ -1,11 +1,6 @@
 <resources>
-    <string name="app_name">Leviathan</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">MADClimb</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_zone_activity">Zone</string>
     <string name="title_activity_sector_activity">Sector</string>
     <string name="action_settings">Settings</string>

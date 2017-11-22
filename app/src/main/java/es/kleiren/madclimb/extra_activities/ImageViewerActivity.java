@@ -1,33 +1,21 @@
-package es.kleiren.leviathan.extra_activities;
+package es.kleiren.madclimb.extra_activities;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.transition.Fade;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.transition.AutoTransition;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.root.GlideApp;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.root.GlideApp;
 
 
 public class ImageViewerActivity extends AppCompatActivity {

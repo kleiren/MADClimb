@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.util;
+package es.kleiren.madclimb.util;
 
 
 import android.os.AsyncTask;
