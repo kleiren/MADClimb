@@ -36,6 +36,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
 import es.kleiren.leviathan.R;
 import es.kleiren.leviathan.data_classes.Zone;
 import es.kleiren.leviathan.zone_activity.ZoneActivity;
@@ -49,7 +50,6 @@ public class ZoneListFragment extends Fragment {
     private SearchView searchView;
     private RecyclerView recyclerView;
     private StorageReference mStorageRef;
-    //private FloatingActionButton fabAddZone;
     private DatabaseReference mDatabase;
     private AlertDialog dialog;
     private ArrayList<Zone> zonesFromFirebase;
@@ -89,55 +89,8 @@ public class ZoneListFragment extends Fragment {
         zonesFromFirebase = new ArrayList<>();
 
         prepareData(zoneView);
-//        fabAddZone = (FloatingActionButton) zoneView.findViewById(R.id.fab_addZone);
-//
-//        fabAddZone.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-////                Intent intent = new Intent(getActivity(), ZoneActivity.class);
-////                startActivityForResult(intent,1);
-//                // showNewZoneDialog(getActivity());
-//
-//            }
-//        });
-
-//        pullLayout = (PullRefreshLayout) zoneView.findViewById(R.id.pullLayout);
-//
-//// listen refresh event
-//        pullLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                pullLayout.setRefreshing(false);
-//
-//                searchView.setFocusableInTouchMode(true);
-//                searchView.setVisibility(View.VISIBLE);
-//                searchView.requestFocus();
-//                searchView.onActionViewExpanded();
-//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
-//                // start refresh
-//
-//            }
-//        });
-
-// refresh complete
-
-//        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
-//        search(searchView);
-//
-//        searchView.setVisibility(View.GONE);
         return zoneView;
     }
-
-    private final String zone_names[] = {
-
-    };
-
-    private final int zone_image_resource[] = {
-
-    };
-
 
     private void prepareData(final View zoneView) {
 
@@ -191,7 +144,8 @@ public class ZoneListFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler_view_zones);
+
+        recyclerView =  view.findViewById(R.id.card_recycler_view_zones);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -257,9 +211,7 @@ public class ZoneListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

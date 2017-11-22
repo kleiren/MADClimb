@@ -361,7 +361,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                     f = SectorListFragment.newInstance(zone);
                     break;
                 case 1:
-                    f = InfoFragment.newInstance(zone.getLoc(),zone.getName());
+                    f = InfoFragment.newInstance("zone",zone);
                     break;
             }
             return f;

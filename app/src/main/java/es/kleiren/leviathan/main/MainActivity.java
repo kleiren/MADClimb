@@ -22,6 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.leviathan.R;
 
 
@@ -29,9 +31,8 @@ import es.kleiren.leviathan.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    //public static Zone currentZone = new Zone("sainz");
-    //public static Sector currentSector = new Sector("cabeza", "toledo", 0);
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    @BindView(R.id.drawer_layout) DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .replace(R.id.container, ZoneListFragment.newInstance())
                 .commit();
 
-//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-//        navigation.setOnNavigationItemSelectedListener(this);
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -63,20 +60,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case R.id.navigation_home:
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, ZoneListFragment.newInstance())
                         .commit();
                 return true;
-//            case R.id.navigation_dashboard:
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.container, InfoFragment.newInstance(currentZone.getName()))
-//                        .commit();
-//                return true;
+
+            case R.id.nav_share:
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "MADClimb");
+                    String sAux = "\nTe recomiendo esta app\n\n";
+                    sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+                    i.putExtra(Intent.EXTRA_TEXT, sAux);
+                    startActivity(Intent.createChooser(i, "choose one"));
+                return true;
+
+            case R.id.nav_send:
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","madclimb@gmail.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                return true;
+
+            case R.id.nav_twitter:
+
+                Intent intent;
+                try {
+                    getApplicationContext().getPackageManager().getPackageInfo("com.twitter.android", 0);
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=<carlossanred>"));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                } catch (Exception e) {
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/<carlossanred>"));
+                }
+                startActivity(intent);
+                return true;
 
             case R.id.nav_github:
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/kleiren/Leviathan"));
@@ -85,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ButterKnife.bind(this);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -101,11 +120,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
 
         return super.onOptionsItemSelected(item);
     }

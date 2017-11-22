@@ -41,7 +41,6 @@ public class RouteListFragment extends Fragment {
     private ObservableRecyclerView recyclerView;
     private StorageReference mStorageRef;
 
-    private FloatingActionButton btnAddRoute;
     private DatabaseReference mDatabase;
     private ArrayList<Route> routesFromFirebase;
     private RouteDataAdapter adapter;
@@ -116,9 +115,8 @@ public class RouteListFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
-
         // Attach a listener to read the data at our posts reference
-        mDatabase.child("zones/"+ sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("FIREBASE", dataSnapshot.getValue().toString());
@@ -165,16 +163,6 @@ public class RouteListFragment extends Fragment {
 
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-
-//                View child = rv.findChildViewUnder(e.getX(), e.getY());
-//                if (child != null && gestureDetector.onTouchEvent(e)) {
-//                    int position = rv.getChildAdapterPosition(child);
-//
-//                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
-//                    startActivity(intent);
-//                    //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
-//                }
-
                 return false;
             }
 
@@ -205,25 +193,10 @@ public class RouteListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
-
-
-
 
 
 }

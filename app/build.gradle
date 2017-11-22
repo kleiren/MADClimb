@@ -41,8 +41,8 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'org.jsoup:jsoup:1.10.3'
     testCompile 'junit:junit:4.12'
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
+    compile 'com.squareup.okhttp:okhttp:2.7.1'
+    // Glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
     compile 'com.github.bumptech.glide:glide:4.2.0'
     compile 'com.firebaseui:firebase-ui-storage:3.1.0'
@@ -51,5 +51,8 @@ dependencies {
     // FirebaseUI for Firebase Auth
     compile 'com.firebaseui:firebase-ui-auth:3.1.0'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
+    // Butter
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 apply plugin: 'com.google.gms.google-services'

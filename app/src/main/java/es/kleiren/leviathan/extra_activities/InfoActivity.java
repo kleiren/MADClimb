@@ -10,25 +10,25 @@ import android.transition.AutoTransition;
 import android.view.View;
 
 import es.kleiren.leviathan.R;
+import es.kleiren.leviathan.data_classes.Datum;
 
 
 public class InfoActivity extends AppCompatActivity {
 
-    String title;
-    String location;
+    String type;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-        location = getIntent().getStringExtra("location");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tlb_infoActivity);
+        Toolbar toolbar = findViewById(R.id.tlb_infoActivity);
         setSupportActionBar(toolbar);
 
-        title = this.getIntent().getStringExtra("title");
-        setTitle(title);
+        type = getIntent().getStringExtra("type");
+        Datum datum = (Datum) this.getIntent().getSerializableExtra("datum");
+        setTitle(datum.getName());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,7 +36,7 @@ public class InfoActivity extends AppCompatActivity {
             }
         });
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, InfoFragment.newInstance(location, title))
+                .replace(R.id.container, InfoFragment.newInstance(type, datum))
                 .commit();
 
     }
