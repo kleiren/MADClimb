@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_send:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","madclimb@gmail.com", null));
+                        "mailto","madclimbapp@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 return true;
