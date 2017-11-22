@@ -97,8 +97,8 @@ public class SectorActivity extends AppCompatActivity {
         if (id == R.id.info) {
 
             Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra("title", zone.getName());
-            intent.putExtra("location", zone.getLoc());
+            intent.putExtra("type", "zone");
+            intent.putExtra("datum", zone);
             startActivity(intent);
             return true;
         }

@@ -1,62 +1,19 @@
 package es.kleiren.leviathan.data_classes;
 
+import java.io.Serializable;
+
 /**
  * Created by carlos on 5/17/17.
  */
 
-public class Route {
+public class Route implements Serializable{
 
-
-    public Route(String zoneName,String sectorName,String name, int resource, String grade) {
-        this.name = name;
-        this.resource = resource;
-        this.grade = grade;
-        this.zoneName = zoneName;
-        this.sectorName = sectorName;
-
-    }
-
-    public  Route(){}
-    private String name;
     private String zoneName;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    private String description;
-
-    public String getZoneName() {
-        return zoneName;
-    }
-
-    public void setZoneName(String zoneName) {
-        this.zoneName = zoneName;
-    }
-
-    public String getSectorName() {
-        return sectorName;
-    }
-
-    public void setSectorName(String sectorName) {
-        this.sectorName = sectorName;
-    }
-
     private String sectorName;
     private int resource;
     private String grade;
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
+    String name;
+    String description;
 
     public String getName() {
         return name;
@@ -66,11 +23,36 @@ public class Route {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public String getZoneName() {
+        return zoneName;
+    }
+    public void setZoneName(String zoneName) {
+        this.zoneName = zoneName;
+    }
+    public String getSectorName() {
+        return sectorName;
+    }
+    public void setSectorName(String sectorName) {
+        this.sectorName = sectorName;
+    }
+    public String getGrade() {
+        return grade;
+    }
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
     public int getResource() {
         return resource;
     }
-
     public void setResource(int resource) {
         this.resource = resource;
     }
+
 }

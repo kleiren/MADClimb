@@ -35,8 +35,6 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     private Context context;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-// ...
-
 
     public ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
         this.context = context;
