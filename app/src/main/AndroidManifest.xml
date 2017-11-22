@@ -1,27 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="es.kleiren.leviathan">
+    package="es.kleiren.madclimb">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:name="es.kleiren.madclimb.main.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".ZoneActivity"
-            android:label="@string/title_activity_zone_acticity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name="es.kleiren.madclimb.zone_activity.ZoneActivity"
+            android:label="@string/title_activity_sector_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name="es.kleiren.madclimb.extra_activities.ImageViewerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_image_viewer"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="es.kleiren.madclimb.extra_activities.InfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_info_viewer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="es.kleiren.madclimb.sector_activity.SectorActivity"
+            android:label="@string/title_activity_sector_simple_tab"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

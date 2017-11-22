@@ -1,0 +1,19 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_activated="true">
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:propertyName="translationZ"
+            android:interpolator="@android:interpolator/accelerate_decelerate"
+            android:valueTo="@dimen/activity_horizontal_margin" />
+    </item>
+
+    <item>
+        <objectAnimator
+            android:duration="@android:integer/config_shortAnimTime"
+            android:interpolator="@android:interpolator/accelerate_decelerate"
+
+            android:propertyName="translationZ"
+            android:valueTo="0dp" />
+    </item>
+</selector>
