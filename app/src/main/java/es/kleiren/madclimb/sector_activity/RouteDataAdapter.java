@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.sector_activity;
+package es.kleiren.madclimb.sector_activity;
 
 /**
  * Created by Carlos on 11/05/2017.
@@ -22,10 +22,10 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.kleiren.leviathan.extra_activities.InfoActivity;
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Route;
-import es.kleiren.leviathan.data_classes.Sector;
+import es.kleiren.madclimb.extra_activities.InfoActivity;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Route;
+import es.kleiren.madclimb.data_classes.Sector;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;

@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.main;
+package es.kleiren.madclimb.main;
 
 /**
  * Created by Carlos on 11/05/2017.
@@ -25,9 +25,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Zone;
-import es.kleiren.leviathan.root.GlideApp;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.root.GlideApp;
 
 public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Zone> zones;

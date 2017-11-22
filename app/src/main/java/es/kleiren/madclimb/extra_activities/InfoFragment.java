@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package es.kleiren.leviathan.extra_activities;
+package es.kleiren.madclimb.extra_activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,7 +24,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -43,18 +41,16 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Datum;
-import es.kleiren.leviathan.data_classes.Route;
-import es.kleiren.leviathan.data_classes.Sector;
-import es.kleiren.leviathan.sector_activity.RouteDataAdapter;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Datum;
+import es.kleiren.madclimb.data_classes.Route;
+import es.kleiren.madclimb.data_classes.Sector;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
-import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class InfoFragment extends Fragment {

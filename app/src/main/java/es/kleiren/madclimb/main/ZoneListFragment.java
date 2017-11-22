@@ -1,4 +1,4 @@
-package es.kleiren.leviathan.main;
+package es.kleiren.madclimb.main;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,11 +36,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
-import es.kleiren.leviathan.R;
-import es.kleiren.leviathan.data_classes.Zone;
-import es.kleiren.leviathan.zone_activity.ZoneActivity;
-import es.kleiren.leviathan.util.UploadHelper;
+import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.zone_activity.ZoneActivity;
+import es.kleiren.madclimb.util.UploadHelper;
 
 
 public class ZoneListFragment extends Fragment {
