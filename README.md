@@ -1,8 +1,5 @@
 # MADClimb
-![](screenshots/cap1.jpg?raw=true "")
-![](screenshots/cap2.jpg?raw=true "")
-![](screenshots/cap3.jpg?raw=true "")
-![](screenshots/cap4.jpg?raw=true "")
+<img src="screenshots/cap1.png" width="200">  <img src="screenshots/cap2.png" width="200">  <img src="screenshots/cap3.png" width="200">  <img src="screenshots/cap4.png" width="200">
 
 MADClimb es una app de croquis para escalada en los alrededores de Madrid. Perfecta para encontrar nuevas vías y para redescubrir los sectores de siempre.
 La aplicación muestra los sectores y las vías de múltiples zonas de escalada, con croquis actualizados y un sencillo buscador.
@@ -16,11 +13,11 @@ MADClimb es completamente gratuita, sin anuncios, y es software libre.<br />
 Esto es un proyecto de una sóla persona. Lo realizo en mi tiempo libre y no puedo dedicarle todo el tiempo que querría. No seas impaciente si la aplicación da problemas o no tiene suficiente contenido.
 
 
-TODO<br />
--Añadir comentarios en sectores<br />
--Añadir apartados de zonas y sectores favoritos<br />
--Permitir búsqueda de sectores y vías además de zonas<br />
--Mostrar todos los sectores en el mapa de la zona<br />
--Añadir información de horas de sol<br />
--Añadir usuarios y puntuaciones a las vías<br />
--Refactorizar a MVP para facilitar tests y la adición de funcionalidades<br />
+# TODO
+- Añadir comentarios en sectores<br />
+- Añadir apartados de zonas y sectores favoritos<br />
+- Permitir búsqueda de sectores y vías además de zonas<br />
+- Mostrar todos los sectores en el mapa de la zona<br />
+- Añadir información de horas de sol<br />
+- Añadir usuarios y puntuaciones a las vías<br />
+- Refactorizar a MVP para facilitar tests y la adición de funcionalidades<br />
