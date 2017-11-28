@@ -75,31 +75,9 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
 
         GlideApp.with(context)
                 .load(load)
+                .placeholder(R.drawable.mountain_placeholder)
                 .centerCrop()
                 .into(viewHolder.img);
-//
-//            load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//
-//
-//
-//                    PicassoHelper.showImageCropped(context, uri.toString(), viewHolder.img);
-//
-////                    Picasso.with(context)
-////                            .load(uri.toString())
-////                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
-////                            .centerCrop()
-////                            .into(viewHolder.img);
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception exception) {
-//                    // Handle any errors
-//                }
-//            });
-//
-
 
     }
 
@@ -155,7 +133,7 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
             super(view);
 
             txt_name = (TextView) view.findViewById(R.id.textRouteName);
-            img = (ImageView) view.findViewById(R.id.img_android);
+            img = (ImageView) view.findViewById(R.id.img_zone);
         }
     }
 
