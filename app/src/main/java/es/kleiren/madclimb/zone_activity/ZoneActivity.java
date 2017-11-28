@@ -26,6 +26,7 @@ import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.media.RatingCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -83,6 +84,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private StorageReference mStorageRef;
     private Zone zone;
     private Sector sector;
+    private Toolbar toolbar;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -94,13 +96,13 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         mImageView = findViewById(R.id.imageZone);
         zone = (Zone) getIntent().getSerializableExtra("zone");
 
-        ((Toolbar) (findViewById(R.id.toolbar))).setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar = (Toolbar) (findViewById(R.id.toolbar));
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ZoneActivity.super.onBackPressed();
             }
         });
-
         setupWindowAnimations();
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -152,6 +154,9 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         });
 
 
+        toolbar.setPopupTheme(R.style.ToolbarThemeWhite
+
+        );
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

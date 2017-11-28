@@ -59,55 +59,25 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
 
         viewHolder.txt_name.setText(filteredZones.get(i).getName());
 
-        mDatabase.child("zones").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("zones/" + filteredZones.get(i).getId() + "/sectors").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Toast.makeText(context, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+
+                if (dataSnapshot.exists()) viewHolder.imgNoSectors.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Toast.makeText(context, databaseError.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });
-
 
         StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
 
         GlideApp.with(context)
                 .load(load).centerCrop()
+                .placeholder(R.drawable.mountain_placeholder)
                 .into(viewHolder.img);
-
-//        load.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//
-//                    GlideApp.with(context)
-//                            .load("https://firebasestorage.googleapis.com/v0/b/leviathan-d57d8.appspot.com/o/images%2Fimg_sanmartin.jpg?alt=media&token=cc8f26b5-9315-4ebd-be0d-d3ef606eca55")
-//                            .centerCrop()
-//                            .placeholder(R.drawable.mountain_placeholder)
-//                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-//
-//                            .into(viewHolder.img);
-//                PicassoHelper.showImageCropped(context, "https://firebasestorage.googleapis.com/v0/b/leviathan-d57d8.appspot.com/o/images%2Fcroq_cabeza.jpg?alt=media&token=ba1232bb-d657-43fc-9674-566749275b68", viewHolder.img);
-//
-//                //  PicassoHelper.showImageCropped(context, uri.toString(), viewHolder.img);
-////                    Picasso.with(context)
-////                            .load(uri.toString())
-////                            .resize(viewHolder.img.getWidth(),viewHolder.img.getHeight())
-////
-////                            .centerCrop()
-////                            .into(viewHolder.img);
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
-
 
     }
 
@@ -158,12 +128,14 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView txt_name;
         private ImageView img;
+        private ImageView imgNoSectors;
 
         public ViewHolder(View view) {
             super(view);
 
-            txt_name = (TextView) view.findViewById(R.id.textRouteName);
-            img = (ImageView) view.findViewById(R.id.img_android);
+            txt_name = view.findViewById(R.id.textRouteName);
+            img = view.findViewById(R.id.img_zone);
+            imgNoSectors = view.findViewById(R.id.img_noSectors);
         }
     }
 

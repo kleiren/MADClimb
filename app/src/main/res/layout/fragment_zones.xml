@@ -7,20 +7,6 @@
     android:layout_marginRight="0dp"
     tools:context="es.kleiren.madclimb.main.ZoneListFragment">
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab_addZone"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="end|bottom"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:srcCompat="@drawable/ic_add"-->
-        <!--app:layout_constraintRight_toRightOf="parent" />-->
-
-
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -76,32 +76,11 @@ public class SectorListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View zoneView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-
-
-    //    btnAddSector = (FloatingActionButton) zoneView.findViewById(R.id.fab_addSector);
-
+        zoneView.findViewById(R.id.noSectorsImage).setVisibility(View.GONE);
         prepareData(zoneView);
 
         sectorsFromFirebase = new ArrayList<>();
-
-//        btnAddSector.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Sector newSector = new Sector("Placas del Halcon", "Pedriza", 3, 3);
-//
-//                UploadHelper.uploadSector(newSector);
-//
-//            }
-//        });
-
-//
-//        searchView = (SearchView) zoneView.findViewById(R.id.searchView);
-//
-//        search(searchView);
-
 
         return zoneView;
     }
@@ -114,18 +93,24 @@ public class SectorListFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
+
         // Attach a listener to read the data at our posts reference
         mDatabase.child("zones/"+ zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+                if (dataSnapshot.exists()) {
 
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Sector sector = postSnapshot.getValue(Sector.class);
-                    sectorsFromFirebase.add(sector);
-                    adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
-                }
-                initViews(sectorView);
+                    Log.i("FIREBASE", dataSnapshot.getValue().toString());
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        Sector sector = postSnapshot.getValue(Sector.class);
+                        sectorsFromFirebase.add(sector);
+                        adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
+                    }
+                    initViews(sectorView);
+                } else sectorView.findViewById(R.id.noSectorsImage).setVisibility(View.VISIBLE);
+
+
 
             }
 
