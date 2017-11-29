@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
-            builder.setTitle("Bienvenido")
-                    .setMessage("Gracias por descargar MADClimb. Ten en cuenta que esta aplicación está en fase beta, por lo que muchas de las funionalidades planeadas no están implemantadas o no funionan correctamente. Además la aplicación no tiene casi contenido aún, aunque estamos añadiendo contenido rápidamente. Si buscas una app completa, te recomendamos que esperes. Si te gusta nuestra idea y quieres que podamos completarla lo antes posible, no dudes en escribirnos, ya sea ayudando con buenas fotos o con feedback. Gracias! :)")
+            builder.setTitle(R.string.welcome)
+                    .setMessage(R.string.welcome_message)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                         }
