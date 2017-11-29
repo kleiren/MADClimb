@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=carlossanred"));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 } catch (Exception e) {
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/carlossanred"));
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/carlosanred"));
                 }
                 startActivity(intent);
                 return true;
