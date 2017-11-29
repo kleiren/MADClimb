@@ -107,9 +107,6 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-
-        //Toast.makeText(this, zone.getImg(), Toast.LENGTH_SHORT).show();
-
         StorageReference load = mStorageRef.child(zone.getImg());
         GlideApp.with(getApplicationContext())
                 .load(load).into((ImageView) mImageView);
