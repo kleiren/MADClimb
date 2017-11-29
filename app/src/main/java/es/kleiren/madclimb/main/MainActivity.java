@@ -1,7 +1,11 @@
 package es.kleiren.madclimb.main;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -27,34 +31,33 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 
 
-// https://www.learn2crack.com/2017/03/searchview-with-recyclerview.html
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.nav_view) NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
-
-
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, ZoneListFragment.newInstance())
                 .commit();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        checkFirstRun();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     i.setType("text/plain");
                     i.putExtra(Intent.EXTRA_SUBJECT, "MADClimb");
                     String sAux = "\nTe recomiendo esta app\n\n";
-                    sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+                    sAux = sAux + "https://play.google.com/store/apps/details?id=es.kleiren.madclimb \n\n";
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "choose one"));
                 return true;
@@ -84,10 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent;
                 try {
                     getApplicationContext().getPackageManager().getPackageInfo("com.twitter.android", 0);
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=<carlossanred>"));
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=carlossanred"));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 } catch (Exception e) {
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/<carlossanred>"));
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/carlossanred"));
                 }
                 startActivity(intent);
                 return true;
@@ -99,13 +102,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        ButterKnife.bind(this);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
 
+    public void checkFirstRun() {
+        boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
+        if (isFirstRun){
+            // Place your dialog code here to display the dialog
 
+            AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+
+            builder.setTitle("Bienvenido")
+                    .setMessage("Gracias por descargar MADClimb. Ten en cuenta que esta aplicación está en fase beta, por lo que muchas de las funionalidades planeadas no están implemantadas o no funionan correctamente. Además la aplicación no tiene casi contenido aún, aunque estamos añadiendo contenido rápidamente. Si buscas una app completa, te recomendamos que esperes. Si te gusta nuestra idea y quieres que podamos completarla lo antes posible, no dudes en escribirnos, ya sea ayudando con buenas fotos o con feedback. Gracias! :)")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("isFirstRun", false)
+                    .apply();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

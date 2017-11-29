@@ -106,7 +106,7 @@ public class SectorActivity extends AppCompatActivity {
 
         if (id == R.id.error){
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","madclimb@gmail.com", null));
+                        "mailto","madclimbapp@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 return true;
