@@ -34,17 +34,14 @@
         <activity
             android:name="es.kleiren.madclimb.extra_activities.ImageViewerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_image_viewer"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="es.kleiren.madclimb.extra_activities.InfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_info_viewer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="es.kleiren.madclimb.sector_activity.SectorActivity"
-            android:label="@string/title_activity_sector_simple_tab"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
