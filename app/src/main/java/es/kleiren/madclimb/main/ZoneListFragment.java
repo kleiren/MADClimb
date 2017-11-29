@@ -73,9 +73,7 @@ public class ZoneListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
     }
 
     @Override
@@ -83,8 +81,6 @@ public class ZoneListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the pullLayout for this fragment
         View zoneView = inflater.inflate(R.layout.fragment_zones, container, false);
-
-
         zonesFromFirebase = new ArrayList<>();
 
         prepareData(zoneView);
@@ -95,23 +91,17 @@ public class ZoneListFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
         // Attach a listener to read the data at our posts reference
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("FIREBASE", dataSnapshot.getValue().toString());
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
-
                     zonesFromFirebase.add(zone);
-
                     adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
-
                 }
                 initViews(zoneView);
-
             }
 
             @Override
@@ -119,23 +109,17 @@ public class ZoneListFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
-
     }
 
-
     private void search(SearchView searchView) {
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 adapter.getFilter().filter(newText);
                 return true;
             }
@@ -237,16 +221,6 @@ public class ZoneListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -256,8 +230,6 @@ public class ZoneListFragment extends Fragment {
                                  Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-
-        // super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1001) {
             Uri currFileURI = data.getData();
@@ -304,16 +276,10 @@ public class ZoneListFragment extends Fragment {
                             public void onClick(View view) {
 
                                 Zone zone = new Zone();
-
                                 zone.setName(((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString());
-
                                 zone.setImg("images/" + zone.getName());
-
-
                                 UploadHelper.uploadZone(zone);
-
                                 UploadHelper.uploadFile(fileToUploadUri, ((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString(), uploadTask, mStorageRef);
-
                                 dialog.dismiss();
                             }
                         });

@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            // do your stuff
         } else {
             signInAnonymously();
         }
