@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @BindView(R.id.main_drawerLayout)
     DrawerLayout drawer;
-    @BindView(R.id.main_toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_about:
                 new LibsBuilder()
                         .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        .withFields(R.string.class.getFields())
                         .start(this);
                 return true;
 
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Place your dialog code here to display the dialog
 
             AlertDialog.Builder builder;
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder(this);
 
             builder.setTitle(R.string.welcome)
                     .setMessage(R.string.welcome_message)

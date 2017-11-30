@@ -56,7 +56,6 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.R;
-import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.util.SlidingTabLayout;
 import es.kleiren.madclimb.data_classes.Zone;
@@ -67,7 +66,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final int INVALID_POINTER = -1;
 
-    @BindView(R.id.main_toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.imageZone)
     View mImageView;
