@@ -81,14 +81,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         final LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
 
 
-        final ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scroll);
+        final ObservableScrollView scrollView = view.findViewById(R.id.mapFrag_scroll);
         Activity parentActivity = getActivity();
         scrollView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
             scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
-
-        mMapView = (MapView) view.findViewById(R.id.mapView);
+        mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
@@ -104,14 +103,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
 
-                // For showing a move to my location button
-                //mMap.setMyLocationEnabled(true);
-
-                // For dropping a marker at a point on the Map
-
                 mMap.addMarker(new MarkerOptions().position(loc));
 
-                // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
@@ -127,15 +120,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
         return view;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
         String [] latlon =location.split(",");
         LatLng loc = new LatLng(Long.parseLong(latlon[0]),Long.parseLong(latlon[1]));
         mMap.addMarker(new MarkerOptions().position(loc));

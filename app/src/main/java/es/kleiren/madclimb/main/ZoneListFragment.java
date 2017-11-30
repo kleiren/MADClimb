@@ -36,35 +36,33 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 import es.kleiren.madclimb.util.UploadHelper;
-
 
 public class ZoneListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private ZoneDataAdapter adapter;
     private SearchView searchView;
-    private RecyclerView recyclerView;
+    @BindView(R.id.card_recycler_view_zones) RecyclerView recyclerView;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
     private AlertDialog dialog;
     private ArrayList<Zone> zonesFromFirebase;
     private Uri fileToUploadUri;
-    private TextView txtFileToUpload;
+    TextView txtFileToUpload;
     private UploadTask uploadTask;
     private Zone zone;
-
 
     public ZoneListFragment() {
     }
 
-
     public static ZoneListFragment newInstance() {
         ZoneListFragment fragment = new ZoneListFragment();
-
         return fragment;
     }
 
@@ -72,26 +70,21 @@ public class ZoneListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
         mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the pullLayout for this fragment
-        View zoneView = inflater.inflate(R.layout.fragment_zones, container, false);
+        View zoneView = inflater.inflate(R.layout.fragment_zone_list, container, false);
+        ButterKnife.bind(this, zoneView);
         zonesFromFirebase = new ArrayList<>();
-
-        prepareData(zoneView);
+        prepareData();
         return zoneView;
     }
 
-    private void prepareData(final View zoneView) {
-
+    private void prepareData() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        // Attach a listener to read the data at our posts reference
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,9 +94,8 @@ public class ZoneListFragment extends Fragment {
                     zonesFromFirebase.add(zone);
                     adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
                 }
-                initViews(zoneView);
+                initViews();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
@@ -117,7 +109,6 @@ public class ZoneListFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
@@ -126,15 +117,11 @@ public class ZoneListFragment extends Fragment {
         });
     }
 
-    private void initViews(View view) {
-
-        recyclerView =  view.findViewById(R.id.card_recycler_view_zones);
+    private void initViews() {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-
         recyclerView.setAdapter(adapter);
-
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
 
@@ -151,9 +138,7 @@ public class ZoneListFragment extends Fragment {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-
                     zone = zonesFromFirebase.get(position);
-
                     Intent intent = new Intent(getActivity(), ZoneActivity.class);
                     intent.putExtra("zone", zone);
                     startActivityForResult(intent, 1);
@@ -164,7 +149,6 @@ public class ZoneListFragment extends Fragment {
 
             @Override
             public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
             }
 
             @Override
@@ -177,7 +161,6 @@ public class ZoneListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Do something that differs the Activity's menu here
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -186,9 +169,7 @@ public class ZoneListFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
         MenuItem searchViewMenuItem = menu.findItem(R.id.search);
         searchView = (SearchView) searchViewMenuItem.getActionView();
-
         search(searchView);
-
 
     }
 

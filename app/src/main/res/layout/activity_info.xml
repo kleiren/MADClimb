@@ -1,6 +1,5 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#8dffffff"
@@ -21,7 +20,7 @@
             android:layout_weight="1">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/tlb_infoActivity"
+                android:id="@+id/infoAct_toolbar"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="1"

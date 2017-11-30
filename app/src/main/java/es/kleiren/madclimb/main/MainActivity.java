@@ -1,11 +1,9 @@
 package es.kleiren.madclimb.main;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -25,6 +23,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +34,12 @@ import es.kleiren.madclimb.R;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    @BindView(R.id.drawer_layout) DrawerLayout drawer;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.main_drawerLayout)
+    DrawerLayout drawer;
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,18 +69,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
 
             case R.id.nav_share:
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("text/plain");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "MADClimb");
-                    String sAux = "\nTe recomiendo esta app\n\n";
-                    sAux = sAux + "https://play.google.com/store/apps/details?id=es.kleiren.madclimb \n\n";
-                    i.putExtra(Intent.EXTRA_TEXT, sAux);
-                    startActivity(Intent.createChooser(i, "choose one"));
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "MADClimb");
+                String sAux = "\nTe recomiendo esta app\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=es.kleiren.madclimb \n\n";
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "choose one"));
                 return true;
 
             case R.id.nav_send:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","madclimbapp@gmail.com", null));
+                        "mailto", "madclimbapp@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 return true;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent;
                 try {
                     getApplicationContext().getPackageManager().getPackageInfo("com.twitter.android", 0);
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=carlossanred"));
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=carlosanred"));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 } catch (Exception e) {
                     intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/carlosanred"));
@@ -100,6 +103,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(browserIntent);
                 return true;
 
+            case R.id.nav_about:
+                new LibsBuilder()
+                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        .start(this);
+                return true;
+
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -109,11 +118,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void checkFirstRun() {
         boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
-        if (isFirstRun){
+        if (isFirstRun) {
             // Place your dialog code here to display the dialog
 
             AlertDialog.Builder builder;
-                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
 
             builder.setTitle(R.string.welcome)
                     .setMessage(R.string.welcome_message)
@@ -129,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .apply();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -154,17 +164,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void signInAnonymously() {
-        mAuth.signInAnonymously().addOnSuccessListener(this, new  OnSuccessListener<AuthResult>() {
+        mAuth.signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                // do your stuff
             }
-        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e("LEVIATHAN", "signInAnonymously:FAILURE", exception);
-                    }
-                });
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.e("LEVIATHAN", "signInAnonymously:FAILURE", exception);
+            }
+        });
     }
 }

@@ -119,7 +119,6 @@ viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade())-1]);
             @Override
             public void onClick(View v) {
                 mExpandedPosition = isExpanded ? -1 : i;
-                // viewHolder.recyclerView.animate();
                 TransitionManager.beginDelayedTransition(viewHolder.recyclerView);
                 notifyDataSetChanged();
             }
@@ -186,21 +185,21 @@ viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade())-1]);
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.textRouteName)
+        @BindView(R.id.routeRow_txtRouteName)
         TextView txtName;
-        @BindView(R.id.textRouteGrade)
+        @BindView(R.id.routeRow_txtRouteGrade)
         TextView txtGrade;
-        @BindView(R.id.txtDetails)
+        @BindView(R.id.routeRow_txtDetails)
         TextView txtDetails;
-        @BindView(R.id.details)
+        @BindView(R.id.routeRow_viewDetails)
         View details;
-        @BindView(R.id.card)
+        @BindView(R.id.routeRow_cardView)
         ViewGroup recyclerView;
-        @BindView(R.id.gradeChart)
+        @BindView(R.id.routeRow_gradeChart)
         ColumnChartView chart;
-        @BindView(R.id.btnInfo)
+        @BindView(R.id.routeRow_btnInfo)
         ImageButton btnInfo;
-        @BindView(R.id.infoLayout)
+        @BindView(R.id.routeRow_infoLayout)
         ConstraintLayout infoLayout;
 
 

@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.transition.AutoTransition;
 import android.view.View;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Datum;
 
@@ -16,6 +18,8 @@ import es.kleiren.madclimb.data_classes.Datum;
 public class InfoActivity extends AppCompatActivity {
 
     String type;
+    @BindView(R.id.infoAct_toolbar)
+    Toolbar toolbar;
 
 
     @Override
@@ -23,7 +27,7 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        Toolbar toolbar = findViewById(R.id.tlb_infoActivity);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
         type = getIntent().getStringExtra("type");
@@ -39,13 +43,6 @@ public class InfoActivity extends AppCompatActivity {
                 .replace(R.id.container, InfoFragment.newInstance(type, datum))
                 .commit();
 
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void setupWindowAnimations() {
-        Fade fade = new Fade();
-        fade.setDuration(1000);
-        getWindow().setEnterTransition(new AutoTransition());
     }
 
 }

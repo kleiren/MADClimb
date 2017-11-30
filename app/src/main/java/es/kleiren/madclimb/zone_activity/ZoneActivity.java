@@ -26,7 +26,6 @@ import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.media.RatingCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +51,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.R;
@@ -66,11 +67,19 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final int INVALID_POINTER = -1;
 
-    private View mImageView;
-    private View mOverlayView;
-    private TextView mTitleView;
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.imageZone)
+    View mImageView;
+    @BindView(R.id.overlay)
+    View mOverlayView;
+    @BindView(R.id.title)
+    TextView mTitleView;
+    @BindView(R.id.pager)
+    ViewPager mPager;
+
+
     private TouchInterceptionFrameLayout mInterceptionLayout;
-    private ViewPager mPager;
     private NavigationAdapter mPagerAdapter;
     private VelocityTracker mVelocityTracker;
     private OverScroller mScroller;
@@ -81,10 +90,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private int mFlexibleSpaceHeight;
     private int mTabHeight;
     private boolean mScrolled;
-    private StorageReference mStorageRef;
     private Zone zone;
-    private Sector sector;
-    private Toolbar toolbar;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -92,12 +98,12 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zone);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        mImageView = findViewById(R.id.imageZone);
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
         zone = (Zone) getIntent().getSerializableExtra("zone");
 
-        toolbar = (Toolbar) (findViewById(R.id.toolbar));
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ZoneActivity.super.onBackPressed();
@@ -105,38 +111,28 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         });
         setupWindowAnimations();
 
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        StorageReference load = mStorageRef.child(zone.getImg());
-        GlideApp.with(getApplicationContext())
-                .load(load).into((ImageView) mImageView);
-
-
+       // Observable Scrollview stuff
         ViewCompat.setElevation(findViewById(R.id.header), getResources().getDimension(R.dimen.toolbar_elevation));
         mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
-        mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
-        mOverlayView = findViewById(R.id.overlay);
-        // Padding for ViewPager must be set outside the ViewPager itself
-        // because with padding, EdgeEffect of ViewPager become strange.
         mFlexibleSpaceHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mTabHeight = getResources().getDimensionPixelSize(R.dimen.tab_height);
         findViewById(R.id.pager_wrapper).setPadding(0, mFlexibleSpaceHeight, 0, 0);
-        mTitleView = findViewById(R.id.title);
         mTitleView.setText(zone.getName());
         setTitle(null);
 
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        SlidingTabLayout slidingTabLayout = findViewById(R.id.sliding_tabs);
         slidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
         slidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorAccent));
         slidingTabLayout.setDistributeEvenly(true);
         slidingTabLayout.setViewPager(mPager);
         ((FrameLayout.LayoutParams) slidingTabLayout.getLayoutParams()).topMargin = mFlexibleSpaceHeight - mTabHeight;
-
         ViewConfiguration vc = ViewConfiguration.get(this);
         mSlop = vc.getScaledTouchSlop();
         mMaximumVelocity = vc.getScaledMaximumFlingVelocity();
-        mInterceptionLayout = (TouchInterceptionFrameLayout) findViewById(R.id.container);
+        mInterceptionLayout = findViewById(R.id.container);
         mInterceptionLayout.setScrollInterceptionListener(mInterceptionListener);
         mScroller = new OverScroller(getApplicationContext());
         ScrollUtils.addOnGlobalLayoutListener(mInterceptionLayout, new Runnable() {
@@ -145,22 +141,22 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                 FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mInterceptionLayout.getLayoutParams();
                 lp.height = getScreenHeight() + mFlexibleSpaceHeight;
                 mInterceptionLayout.requestLayout();
-
                 updateFlexibleSpace();
             }
         });
 
-
         toolbar.setPopupTheme(R.style.ToolbarThemeWhite
-
         );
+
+        StorageReference load = mStorageRef.child(zone.getImg());
+        GlideApp.with(getApplicationContext())
+                .load(load).into((ImageView) mImageView);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getApplicationContext(), ImageViewerActivity.class);
                 intent.putExtra("image", zone.getImg());
-                intent.putExtra("title",  zone.getName());
+                intent.putExtra("title", zone.getName());
                 startActivityForResult(intent, 1);
             }
         });
@@ -199,8 +195,6 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                 return false;
             }
 
-            // If interceptionLayout can move, it should intercept.
-            // And once it begins to move, horizontal scroll shouldn't work any longer.
             int flexibleSpace = mFlexibleSpaceHeight - mTabHeight;
             int translationY = (int) ViewHelper.getTranslationY(mInterceptionLayout);
             boolean scrollingUp = 0 < diffY;
@@ -363,7 +357,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                     f = SectorListFragment.newInstance(zone);
                     break;
                 case 1:
-                    f = InfoFragment.newInstance("zone",zone);
+                    f = InfoFragment.newInstance("zone", zone);
                     break;
             }
             return f;

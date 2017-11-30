@@ -25,6 +25,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
@@ -36,7 +38,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
-    public ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
+    ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
         this.context = context;
         this.zones = zones;
         this.filteredZones = zones;
@@ -49,7 +51,6 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.keepSynced(true);
 
-
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.zone_row, viewGroup, false);
         return new ViewHolder(view);
     }
@@ -57,7 +58,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
-        viewHolder.txt_name.setText(filteredZones.get(i).getName());
+        viewHolder.txtRouteName.setText(filteredZones.get(i).getName());
 
         mDatabase.child("zones/" + filteredZones.get(i).getId() + "/sectors").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -77,7 +78,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         GlideApp.with(context)
                 .load(load).centerCrop()
                 .placeholder(R.drawable.mountain_placeholder)
-                .into(viewHolder.img);
+                .into(viewHolder.imgSector);
 
     }
 
@@ -91,27 +92,18 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-
                 String charString = charSequence.toString();
-
                 if (charString.isEmpty()) {
-
                     filteredZones = zones;
                 } else {
-
                     ArrayList<Zone> tempList = new ArrayList<>();
-
                     for (Zone zone : zones) {
-
                         if (zone.getName().toLowerCase().contains(charString.toLowerCase())) {
-
                             tempList.add(zone);
                         }
                     }
-
                     filteredZones = tempList;
                 }
-
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = filteredZones;
                 return filterResults;
@@ -125,17 +117,17 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         };
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txt_name;
-        private ImageView img;
-        private ImageView imgNoSectors;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.zoneRow_txtRouteName)
+        TextView txtRouteName;
+        @BindView(R.id.zoneRow_imgSector)
+        ImageView imgSector;
+        @BindView(R.id.zoneRow_imgNoSector)
+        ImageView imgNoSectors;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-
-            txt_name = view.findViewById(R.id.textRouteName);
-            img = view.findViewById(R.id.img_zone);
-            imgNoSectors = view.findViewById(R.id.img_noSectors);
+            ButterKnife.bind(this, view);
         }
     }
 

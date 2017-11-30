@@ -60,9 +60,7 @@ public class InfoFragment extends Fragment {
     private static final String ARG_TYPE = "type";
     private static final String ARG_DATUM = "datum";
     private ArrayList<Route> routes;
-    private ColumnChartData data;
 
-    private DatabaseReference mDatabase;
     Map<String, Integer> map = new HashMap<String, Integer>() {{
         put("3", 1);
         put("3+", 1);
@@ -83,11 +81,8 @@ public class InfoFragment extends Fragment {
         put("7c", 3);
         put("7c+", 3);
     }};
-    private Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
-    private Integer[] colors;
-    private String[] labels;
 
-    @BindView(R.id.gradeChart)
+    @BindView(R.id.infoFrag_gradeChart)
     ColumnChartView columnChartView;
 
 
@@ -119,7 +114,7 @@ public class InfoFragment extends Fragment {
 
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.map_container, MapsFragment.newInstance(datum.getLoc(), datum.getName()))
+                .replace(R.id.infoFrag_mapContainer, MapsFragment.newInstance(datum.getLoc(), datum.getName()))
                 .commit();
 
         final ObservableScrollView scrollView = view.findViewById(R.id.scroll);
@@ -128,30 +123,24 @@ public class InfoFragment extends Fragment {
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
             scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
-        ((TextView) view.findViewById(R.id.txtInfo)).setText( datum.getDescription());
+        ((TextView) view.findViewById(R.id.infoFrag_txtInfo)).setText( datum.getDescription());
 
         if (type.equals("sector")){
             prepareData();
-            view.findViewById(R.id.chartLayout).setVisibility(View.VISIBLE);
-
-
+            view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.VISIBLE);
         }else {
-            view.findViewById(R.id.chartLayout).setVisibility(View.GONE);
-
+            view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.GONE);
         }
-
 
         return view;
     }
 
     private void prepareData() {
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         routes = new ArrayList<>();
 
-
-        // Attach a listener to read the data at our posts reference
         mDatabase.child("zones/" + ((Sector)datum).getZone_id() + "/sectors/" + datum.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -175,10 +164,9 @@ public class InfoFragment extends Fragment {
     }
 
     private void generateData() {
-        gradesFiltered = new Integer[]{0, 0, 0, 0};
-        colors = new Integer[]{ChartUtils.COLOR_GREEN, ChartUtils.COLOR_BLUE, ChartUtils.COLOR_VIOLET, ChartUtils.COLOR_RED};
-        labels = new String[]{"III - V+", "6a - 6c+", "7a - 7c+", "8a - 9c+"};
-        gradesFiltered = new Integer[]{0, 0, 0, 0};
+        Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
+        Integer[] colors = new Integer[]{ChartUtils.COLOR_GREEN, ChartUtils.COLOR_BLUE, ChartUtils.COLOR_VIOLET, ChartUtils.COLOR_RED};
+        String[] labels = new String[]{"III - V+", "6a - 6c+", "7a - 7c+", "8a - 9c+"};
 
         for (Route route : routes) {
             gradesFiltered[map.get(route.getGrade())-1]++;
@@ -201,10 +189,10 @@ public class InfoFragment extends Fragment {
             columns.add(column);
         }
 
-        data = new ColumnChartData(columns);
+        ColumnChartData data = new ColumnChartData(columns);
 
         List<AxisValue> axisValues = new ArrayList<>();
-        for (int i =0; i< labels.length; i++) {
+        for (int i = 0; i< labels.length; i++) {
 
             axisValues.add(new AxisValue(i, labels[i].toCharArray()));
         }

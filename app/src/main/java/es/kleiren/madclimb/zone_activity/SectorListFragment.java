@@ -1,14 +1,12 @@
 package es.kleiren.madclimb.zone_activity;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
-import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -35,13 +32,7 @@ import es.kleiren.madclimb.data_classes.Zone;
 
 public class SectorListFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
     private SectorDataAdapter adapter;
-    private SearchView searchView;
-    private ObservableRecyclerView recyclerView;
-    private StorageReference mStorageRef;
-    private FloatingActionButton btnAddSector;
-    private DatabaseReference mDatabase;
     private ArrayList<Sector> sectorsFromFirebase;
     private Activity parentActivity;
     private Zone zone;
@@ -49,7 +40,6 @@ public class SectorListFragment extends Fragment {
 
     public SectorListFragment() {
     }
-
 
 
     public static SectorListFragment newInstance(Zone zone) {
@@ -60,23 +50,19 @@ public class SectorListFragment extends Fragment {
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mStorageRef = FirebaseStorage.getInstance().getReference();
         parentActivity = getActivity();
         if (getArguments() != null) {
             zone = (Zone) getArguments().getSerializable(ARG_ZONE);
-
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View zoneView = inflater.inflate(R.layout.fragment_recyclerview, container, false);
+        View zoneView = inflater.inflate(R.layout.fragment_sector_list, container, false);
         zoneView.findViewById(R.id.noSectorsImage).setVisibility(View.GONE);
         prepareData(zoneView);
 
@@ -86,15 +72,10 @@ public class SectorListFragment extends Fragment {
     }
 
 
-
-
     private void prepareData(final View sectorView) {
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-
-        // Attach a listener to read the data at our posts reference
         mDatabase.child("zones/"+ zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,27 +105,9 @@ public class SectorListFragment extends Fragment {
     }
 
 
-    private void search(SearchView searchView) {
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                adapter.getFilter().filter(newText);
-                return true;
-            }
-        });
-    }
-
     private void initViews(View view) {
 
-        recyclerView = (ObservableRecyclerView) view.findViewById(R.id.scroll);
+        ObservableRecyclerView recyclerView = view.findViewById(R.id.scroll);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(false);
 
@@ -177,7 +140,6 @@ public class SectorListFragment extends Fragment {
                     intent.putExtra("sectors", sectorsFromFirebase);
                     intent.putExtra("currentSectorPosition", position);
                     startActivity(intent);
-                    //Toast.makeText(getActivity().getApplicationContext(), countries.get(position).toString(), Toast.LENGTH_SHORT).show();
                 }
 
                 return false;
@@ -193,38 +155,6 @@ public class SectorListFragment extends Fragment {
 
             }
         });
-    }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 
