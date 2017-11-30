@@ -1,5 +1,6 @@
 # MADClimb
-<a href='https://play.google.com/store/apps/details?id=es.kleiren.madclimb&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible en Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/es_badge_web_generic.png'/></a>
+
+<a href='https://play.google.com/store/apps/details?id=es.kleiren.madclimb&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Disponible en Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/es_badge_web_generic.png' width="200" /></a>
 
 <img src="screenshots/cap1.png" width="200">  <img src="screenshots/cap2.png" width="200">  <img src="screenshots/cap3.png" width="200">  <img src="screenshots/cap4.png" width="200">
 
