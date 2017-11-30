@@ -24,6 +24,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
@@ -34,7 +36,6 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
     private Context context;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-// ...
 
 
     public SectorDataAdapter(ArrayList<Sector> sectors, Context context) {
@@ -126,14 +127,14 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txt_name;
-        private ImageView img;
+        @BindView(R.id.sectorRow_txtSectorName)
+        TextView txt_name;
+        @BindView(R.id.sectorRow_imgSector)
+        ImageView img;
 
         public ViewHolder(View view) {
             super(view);
-
-            txt_name = (TextView) view.findViewById(R.id.textRouteName);
-            img = (ImageView) view.findViewById(R.id.img_zone);
+            ButterKnife.bind(this, view);
         }
     }
 

@@ -3,7 +3,6 @@ package es.kleiren.madclimb.sector_activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +26,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Route;
@@ -36,15 +37,16 @@ import es.kleiren.madclimb.root.GlideApp;
 
 public class RouteListFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
-    private ObservableRecyclerView recyclerView;
-    private StorageReference mStorageRef;
+    @BindView(R.id.card_route_view)
+    ObservableRecyclerView recyclerRoute;
 
-    private DatabaseReference mDatabase;
     private ArrayList<Route> routesFromFirebase;
     private RouteDataAdapter adapter;
     private Activity parentActivity;
     private Sector sector;
+
+    @BindView(R.id.route_imgCroquis)
+    ImageView imgCroquis;
 
     public RouteListFragment() {
     }
@@ -76,14 +78,18 @@ public class RouteListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View routeView = inflater.inflate(R.layout.fragment_routes, container, false);
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        View routeView = inflater.inflate(R.layout.fragment_route_list, container, false);
+
+        ButterKnife.bind(this, routeView);
+
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
         StorageReference load = mStorageRef.child(sector.getCroquis());
-        GlideApp.with(getActivity())
-                .load(load).into((ImageView) routeView.findViewById(R.id.croquisView));
 
-        routeView.findViewById(R.id.croquisView).setOnClickListener(new View.OnClickListener() {
+        GlideApp.with(getActivity())
+                .load(load).into(imgCroquis);
+
+        imgCroquis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -93,28 +99,19 @@ public class RouteListFragment extends Fragment {
                 startActivityForResult(intent, 1);
             }
         });
-        routesFromFirebase = new ArrayList<>();
-        prepareData(routeView);
 
-//        btnAddRoute = (FloatingActionButton) routeView.findViewById(R.id.fab_addRoute);
-//
-//        btnAddRoute.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        routesFromFirebase = new ArrayList<>();
+
+        prepareData();
 
         return routeView;
     }
 
 
-    private void prepareData(final View view) {
+    private void prepareData() {
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-        // Attach a listener to read the data at our posts reference
         mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -125,7 +122,7 @@ public class RouteListFragment extends Fragment {
                     routesFromFirebase.add(route);
                     adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector);
                 }
-                initViews(view);
+                initViews();
             }
 
             @Override
@@ -137,20 +134,19 @@ public class RouteListFragment extends Fragment {
 
     }
 
-    private void initViews(View view) {
+    private void initViews() {
 
-        recyclerView = view.findViewById(R.id.card_route_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
+        recyclerRoute.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerRoute.setHasFixedSize(false);
+        recyclerRoute.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
 
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            recyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
+            recyclerRoute.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
 
-        recyclerView.setAdapter(adapter);
+        recyclerRoute.setAdapter(adapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        recyclerRoute.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
 
                 @Override
@@ -176,26 +172,5 @@ public class RouteListFragment extends Fragment {
             }
         });
     }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
 
 }

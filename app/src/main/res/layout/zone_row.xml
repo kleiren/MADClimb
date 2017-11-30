@@ -1,7 +1,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card"
+    android:id="@+id/routeRow_cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
@@ -13,7 +12,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/img_zone"
+            android:id="@+id/zoneRow_imgSector"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_alignParentLeft="true"
@@ -23,10 +22,11 @@
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/mountain_placeholder" />
+            card_view:srcCompat="@drawable/mountain_placeholder"
+            android:layout_alignParentStart="true" />
 
         <ImageView
-            android:id="@+id/img_noSectors"
+            android:id="@+id/zoneRow_imgNoSector"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_alignParentLeft="true"
@@ -36,10 +36,11 @@
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/coming_soon" />
+            card_view:srcCompat="@drawable/coming_soon"
+            android:layout_alignParentStart="true" />
 
         <TextView
-            android:id="@+id/textRouteName"
+            android:id="@+id/zoneRow_txtRouteName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -48,7 +49,6 @@
             android:paddingBottom="5dp"
             android:paddingEnd="10dp"
             android:paddingTop="5dp"
-            android:text="Sample Title"
             android:textAlignment="viewEnd"
             android:textColor="@color/cardview_light_background"
             android:textSize="18sp"
@@ -56,7 +56,8 @@
             card_view:layout_constraintHorizontal_bias="1.0"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            card_view:layout_constraintTop_toTopOf="parent"
+            android:paddingRight="10dp" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

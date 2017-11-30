@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.github.chrisbanes.photoview.PhotoView
-            android:id="@+id/croquisView"
+            android:id="@+id/route_imgCroquis"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/darker_gray"

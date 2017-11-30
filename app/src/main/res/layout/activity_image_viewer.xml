@@ -26,7 +26,7 @@
 
             <android.support.v7.widget.Toolbar
                 app:navigationIcon="?attr/homeAsUpIndicator"
-                android:id="@+id/tlb_imageViewer"
+                android:id="@+id/imgViewerAct_toolbar"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="1"

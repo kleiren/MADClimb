@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
-import android.widget.Button;
 
 import com.google.firebase.database.DatabaseReference;
 
@@ -31,15 +30,11 @@ public class SectorActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ArrayList<Sector> sectorsFromFirebase;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private DatabaseReference mDatabase;
 
     private ArrayList<String> sectorTitles = new ArrayList<>();
 
-    Button btnInfo;
     private Zone zone;
 
     @Override
@@ -52,7 +47,7 @@ public class SectorActivity extends AppCompatActivity {
         sectorsFromFirebase = (ArrayList<Sector>) getIntent().getSerializableExtra("sectors");
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tlb_sector);
+        Toolbar toolbar = findViewById(R.id.sectorAct_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +62,7 @@ public class SectorActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(currentSectorPosition);
 
@@ -82,18 +77,14 @@ public class SectorActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_sector_activity, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
+        int id = item.getItemId();
 
         if (id == R.id.info) {
 

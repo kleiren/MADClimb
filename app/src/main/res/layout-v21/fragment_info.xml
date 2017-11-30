@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/infoFrag_chartLayout"
+
         android:orientation="vertical">
 
         <TextView
@@ -25,7 +26,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/information"
             android:textAlignment="center"
-            android:textSize="18sp"/>
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
         <View
             android:layout_width="fill_parent"
@@ -56,7 +57,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/localization"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
         <View
             android:layout_width="fill_parent"
@@ -85,7 +86,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/description"
                 android:textAlignment="center"
-                android:textSize="18sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
             <View
                 android:layout_width="fill_parent"

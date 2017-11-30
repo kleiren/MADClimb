@@ -10,5 +10,10 @@
 
     <string name="welcome">Bienvenido</string>
     <string name="welcome_message">Gracias por descargar MADClimb. Ten en cuenta que esta aplicación está en fase beta, por lo que muchas de las funcionalidades planeadas no están implemantadas o no funcionan correctamente. Además la aplicación no tiene casi contenido aún, aunque estamos añadiendo contenido rápidamente. Si buscas una app completa, te recomendamos que esperes. Si te gusta nuestra idea y quieres que podamos completarla lo antes posible, no dudes en escribirnos, ya sea ayudando con buenas fotos o con feedback. Gracias! :)</string>
+    <string name="information">Información</string>
+    <string name="localization">Localización</string>
+    <string name="description">Descripción</string>
+    <string name="open_in_maps">Abrir en Maps</string>
+    <string name="info">Info</string>
 
 </resources>

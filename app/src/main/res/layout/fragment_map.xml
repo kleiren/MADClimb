@@ -1,8 +1,6 @@
 
 <com.github.ksoichiro.android.observablescrollview.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll"
+    android:id="@+id/mapFrag_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -25,8 +23,6 @@
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
-
         </LinearLayout>
 
         <Button
@@ -40,7 +36,7 @@
             android:cropToPadding="false"
             android:id="@+id/openMaps"
             android:drawableTop="@mipmap/maps_icon"
-            android:text="Open in Maps"
+            android:text="@string/open_in_maps"
             android:textSize="10sp" />
     </RelativeLayout>
 
