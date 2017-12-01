@@ -14,12 +14,16 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -29,6 +33,8 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Sector> sectors;
@@ -72,13 +78,30 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
             }
         });
 
-        StorageReference load = mStorageRef.child(filteredSectors.get(i).getCroquis());
+        final StorageReference load = mStorageRef.child(filteredSectors.get(i).getCroquis());
 
-        GlideApp.with(context)
-                .load(load)
-                .placeholder(R.drawable.mountain_placeholder)
-                .centerCrop()
-                .into(viewHolder.img);
+//        GlideApp.with(context)
+//                .load(load)
+//                .placeholder(R.drawable.mountain_placeholder)
+//                .centerCrop()
+//                .into(viewHolder.img);
+
+
+        load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+
+                    GlideApp.with(context)
+                            .load(load)
+                            .placeholder(R.drawable.mountain_placeholder)
+                            .centerCrop()
+                            .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
+
+                            .into(viewHolder.img);
+
+
+            }
+        });
 
     }
 

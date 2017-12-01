@@ -41,13 +41,17 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -147,9 +151,32 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         toolbar.setPopupTheme(R.style.ToolbarThemeWhite
         );
 
-        StorageReference load = mStorageRef.child(zone.getImg());
-        GlideApp.with(getApplicationContext())
-                .load(load).into((ImageView) mImageView);
+        final StorageReference load = mStorageRef.child(zone.getImg());
+
+
+
+//
+//        GlideApp.with(getApplicationContext())
+//                .load(load).into((ImageView) mImageView);
+//
+
+        load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+
+                    GlideApp.with(getApplicationContext())
+                            .load(load)
+                            .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
+                            .into((ImageView) mImageView);
+
+            }
+        });
+
+
+
+
+
+
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
