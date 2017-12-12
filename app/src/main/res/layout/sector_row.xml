@@ -26,6 +26,21 @@
             card_view:srcCompat="@drawable/mountain_placeholder"
             android:layout_alignParentStart="true" />
 
+
+        <ProgressBar
+            android:id="@+id/sectorRow_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="@+id/sectorRow_imgSector"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+
         <TextView
             android:id="@+id/sectorRow_txtSectorName"
             android:layout_width="0dp"

@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,11 +36,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 import es.kleiren.madclimb.util.UploadHelper;
 
@@ -48,7 +54,8 @@ public class ZoneListFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ZoneDataAdapter adapter;
     private SearchView searchView;
-    @BindView(R.id.card_recycler_view_zones) RecyclerView recyclerView;
+    @BindView(R.id.card_recycler_view_zones)
+    RecyclerView recyclerView;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
     private AlertDialog dialog;
@@ -57,6 +64,9 @@ public class ZoneListFragment extends Fragment {
     TextView txtFileToUpload;
     private UploadTask uploadTask;
     private Zone zone;
+    ArrayList<Zone> zoneList = new ArrayList<>();
+    private ObservableZoneList observableZoneList;
+
 
     public ZoneListFragment() {
     }
@@ -65,6 +75,19 @@ public class ZoneListFragment extends Fragment {
         ZoneListFragment fragment = new ZoneListFragment();
         return fragment;
     }
+
+    private Observer zoneListChanged = new Observer() {
+        @Override
+        public void update(Observable o, Object newValue) {
+
+            zoneList = (ArrayList<Zone>) newValue;
+            zoneList = sortBySectors(zoneList);
+            adapter = new ZoneDataAdapter(zoneList, getActivity());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +107,7 @@ public class ZoneListFragment extends Fragment {
     }
 
     private void prepareData() {
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
@@ -92,10 +116,17 @@ public class ZoneListFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zonesFromFirebase.add(zone);
-                    adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
                 }
+
+
+
+                observableZoneList = new ObservableZoneList();
+                observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
+                observableZoneList.addObserver(zoneListChanged);
+
                 initViews();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
@@ -109,6 +140,7 @@ public class ZoneListFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
@@ -121,7 +153,9 @@ public class ZoneListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
 
@@ -138,7 +172,7 @@ public class ZoneListFragment extends Fragment {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-                    zone = zonesFromFirebase.get(position);
+                    zone = adapter.getZone(position);
                     Intent intent = new Intent(getActivity(), ZoneActivity.class);
                     intent.putExtra("zone", zone);
                     startActivityForResult(intent, 1);
@@ -219,56 +253,24 @@ public class ZoneListFragment extends Fragment {
         }
     }
 
-    public void showNewZoneDialog(final Activity activity) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                LayoutInflater inflater = activity.getLayoutInflater();
-                final View newZoneView = inflater.inflate(R.layout.dialog_new_zone, null);
+    ArrayList<Zone> sortBySectors(ArrayList<Zone> zones) {
+        ArrayList<Zone> newZones = new ArrayList<>();
+        ArrayList<Zone> zonesWithSectors = new ArrayList<>();
+        ArrayList<Zone> zonesWithoutSectors = new ArrayList<>();
 
-                builder.setPositiveButton("Upload Zone", null);
-                builder.setView(newZoneView);
-                dialog = builder.create();
-                dialog.getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-                Button btnFile = (Button) newZoneView.findViewById(R.id.dia_btnFile);
+        for (Zone zone : zones) {
+            if (zone.getHasSectors())
+                zonesWithSectors.add(zone);
+            else
+                zonesWithoutSectors.add(zone);
+        }
+        newZones.addAll(zonesWithSectors);
+        newZones.addAll(zonesWithoutSectors);
 
-                txtFileToUpload = (TextView) newZoneView.findViewById(R.id.dia_txtFile);
+        return newZones;
 
-                btnFile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        // Set your required file type
-                        intent.setType("*/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "DEMO"), 1001);
-                    }
-                });
 
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                Zone zone = new Zone();
-                                zone.setName(((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString());
-                                zone.setImg("images/" + zone.getName());
-                                UploadHelper.uploadZone(zone);
-                                UploadHelper.uploadFile(fileToUploadUri, ((TextView) newZoneView.findViewById(R.id.dia_zoneName)).getText().toString(), uploadTask, mStorageRef);
-                                dialog.dismiss();
-                            }
-                        });
-                    }
-                });
-                dialog.show();
-            }
-        });
     }
 
 

@@ -20,9 +20,11 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,23 +41,38 @@ import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.OverScroller;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.ObjectKey;
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
 
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import es.kleiren.madclimb.data_classes.Datum;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.main.ZoneDataAdapter;
 import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.util.SlidingTabLayout;
 import es.kleiren.madclimb.data_classes.Zone;
@@ -76,6 +93,8 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     TextView mTitleView;
     @BindView(R.id.pager)
     ViewPager mPager;
+    @BindView(R.id.zoneAct_progressBar)
+    ProgressBar progressBar;
 
 
     private TouchInterceptionFrameLayout mInterceptionLayout;
@@ -91,7 +110,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private boolean mScrolled;
     private Zone zone;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,11 +127,14 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                 ZoneActivity.super.onBackPressed();
             }
         });
-        setupWindowAnimations();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setupWindowAnimations();
+        }
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
-       // Observable Scrollview stuff
+        // Observable Scrollview stuff
         ViewCompat.setElevation(findViewById(R.id.header), getResources().getDimension(R.dimen.toolbar_elevation));
         mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -147,9 +169,27 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         toolbar.setPopupTheme(R.style.ToolbarThemeWhite
         );
 
-        StorageReference load = mStorageRef.child(zone.getImg());
+        final StorageReference load = mStorageRef.child(zone.getImg());
+
+
         GlideApp.with(getApplicationContext())
-                .load(load).into((ImageView) mImageView);
+                .load(load)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into((ImageView) mImageView);
+
+
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

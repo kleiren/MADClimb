@@ -11,7 +11,6 @@ public class Sector extends Datum implements Serializable {
     private String zoneName;
     private int numOfRoutes;
     private String zone_id;
-    private String img;
     private String croquis;
 
     public String getZone_id() {
@@ -25,12 +24,6 @@ public class Sector extends Datum implements Serializable {
     }
     public void setCroquis(String croquis) {
         this.croquis = croquis;
-    }
-    public String getImg() {
-        return img;
-    }
-    public void setImg(String img) {
-        this.img = img;
     }
     public String getZoneName() {
         return zoneName;

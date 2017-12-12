@@ -5,6 +5,8 @@ package es.kleiren.madclimb.zone_activity;
  */
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +14,23 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -29,6 +40,8 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Sector> sectors;
@@ -61,24 +74,29 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
 
         viewHolder.txt_name.setText(filteredSectors.get(i).getName());
 
-        mDatabase.child("zones").child(filteredSectors.get(i).getId()).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        final StorageReference load = mStorageRef.child(filteredSectors.get(i).getImg());
 
-            }
-        });
-
-        StorageReference load = mStorageRef.child(filteredSectors.get(i).getCroquis());
 
         GlideApp.with(context)
                 .load(load)
                 .placeholder(R.drawable.mountain_placeholder)
                 .centerCrop()
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        viewHolder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        viewHolder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
                 .into(viewHolder.img);
+
 
     }
 
@@ -131,6 +149,8 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
         TextView txt_name;
         @BindView(R.id.sectorRow_imgSector)
         ImageView img;
+        @BindView(R.id.sectorRow_progressBar)
+        ProgressBar progressBar;
 
         public ViewHolder(View view) {
             super(view);

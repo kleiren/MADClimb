@@ -14,14 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -33,6 +37,8 @@ import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class RouteListFragment extends Fragment {
@@ -84,10 +90,13 @@ public class RouteListFragment extends Fragment {
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        StorageReference load = mStorageRef.child(sector.getCroquis());
+        final StorageReference load = mStorageRef.child(sector.getCroquis());
 
         GlideApp.with(getActivity())
-                .load(load).into(imgCroquis);
+                .load(load)
+                .placeholder(R.drawable.mountain_placeholder)
+                .into(imgCroquis);
+
 
         imgCroquis.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +124,7 @@ public class RouteListFragment extends Fragment {
         mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+                //  Log.i("FIREBASE", dataSnapshot.getValue().toString());
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);

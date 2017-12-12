@@ -5,6 +5,8 @@ package es.kleiren.madclimb.main;
  */
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +14,16 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -30,6 +41,8 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Zone> zones;
@@ -42,6 +55,10 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         this.context = context;
         this.zones = zones;
         this.filteredZones = zones;
+    }
+
+    public Zone getZone(int i) {
+        return filteredZones.get(i);
     }
 
     @Override
@@ -58,26 +75,30 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
+
         viewHolder.txtRouteName.setText(filteredZones.get(i).getName());
 
-        mDatabase.child("zones/" + filteredZones.get(i).getId() + "/sectors").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        if (filteredZones.get(i).getHasSectors()) viewHolder.imgNoSectors.setVisibility(View.GONE);
+        else viewHolder.imgNoSectors.setVisibility(View.VISIBLE);
 
-                if (dataSnapshot.exists()) viewHolder.imgNoSectors.setVisibility(View.GONE);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
-
+        final StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
         GlideApp.with(context)
-                .load(load).centerCrop()
-                .placeholder(R.drawable.mountain_placeholder)
+                .load(load)
+                .centerCrop()
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        viewHolder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        viewHolder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
                 .into(viewHolder.imgSector);
 
     }
@@ -124,11 +145,15 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         ImageView imgSector;
         @BindView(R.id.zoneRow_imgNoSector)
         ImageView imgNoSectors;
+        @BindView(R.id.zoneRow_progressBar)
+        ProgressBar progressBar;
+
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
     }
+
 
 }
