@@ -1,35 +1,19 @@
-package es.kleiren.madclimb.main;
+package es.kleiren.madclimb.zone_activity;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestFutureTarget;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.ObjectKey;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -38,54 +22,40 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import es.kleiren.madclimb.R;
-import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
-import lecho.lib.hellocharts.view.ColumnChartView;
 
 /**
  * Created by carlos on 12/12/17.
  */
 
-public class ObservableZoneList extends Observable {
+public class ObservableSectorList extends Observable {
 
-    private ArrayList<Zone> zones = new ArrayList<>();
+    private ArrayList<Sector> sectors = new ArrayList<>();
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
 
-    public void getZonesFromFirebaseZoneList(ArrayList<Zone> zones, Context context) {
+    public void getSectorImagesFromFirebase(ArrayList<Sector> sectors, Context context) {
 
-        this.zones = zones;
+        this.sectors = sectors;
 
 
-        for (Zone zone : this.zones) {
-            getZoneFromFirebaseZone(zone, context);
+        for (Sector sector : this.sectors) {
+            loadImageFromFirebase(sector, context);
         }
 
     }
 
-    public void getZoneFromFirebaseZone(final Zone zone, final Context context) {
+    public void loadImageFromFirebase(final Sector sector, final Context context) {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        setChanged();
+        notifyObservers(sectors);
 
-        mDatabase.child("zones/" + zone.getId() + "/sectors").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                zone.setHasSectors(dataSnapshot.exists());
-                setChanged();
-                notifyObservers(zones);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-        final StorageReference load = mStorageRef.child(zone.getImg());
+        final StorageReference load = mStorageRef.child(sector.getImg());
 
 
             load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
@@ -94,6 +64,7 @@ public class ObservableZoneList extends Observable {
 
                     GlideApp.with(context)
                             .load(load)
+                            .placeholder(R.drawable.mountain_placeholder)
                             .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
                             .listener(new RequestListener<Drawable>() {
                                 @Override
@@ -104,7 +75,7 @@ public class ObservableZoneList extends Observable {
                                 @Override
                                 public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                                     setChanged();
-                                    notifyObservers(zones);
+                                    notifyObservers(sectors);
                                     return false;
                                 }
                             }).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);

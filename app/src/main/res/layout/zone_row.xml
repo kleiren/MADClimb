@@ -39,6 +39,19 @@
             card_view:srcCompat="@drawable/coming_soon"
             android:layout_alignParentStart="true" />
 
+        <ProgressBar
+            android:id="@+id/zoneRow_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/zoneRow_txtRouteName"
             android:layout_width="0dp"

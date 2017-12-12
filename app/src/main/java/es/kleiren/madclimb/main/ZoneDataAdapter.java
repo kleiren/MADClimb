@@ -5,6 +5,8 @@ package es.kleiren.madclimb.main;
  */
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -50,7 +57,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         this.filteredZones = zones;
     }
 
-    public Zone getZone(int i){
+    public Zone getZone(int i) {
         return filteredZones.get(i);
     }
 
@@ -77,8 +84,22 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
 
         final StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
         GlideApp.with(context)
-                            .load(load).centerCrop()
-                            .into(viewHolder.imgSector);
+                .load(load)
+                .centerCrop()
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        viewHolder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        viewHolder.progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(viewHolder.imgSector);
 
     }
 
@@ -124,13 +145,15 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         ImageView imgSector;
         @BindView(R.id.zoneRow_imgNoSector)
         ImageView imgNoSectors;
+        @BindView(R.id.zoneRow_progressBar)
+        ProgressBar progressBar;
+
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
     }
-
 
 
 }

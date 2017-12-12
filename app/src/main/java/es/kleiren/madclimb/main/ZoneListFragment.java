@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 import es.kleiren.madclimb.util.UploadHelper;
 
@@ -100,11 +102,12 @@ public class ZoneListFragment extends Fragment {
         View zoneView = inflater.inflate(R.layout.fragment_zone_list, container, false);
         ButterKnife.bind(this, zoneView);
         zonesFromFirebase = new ArrayList<>();
-        prepareData(zoneView);
+        prepareData();
         return zoneView;
     }
 
-    private void prepareData(final View view) {
+    private void prepareData() {
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
@@ -114,11 +117,11 @@ public class ZoneListFragment extends Fragment {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zonesFromFirebase.add(zone);
                 }
-                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View contentview = inflater.inflate(R.layout.zone_row, null, false);
+
+
 
                 observableZoneList = new ObservableZoneList();
-                observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity(), contentview);
+                observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
                 observableZoneList.addObserver(zoneListChanged);
 
                 initViews();
@@ -150,7 +153,9 @@ public class ZoneListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
 
