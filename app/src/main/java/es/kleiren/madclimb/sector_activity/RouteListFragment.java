@@ -92,28 +92,10 @@ public class RouteListFragment extends Fragment {
 
         final StorageReference load = mStorageRef.child(sector.getCroquis());
 
-
-//        GlideApp.with(getActivity())
-//                .load(load)
-//                .placeholder(R.drawable.mountain_placeholder)
-//                .into(imgCroquis);
-
-
-        load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-            @Override
-            public void onSuccess(StorageMetadata storageMetadata) {
-
-
-                    GlideApp.with(getActivity())
-                            .load(load)
-                            .placeholder(R.drawable.mountain_placeholder)
-                            .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
-
-                            .into(imgCroquis);
-
-
-            }
-        });
+        GlideApp.with(getActivity())
+                .load(load)
+                .placeholder(R.drawable.mountain_placeholder)
+                .into(imgCroquis);
 
 
         imgCroquis.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +124,7 @@ public class RouteListFragment extends Fragment {
         mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-              //  Log.i("FIREBASE", dataSnapshot.getValue().toString());
+                //  Log.i("FIREBASE", dataSnapshot.getValue().toString());
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);

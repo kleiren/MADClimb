@@ -8,8 +8,7 @@ import java.io.Serializable;
 
 public class Zone extends Datum implements Serializable {
 
-    private String img;
-    private Boolean hasSectors;
+    private Boolean hasSectors = false;
 
     public Boolean getHasSectors() {
         return hasSectors;
@@ -19,12 +18,6 @@ public class Zone extends Datum implements Serializable {
         this.hasSectors = hasSectors;
     }
 
-    public String getImg() {
-        return img;
-    }
-    public void setImg(String img) {
-        this.img = img;
-    }
 
 
 }

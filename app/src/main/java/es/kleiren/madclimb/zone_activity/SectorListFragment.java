@@ -1,7 +1,6 @@
 package es.kleiren.madclimb.zone_activity;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
@@ -33,15 +35,29 @@ import es.kleiren.madclimb.data_classes.Zone;
 public class SectorListFragment extends Fragment {
 
     private SectorDataAdapter adapter;
-    private ArrayList<Sector> sectorsFromFirebase;
+    private ArrayList<Sector> sectorsFromFirebase= new ArrayList<>();
     private Activity parentActivity;
     private Zone zone;
     private static final String ARG_ZONE = "zone";
+    private ObservableRecyclerView recyclerView;
+    private ObservableSectorList observableSectorList;
 
     public SectorListFragment() {
     }
 
+    private ArrayList<Sector> sectors;
+    private Observer sectorListChanged = new Observer() {
+        @Override
+        public void update(Observable o, Object newValue) {
 
+            sectors = (ArrayList<Sector>) newValue;
+            adapter = new SectorDataAdapter(sectors, getActivity());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+
+
+        }
+    };
     public static SectorListFragment newInstance(Zone zone) {
         SectorListFragment fragment = new SectorListFragment();
         Bundle args = new Bundle();
@@ -66,7 +82,7 @@ public class SectorListFragment extends Fragment {
         zoneView.findViewById(R.id.noSectorsImage).setVisibility(View.GONE);
         prepareData(zoneView);
 
-        sectorsFromFirebase = new ArrayList<>();
+        initViews(zoneView);
 
         return zoneView;
     }
@@ -86,9 +102,12 @@ public class SectorListFragment extends Fragment {
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         Sector sector = postSnapshot.getValue(Sector.class);
                         sectorsFromFirebase.add(sector);
-                        adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
                     }
-                    initViews(sectorView);
+
+                    observableSectorList = new ObservableSectorList();
+                    observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
+                    observableSectorList.addObserver(sectorListChanged);
+
                 } else sectorView.findViewById(R.id.noSectorsImage).setVisibility(View.VISIBLE);
 
 
@@ -107,7 +126,8 @@ public class SectorListFragment extends Fragment {
 
     private void initViews(View view) {
 
-        ObservableRecyclerView recyclerView = view.findViewById(R.id.scroll);
+
+        recyclerView = view.findViewById(R.id.scroll);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(false);
 
@@ -116,7 +136,10 @@ public class SectorListFragment extends Fragment {
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
             recyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
+
+        adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
