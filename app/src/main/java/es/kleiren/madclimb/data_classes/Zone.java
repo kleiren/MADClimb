@@ -9,6 +9,16 @@ import java.io.Serializable;
 public class Zone extends Datum implements Serializable {
 
     private String img;
+    private Boolean hasSectors;
+
+    public Boolean getHasSectors() {
+        return hasSectors;
+    }
+
+    public void setHasSectors(Boolean hasSectors) {
+        this.hasSectors = hasSectors;
+    }
+
     public String getImg() {
         return img;
     }

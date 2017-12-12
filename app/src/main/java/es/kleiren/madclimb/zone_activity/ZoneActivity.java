@@ -95,7 +95,6 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private boolean mScrolled;
     private Zone zone;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +111,10 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                 ZoneActivity.super.onBackPressed();
             }
         });
-        setupWindowAnimations();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    setupWindowAnimations();
+        }
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 

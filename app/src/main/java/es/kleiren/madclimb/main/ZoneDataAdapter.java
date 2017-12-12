@@ -50,6 +50,10 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         this.filteredZones = zones;
     }
 
+    public Zone getZone(int i){
+        return filteredZones.get(i);
+    }
+
     @Override
     public ZoneDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
@@ -64,43 +68,17 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
+
         viewHolder.txtRouteName.setText(filteredZones.get(i).getName());
 
-        mDatabase.child("zones/" + filteredZones.get(i).getId() + "/sectors").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        if (filteredZones.get(i).getHasSectors()) viewHolder.imgNoSectors.setVisibility(View.GONE);
+        else viewHolder.imgNoSectors.setVisibility(View.VISIBLE);
 
-                if (dataSnapshot.exists()) viewHolder.imgNoSectors.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         final StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
-
-//        GlideApp.with(context)
-//                .load(load).centerCrop()
-//                .placeholder(R.drawable.mountain_placeholder)
-//                .into(viewHolder.imgSector);
-
-        load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-            @Override
-            public void onSuccess(StorageMetadata storageMetadata) {
-
-
-                    GlideApp.with(context)
+        GlideApp.with(context)
                             .load(load).centerCrop()
-                            .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
                             .into(viewHolder.imgSector);
-
-            }
-        });
-
-
-
 
     }
 
@@ -152,5 +130,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
             ButterKnife.bind(this, view);
         }
     }
+
+
 
 }
