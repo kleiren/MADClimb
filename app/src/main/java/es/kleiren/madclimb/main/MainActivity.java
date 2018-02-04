@@ -3,6 +3,7 @@ package es.kleiren.madclimb.main;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,9 +24,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    private DatabaseReference mDatabase;
+    public ArrayList<ArrayList<String>> zonesFromFirebase = new ArrayList<>();
+    private boolean shownNewZones = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .edit()
                     .putBoolean("isFirstRun", false)
                     .apply();
+        } else {
+            checkFirebaseChanges();
         }
     }
 
@@ -178,4 +193,126 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
+    void showNewZones() {
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson2 = new Gson();
+        String json2 = mPrefs.getString("SerializableObject", "");
+        ArrayList<ArrayList<String>> zonesFromPreferences = gson2.fromJson(json2, new TypeToken<ArrayList<ArrayList<String>>>() {
+        }.getType());
+        Log.i("ZonesFromPreferences", zonesFromPreferences.toString());
+
+        Log.i("ZonesFromFirebase", zonesFromFirebase.toString());
+
+        Gson gson = new Gson();
+        String json = gson.toJson(zonesFromFirebase);
+        prefsEditor.putString("SerializableObject", json);
+        prefsEditor.apply();
+
+        if (zonesFromPreferences.size() != 0) {
+            StringBuilder newZones = new StringBuilder();
+            iLoop:
+            for (int i = 0; i < zonesFromFirebase.size(); i++) {
+                if (!zonesFromFirebase.get(i).isEmpty()) {
+                    for (int j = 0; j < zonesFromPreferences.size(); j++) {
+                        Log.i("num", i + " " + j);
+                        Log.i("1", zonesFromFirebase.get(i).toString());
+                        Log.i("2", zonesFromPreferences.get(j).toString());
+
+                        if (zonesFromFirebase.get(i).get(0).equals(zonesFromPreferences.get(j).get(0))) {
+                            String zoneName = zonesFromFirebase.get(i).get(0);
+
+                            Log.i("1", zonesFromFirebase.get(i).get(0).toString());
+                            Log.i("2", zonesFromPreferences.get(j).get(0).toString());
+
+                            Collection firstList = zonesFromPreferences.get(j);
+                            Collection secondList = zonesFromFirebase.get(i);
+                            Log.i("COLL1", secondList.toString());
+                            Log.i("COLL2", firstList.toString());
+                            secondList.removeAll(firstList);
+
+                            if (!secondList.isEmpty()) {
+                                newZones.append("Zona: " + zoneName + "\n    Nuevos sectores: ");
+
+                                for (String sector : zonesFromFirebase.get(i)) {
+                                    newZones.append(sector).append(" ");
+                                }
+                                newZones.append("\n");
+
+                            }
+                            continue iLoop;
+                        } else {
+
+                            if (j >= zonesFromPreferences.size() - 1) {
+                                newZones.append("Nueva zona: " + zonesFromFirebase.get(i).get(0) + "\n    Con sectores: ");
+                                for ( i = 1; i< zonesFromFirebase.get(i).size() ; i ++)  {
+                                    newZones.append(zonesFromFirebase.get(i)).append(" ");
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+            if (!newZones.toString().isEmpty()) {
+
+
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("Zonas y sectores añadidos desde última conexión");
+
+                alertDialog.setMessage(newZones);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialog.show();
+
+                    }
+                });
+            }
+        }
+
+
+    }
+
+    // Unused for now
+    void checkFirebaseChanges() {
+
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Log.i("FIREBASE", postSnapshot.child("sectors").toString());
+                    ArrayList<String> zoneFromFirebase = new ArrayList<>();
+                    zoneFromFirebase.add(postSnapshot.child("name").getValue().toString());
+                    for (DataSnapshot postPostSnapshot : postSnapshot.child("sectors").getChildren()) {
+                        zoneFromFirebase.add(postPostSnapshot.child("name").getValue().toString());
+                    }
+                    zonesFromFirebase.add(zoneFromFirebase);
+                }
+
+                if (!shownNewZones) {
+                    showNewZones();
+                    shownNewZones = true;
+                }
+
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
+            }
+        });
+    }
+
+
 }

@@ -118,8 +118,6 @@ public class ZoneListFragment extends Fragment {
                     zonesFromFirebase.add(zone);
                 }
 
-
-
                 observableZoneList = new ObservableZoneList();
                 observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
                 observableZoneList.addObserver(zoneListChanged);
