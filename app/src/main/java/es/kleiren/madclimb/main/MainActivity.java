@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 
 import android.support.v4.view.GravityCompat;
@@ -18,7 +21,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
+import com.github.rubensousa.bottomsheetbuilder.BottomSheetMenuDialog;
+import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -54,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference mDatabase;
     public ArrayList<ArrayList<String>> zonesFromFirebase = new ArrayList<>();
     private boolean shownNewZones = false;
+    private CoordinatorLayout coordinatorLayout;
+    private BottomSheetMenuDialog mBottomSheetDialog;
+    private BottomSheetBehavior mBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +86,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         checkFirstRun();
+
+
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -258,17 +271,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             if (!newZones.toString().isEmpty()) {
 
-
-                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("Zonas y sectores añadidos desde última conexión");
-
-                alertDialog.setMessage(newZones);
+                final BottomSheetMenuDialog dialog = new BottomSheetBuilder(this, R.style.BottomSheetBuilder_DialogStyle)
+                        .setMode(BottomSheetBuilder.MODE_LIST)
+                        .setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark))
+                        .addTitleItem("Zonas y sectores añadidos desde última conexión")
+                        .setTitleTextColor(getResources().getColor(R.color.black_overlay))
+                        .addTitleItem(newZones.toString())
+                        .expandOnStart(false)
+                        .createDialog();
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        alertDialog.show();
-
+                        dialog.show();
                     }
                 });
             }

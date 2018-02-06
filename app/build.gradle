@@ -7,8 +7,8 @@ android {
         applicationId "es.kleiren.madclimb"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 13
-        versionName "0.13"
+        versionCode 14
+        versionName "0.14"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -64,6 +64,8 @@ dependencies {
     }
     // Gson
     compile 'com.google.code.gson:gson:2.8.0'
-
+    // Cool dialogs
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.github.rubensousa:bottomsheetbuilder:1.6.0'
 }
 apply plugin: 'com.google.gms.google-services'
