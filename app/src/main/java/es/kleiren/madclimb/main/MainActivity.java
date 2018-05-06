@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkFirstRun();
 
 
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -214,10 +213,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String json2 = mPrefs.getString("SerializableObject", "");
         ArrayList<ArrayList<String>> zonesFromPreferences = gson2.fromJson(json2, new TypeToken<ArrayList<ArrayList<String>>>() {
         }.getType());
-        Log.i("ZonesFromPreferences", zonesFromPreferences.toString());
-
-        Log.i("ZonesFromFirebase", zonesFromFirebase.toString());
-
+        try {
+            Log.i("ZonesFromPreferences", zonesFromPreferences.toString());
+            Log.i("ZonesFromFirebase", zonesFromFirebase.toString());
+        } catch (Exception e) {
+            return;
+        }
         Gson gson = new Gson();
         String json = gson.toJson(zonesFromFirebase);
         prefsEditor.putString("SerializableObject", json);
@@ -252,14 +253,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     newZones.append(sector).append(" ");
                                 }
                                 newZones.append("\n");
-
                             }
                             continue iLoop;
                         } else {
 
                             if (j >= zonesFromPreferences.size() - 1) {
                                 newZones.append("Nueva zona: " + zonesFromFirebase.get(i).get(0) + "\n    Con sectores: ");
-                                for ( i = 1; i< zonesFromFirebase.get(i).size() ; i ++)  {
+                                for (i = 1; i < zonesFromFirebase.get(i).size(); i++) {
                                     newZones.append(zonesFromFirebase.get(i)).append(" ");
                                 }
                             }
@@ -267,10 +267,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 }
-
             }
             if (!newZones.toString().isEmpty()) {
-
                 final BottomSheetMenuDialog dialog = new BottomSheetBuilder(this, R.style.BottomSheetBuilder_DialogStyle)
                         .setMode(BottomSheetBuilder.MODE_LIST)
                         .setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark))
@@ -288,13 +286,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
             }
         }
-
-
     }
 
-    // Unused for now
     void checkFirebaseChanges() {
-
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
@@ -317,10 +311,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     showNewZones();
                     shownNewZones = true;
                 }
-
-
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
