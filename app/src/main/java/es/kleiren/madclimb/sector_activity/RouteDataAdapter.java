@@ -42,7 +42,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private ColumnChartData data;
     private ArrayList<String> grades;
 
-    Map<String, Integer> map = new HashMap<String, Integer>() {{
+    private Map<String, Integer> map = new HashMap<String, Integer>() {{
         put("3", 1);
         put("3+", 1);
         put("IV", 1);
@@ -86,13 +86,11 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     @Override
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
         if (i == 0) {
-
             generateData();
             viewHolder.chart.setColumnChartData(data);
             viewHolder.btnInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     Intent intent = new Intent(context, InfoActivity.class);
                     intent.putExtra("type", "sector");
                     intent.putExtra("datum", sector);
@@ -106,9 +104,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         try {
             viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade()) - 1]);
         } catch (Exception e) {
-
         }
-
 
         viewHolder.txtDetails.setText(routes.get(i).getDescription());
 
@@ -124,8 +120,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 notifyDataSetChanged();
             }
         });
-
-
     }
 
 
@@ -143,7 +137,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 gradesFiltered[map.get(route.getGrade()) - 1]++;
             } catch (Exception e) {
             }
-
         }
 
         int numSubColumns = 1;
@@ -167,7 +160,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         for (int i = 0; i < labels.length; i++) {
-
             axisValues.add(new AxisValue(i, labels[i].toCharArray()));
         }
         Axis axisX = new Axis(axisValues);
