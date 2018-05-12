@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         checkFirstRun();
-
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

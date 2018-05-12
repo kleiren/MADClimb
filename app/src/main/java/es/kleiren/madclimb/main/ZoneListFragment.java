@@ -256,7 +256,6 @@ public class ZoneListFragment extends Fragment {
         ArrayList<Zone> zonesWithSectors = new ArrayList<>();
         ArrayList<Zone> zonesWithoutSectors = new ArrayList<>();
 
-
         for (Zone zone : zones) {
             if (zone.getHasSectors())
                 zonesWithSectors.add(zone);
@@ -267,9 +266,5 @@ public class ZoneListFragment extends Fragment {
         newZones.addAll(zonesWithoutSectors);
 
         return newZones;
-
-
     }
-
-
 }

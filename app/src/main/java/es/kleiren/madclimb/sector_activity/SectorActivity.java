@@ -46,7 +46,6 @@ public class SectorActivity extends AppCompatActivity {
         int currentSectorPosition = getIntent().getIntExtra("currentSectorPosition", 0);
         sectorsFromFirebase = (ArrayList<Sector>) getIntent().getSerializableExtra("sectors");
 
-
         Toolbar toolbar = findViewById(R.id.sectorAct_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -103,9 +102,7 @@ public class SectorActivity extends AppCompatActivity {
                 return true;
 
         }
-
         return super.onOptionsItemSelected(item);
-
     }
 
 
@@ -118,7 +115,6 @@ public class SectorActivity extends AppCompatActivity {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
 
         @Override
         public int getCount() {
@@ -136,7 +132,5 @@ public class SectorActivity extends AppCompatActivity {
             f = RouteListFragment.newInstance(sectorsFromFirebase.get(position));
             return f;
         }
-
-
     }
 }

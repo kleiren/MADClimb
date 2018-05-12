@@ -2,6 +2,7 @@ package es.kleiren.madclimb.sector_activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -77,7 +78,6 @@ public class RouteListFragment extends Fragment {
         }
         parentActivity = getActivity();
 
-
     }
 
     @Override
@@ -97,7 +97,6 @@ public class RouteListFragment extends Fragment {
                 .placeholder(R.drawable.mountain_placeholder)
                 .into(imgCroquis);
 
-
         imgCroquis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +110,7 @@ public class RouteListFragment extends Fragment {
 
         routesFromFirebase = new ArrayList<>();
 
-        prepareData();
+        (new LoadData()).execute();
 
         return routeView;
     }
@@ -131,7 +130,6 @@ public class RouteListFragment extends Fragment {
                     routesFromFirebase.add(route);
                     adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector);
                 }
-                initViews();
             }
 
             @Override
@@ -180,6 +178,27 @@ public class RouteListFragment extends Fragment {
 
             }
         });
+    }
+
+
+    private class LoadData extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            prepareData();
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initViews();
+                }
+            });
+        }
     }
 
 }

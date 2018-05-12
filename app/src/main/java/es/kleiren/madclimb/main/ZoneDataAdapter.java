@@ -148,12 +148,9 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         @BindView(R.id.zoneRow_progressBar)
         ProgressBar progressBar;
 
-
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
     }
-
-
 }

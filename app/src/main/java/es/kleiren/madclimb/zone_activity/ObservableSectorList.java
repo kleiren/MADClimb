@@ -24,6 +24,7 @@ import java.util.Observable;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
+import es.kleiren.madclimb.root.MyAppGlideModule;
 
 /**
  * Created by carlos on 12/12/17.
@@ -56,12 +57,10 @@ public class ObservableSectorList extends Observable {
         notifyObservers(sectors);
 
         final StorageReference load = mStorageRef.child(sector.getImg());
-
-
-            load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-                @Override
-                public void onSuccess(StorageMetadata storageMetadata) {
-
+        load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+                if (MyAppGlideModule.isValidContextForGlide(context)) {
                     GlideApp.with(context)
                             .load(load)
                             .placeholder(R.drawable.mountain_placeholder)
@@ -79,12 +78,8 @@ public class ObservableSectorList extends Observable {
                                     return false;
                                 }
                             }).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
-
                 }
-            });
-
-
-
+            }
+        });
     }
-
 }
