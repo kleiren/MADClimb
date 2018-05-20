@@ -17,7 +17,6 @@
 package es.kleiren.madclimb.extra_activities;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -85,7 +84,10 @@ public class InfoFragment extends Fragment {
 
     @BindView(R.id.infoFrag_gradeChart)
     ColumnChartView columnChartView;
-    private ColumnChartData data;
+    @BindView(R.id.infoFrag_latLon)
+    TextView textViewLatLon;
+    @BindView(R.id.infoFrag_txtInfo)
+    TextView txtInfo;
 
 
     public static InfoFragment newInstance(String type, Datum datum) {
@@ -125,10 +127,12 @@ public class InfoFragment extends Fragment {
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
             scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
-        ((TextView) view.findViewById(R.id.infoFrag_txtInfo)).setText(datum.getDescription());
+        txtInfo.setText(datum.getDescription());
+
+        textViewLatLon.setText(datum.getLoc());
 
         if (type.equals("sector")) {
-            (new LoadInfo()).execute();
+            prepareData();
             view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.VISIBLE);
         } else {
             view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.GONE);
@@ -153,6 +157,7 @@ public class InfoFragment extends Fragment {
                     routes.add(route);
                 }
                 generateData();
+
             }
 
             @Override
@@ -160,6 +165,8 @@ public class InfoFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
+
+
     }
 
     private void generateData() {
@@ -188,36 +195,18 @@ public class InfoFragment extends Fragment {
             columns.add(column);
         }
 
-        data = new ColumnChartData(columns);
+        ColumnChartData data = new ColumnChartData(columns);
 
         List<AxisValue> axisValues = new ArrayList<>();
         for (int i = 0; i < labels.length; i++) {
+
             axisValues.add(new AxisValue(i, labels[i].toCharArray()));
         }
         Axis axisX = new Axis(axisValues);
         data.setAxisXBottom(axisX);
         data.setAxisYLeft(null);
 
-    }
+        columnChartView.setColumnChartData(data);
 
-
-    private class LoadInfo extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            prepareData();
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    columnChartView.setColumnChartData(data);
-                }
-            });
-        }
     }
 }

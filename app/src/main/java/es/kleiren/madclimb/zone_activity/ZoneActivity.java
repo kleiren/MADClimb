@@ -189,7 +189,6 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                 })
                 .into((ImageView) mImageView);
 
-
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
