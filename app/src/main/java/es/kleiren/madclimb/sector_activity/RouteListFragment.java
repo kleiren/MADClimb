@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.ObjectKey;
@@ -44,16 +45,18 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class RouteListFragment extends Fragment {
 
-    @BindView(R.id.card_route_view)
-    ObservableRecyclerView recyclerRoute;
 
     private ArrayList<Route> routesFromFirebase;
     private RouteDataAdapter adapter;
     private Activity parentActivity;
     private Sector sector;
 
+    @BindView(R.id.card_route_view)
+    ObservableRecyclerView recyclerRoute;
     @BindView(R.id.route_imgCroquis)
     ImageView imgCroquis;
+    @BindView(R.id.route_initial_progress)
+    ProgressBar initialProgress;
 
     public RouteListFragment() {
     }
@@ -123,13 +126,13 @@ public class RouteListFragment extends Fragment {
         mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //  Log.i("FIREBASE", dataSnapshot.getValue().toString());
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
                     routesFromFirebase.add(route);
                     adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector);
                 }
+                initViews();
             }
 
             @Override
@@ -190,14 +193,17 @@ public class RouteListFragment extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            initialProgress.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
         protected void onPostExecute(String s) {
+
+            initialProgress.setVisibility(View.GONE);
+
             super.onPostExecute(s);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initViews();
-                }
-            });
         }
     }
 

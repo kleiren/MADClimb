@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         checkFirstRun();
     }
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .putBoolean("isFirstRun", false)
                     .apply();
         } else {
-            checkFirebaseChanges();
+            //checkFirebaseChanges();
         }
     }
 
