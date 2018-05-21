@@ -21,7 +21,6 @@ public class InfoActivity extends AppCompatActivity {
     @BindView(R.id.infoAct_toolbar)
     Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +41,5 @@ public class InfoActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, InfoFragment.newInstance(type, datum))
                 .commit();
-
     }
-
 }

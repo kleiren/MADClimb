@@ -13,67 +13,77 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/infoFrag_chartLayout"
-
-        android:orientation="vertical">
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/infoFrag_chartLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/information"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginStart="100dp"
-            android:background="@color/colorPrimaryDark" />
+            android:orientation="vertical">
 
-        <lecho.lib.hellocharts.view.ColumnChartView
-            android:id="@+id/infoFrag_gradeChart"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/information"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="100dp"
+                android:layout_marginStart="100dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <lecho.lib.hellocharts.view.ColumnChartView
+                android:id="@+id/infoFrag_gradeChart"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp" />
 
 
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/localization"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginStart="100dp"
-            android:background="@color/colorPrimaryDark" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/localization"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-        <FrameLayout
-            android:id="@+id/infoFrag_mapContainer"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/flexible_space_image_height"
-            android:layout_margin="10dp">
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="100dp"
+                android:layout_marginStart="100dp"
+                android:background="@color/colorPrimaryDark" />
 
-        </FrameLayout>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/infoFrag_latLon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textIsSelectable="true"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <FrameLayout
+                android:id="@+id/infoFrag_mapContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/flexible_space_image_height"
+                android:layout_margin="10dp">
+
+            </FrameLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

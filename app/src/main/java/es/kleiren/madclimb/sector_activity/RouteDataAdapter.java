@@ -42,7 +42,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private ColumnChartData data;
     private ArrayList<String> grades;
 
-    Map<String, Integer> map = new HashMap<String, Integer>() {{
+    private Map<String, Integer> map = new HashMap<String, Integer>() {{
         put("3", 1);
         put("3+", 1);
         put("IV", 1);
@@ -86,13 +86,11 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     @Override
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
         if (i == 0) {
-
             generateData();
             viewHolder.chart.setColumnChartData(data);
             viewHolder.btnInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     Intent intent = new Intent(context, InfoActivity.class);
                     intent.putExtra("type", "sector");
                     intent.putExtra("datum", sector);
@@ -103,11 +101,10 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
         viewHolder.txtName.setText(routes.get(i).getName());
         viewHolder.txtGrade.setText(routes.get(i).getGrade());
-viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade())-1]);
-
-
-
-
+        try {
+            viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade()) - 1]);
+        } catch (Exception e) {
+        }
 
         viewHolder.txtDetails.setText(routes.get(i).getDescription());
 
@@ -123,8 +120,6 @@ viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade())-1]);
                 notifyDataSetChanged();
             }
         });
-
-
     }
 
 
@@ -138,8 +133,10 @@ viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade())-1]);
 
         for (Route route : routes) {
             grades.add(route.getGrade());
-            gradesFiltered[map.get(route.getGrade())-1]++;
-
+            try {
+                gradesFiltered[map.get(route.getGrade()) - 1]++;
+            } catch (Exception e) {
+            }
         }
 
         int numSubColumns = 1;
@@ -162,8 +159,7 @@ viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade())-1]);
         data = new ColumnChartData(columns);
 
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
-        for (int i =0; i< labels.length; i++) {
-
+        for (int i = 0; i < labels.length; i++) {
             axisValues.add(new AxisValue(i, labels[i].toCharArray()));
         }
         Axis axisX = new Axis(axisValues);

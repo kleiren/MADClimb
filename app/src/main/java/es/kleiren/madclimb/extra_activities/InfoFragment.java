@@ -84,6 +84,10 @@ public class InfoFragment extends Fragment {
 
     @BindView(R.id.infoFrag_gradeChart)
     ColumnChartView columnChartView;
+    @BindView(R.id.infoFrag_latLon)
+    TextView textViewLatLon;
+    @BindView(R.id.infoFrag_txtInfo)
+    TextView txtInfo;
 
 
     public static InfoFragment newInstance(String type, Datum datum) {
@@ -101,17 +105,17 @@ public class InfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            type =  getArguments().getString(ARG_TYPE);
-            datum =  (Datum) getArguments().getSerializable(ARG_DATUM);
+            type = getArguments().getString(ARG_TYPE);
+            datum = (Datum) getArguments().getSerializable(ARG_DATUM);
 
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
 
         ButterKnife.bind(this, view);
-
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.infoFrag_mapContainer, MapsFragment.newInstance(datum.getLoc(), datum.getName()))
@@ -123,12 +127,14 @@ public class InfoFragment extends Fragment {
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
             scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
-        ((TextView) view.findViewById(R.id.infoFrag_txtInfo)).setText( datum.getDescription());
+        txtInfo.setText(datum.getDescription());
 
-        if (type.equals("sector")){
+        textViewLatLon.setText(datum.getLoc());
+
+        if (type.equals("sector")) {
             prepareData();
             view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.VISIBLE);
-        }else {
+        } else {
             view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.GONE);
         }
 
@@ -141,7 +147,7 @@ public class InfoFragment extends Fragment {
 
         routes = new ArrayList<>();
 
-        mDatabase.child("zones/" + ((Sector)datum).getZone_id() + "/sectors/" + datum.getId() + "/routes").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + datum.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("FIREBASE", dataSnapshot.getValue().toString());
@@ -169,7 +175,7 @@ public class InfoFragment extends Fragment {
         String[] labels = new String[]{"III - V+", "6a - 6c+", "7a - 7c+", "8a - 9c+"};
 
         for (Route route : routes) {
-            gradesFiltered[map.get(route.getGrade())-1]++;
+            gradesFiltered[map.get(route.getGrade()) - 1]++;
         }
 
         int numSubColumns = 1;
@@ -192,7 +198,7 @@ public class InfoFragment extends Fragment {
         ColumnChartData data = new ColumnChartData(columns);
 
         List<AxisValue> axisValues = new ArrayList<>();
-        for (int i = 0; i< labels.length; i++) {
+        for (int i = 0; i < labels.length; i++) {
 
             axisValues.add(new AxisValue(i, labels[i].toCharArray()));
         }

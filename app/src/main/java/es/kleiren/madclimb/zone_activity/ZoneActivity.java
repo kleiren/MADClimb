@@ -189,7 +189,6 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                 })
                 .into((ImageView) mImageView);
 
-
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,7 +278,11 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         @Override
         public void onUpOrCancelMotionEvent(MotionEvent ev) {
             mScrolled = false;
-            mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+            try {
+                mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+            } catch (Exception e){
+                return;
+            }
             int velocityY = (int) mVelocityTracker.getYVelocity(mActivePointerId);
             mActivePointerId = INVALID_POINTER;
             mScroller.forceFinished(true);

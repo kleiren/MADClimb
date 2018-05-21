@@ -37,10 +37,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
-import lecho.lib.hellocharts.view.ColumnChartView;
+import es.kleiren.madclimb.root.MyAppGlideModule;
 
 /**
  * Created by carlos on 12/12/17.
@@ -68,8 +67,6 @@ public class ObservableZoneList extends Observable {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
         mDatabase.child("zones/" + zone.getId() + "/sectors").getRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -84,14 +81,12 @@ public class ObservableZoneList extends Observable {
             }
         });
 
-
         final StorageReference load = mStorageRef.child(zone.getImg());
+        load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
 
-
-            load.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-                @Override
-                public void onSuccess(StorageMetadata storageMetadata) {
-
+                if (MyAppGlideModule.isValidContextForGlide(context)) {
                     GlideApp.with(context)
                             .load(load)
                             .signature(new ObjectKey(storageMetadata.getUpdatedTimeMillis()))
@@ -108,12 +103,9 @@ public class ObservableZoneList extends Observable {
                                     return false;
                                 }
                             }).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
-
                 }
-            });
-
-
-
+            }
+        });
     }
 
 }

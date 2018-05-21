@@ -1,6 +1,8 @@
 package es.kleiren.madclimb.zone_activity;
 
 import android.app.Activity;
+import android.os.AsyncTask;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.sector_activity.SectorActivity;
@@ -35,12 +39,16 @@ import es.kleiren.madclimb.data_classes.Zone;
 public class SectorListFragment extends Fragment {
 
     private SectorDataAdapter adapter;
-    private ArrayList<Sector> sectorsFromFirebase= new ArrayList<>();
+    private ArrayList<Sector> sectorsFromFirebase = new ArrayList<>();
     private Activity parentActivity;
     private Zone zone;
     private static final String ARG_ZONE = "zone";
-    private ObservableRecyclerView recyclerView;
     private ObservableSectorList observableSectorList;
+
+    @BindView(R.id.card_sector_view)
+    ObservableRecyclerView recyclerSector;
+    @BindView(R.id.sector_initial_progress)
+    ProgressBar initialProgress;
 
     public SectorListFragment() {
     }
@@ -52,12 +60,13 @@ public class SectorListFragment extends Fragment {
 
             sectors = (ArrayList<Sector>) newValue;
             adapter = new SectorDataAdapter(sectors, getActivity());
-            recyclerView.setAdapter(adapter);
+            recyclerSector.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-
+            initialProgress.setVisibility(View.GONE);
 
         }
     };
+
     public static SectorListFragment newInstance(Zone zone) {
         SectorListFragment fragment = new SectorListFragment();
         Bundle args = new Bundle();
@@ -79,38 +88,33 @@ public class SectorListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View zoneView = inflater.inflate(R.layout.fragment_sector_list, container, false);
-        zoneView.findViewById(R.id.noSectorsImage).setVisibility(View.GONE);
-        prepareData(zoneView);
+        ButterKnife.bind(this, zoneView);
 
-        initViews(zoneView);
+        prepareData();
+        initViews();
 
         return zoneView;
     }
 
 
-    private void prepareData(final View sectorView) {
+    private void prepareData() {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("zones/"+ zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/" + zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
 
-                    Log.i("FIREBASE", dataSnapshot.getValue().toString());
+                Log.i("FIREBASE", dataSnapshot.getValue().toString());
 
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        Sector sector = postSnapshot.getValue(Sector.class);
-                        sectorsFromFirebase.add(sector);
-                    }
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Sector sector = postSnapshot.getValue(Sector.class);
+                    sectorsFromFirebase.add(sector);
+                }
 
-                    observableSectorList = new ObservableSectorList();
-                    observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
-                    observableSectorList.addObserver(sectorListChanged);
-
-                } else sectorView.findViewById(R.id.noSectorsImage).setVisibility(View.VISIBLE);
-
-
+                observableSectorList = new ObservableSectorList();
+                observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
+                observableSectorList.addObserver(sectorListChanged);
 
             }
 
@@ -120,28 +124,24 @@ public class SectorListFragment extends Fragment {
             }
         });
 
-
     }
 
 
-    private void initViews(View view) {
+    private void initViews() {
 
-
-        recyclerView = view.findViewById(R.id.scroll);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(false);
-
-        recyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
+        recyclerSector.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerSector.setHasFixedSize(false);
+        recyclerSector.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
 
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            recyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
+            recyclerSector.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
 
         adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
-        recyclerView.setAdapter(adapter);
+        recyclerSector.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        recyclerSector.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
 
                 @Override
@@ -179,6 +179,5 @@ public class SectorListFragment extends Fragment {
             }
         });
     }
-
 
 }
