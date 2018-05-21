@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference mDatabase;
     public ArrayList<ArrayList<String>> zonesFromFirebase = new ArrayList<>();
     private boolean shownNewZones = false;
-    private CoordinatorLayout coordinatorLayout;
-    private BottomSheetMenuDialog mBottomSheetDialog;
-    private BottomSheetBehavior mBehavior;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

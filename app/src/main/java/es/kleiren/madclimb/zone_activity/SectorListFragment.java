@@ -43,13 +43,12 @@ public class SectorListFragment extends Fragment {
     private Activity parentActivity;
     private Zone zone;
     private static final String ARG_ZONE = "zone";
-    private ObservableRecyclerView recyclerView;
     private ObservableSectorList observableSectorList;
 
     @BindView(R.id.card_sector_view)
     ObservableRecyclerView recyclerSector;
     @BindView(R.id.sector_initial_progress)
-    ConstraintLayout initialProgress;
+    ProgressBar initialProgress;
 
     public SectorListFragment() {
     }
@@ -91,10 +90,9 @@ public class SectorListFragment extends Fragment {
         View zoneView = inflater.inflate(R.layout.fragment_sector_list, container, false);
         ButterKnife.bind(this, zoneView);
 
-
         prepareData();
-
         initViews();
+
         return zoneView;
     }
 
@@ -125,7 +123,6 @@ public class SectorListFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
 
     }
 
