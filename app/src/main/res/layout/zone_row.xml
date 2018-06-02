@@ -6,7 +6,6 @@
     android:layout_marginTop="5dp"
     card_view:cardCornerRadius="0dp">
 
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -36,7 +35,7 @@
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintRight_toRightOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/coming_soon"
+            card_view:srcCompat="@drawable/mountain_placeholder"
             android:layout_alignParentStart="true" />
 
         <ProgressBar

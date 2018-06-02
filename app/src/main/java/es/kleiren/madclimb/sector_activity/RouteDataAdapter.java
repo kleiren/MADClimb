@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -76,11 +77,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     public RouteDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view;
         view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.route_row, viewGroup, false);
-        if (i == 1)
-            return new ViewHolder(view, 0);
-        else
-            return new ViewHolder(view, 1);
-
+        return new ViewHolder(view, i == 1);
     }
 
     @Override
@@ -108,18 +105,22 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
         viewHolder.txtDetails.setText(routes.get(i).getDescription());
 
-        final boolean isExpanded = i == mExpandedPosition;
-        viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        if (!routes.get(i).getDescription().isEmpty()) {
 
-        viewHolder.itemView.setActivated(isExpanded);
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1 : i;
-                TransitionManager.beginDelayedTransition(viewHolder.recyclerView);
-                notifyDataSetChanged();
-            }
-        });
+            viewHolder.imageArrow.setVisibility(View.VISIBLE);
+            final boolean isExpanded = i == mExpandedPosition;
+            viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            viewHolder.imageArrow.setImageDrawable(isExpanded ? context.getResources().getDrawable(R.drawable.arrow_up) : context.getResources().getDrawable(R.drawable.arrow_down));
+            viewHolder.itemView.setActivated(isExpanded);
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mExpandedPosition = isExpanded ? -1 : i;
+                    TransitionManager.beginDelayedTransition(viewHolder.recyclerView);
+                    notifyDataSetChanged();
+                }
+            });
+        }
     }
 
 
@@ -197,18 +198,21 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         ImageButton btnInfo;
         @BindView(R.id.routeRow_infoLayout)
         ConstraintLayout infoLayout;
+        @BindView(R.id.routeRow_arrow)
+        ImageView imageArrow;
 
 
-        ViewHolder(View view, int type) {
+        ViewHolder(View view, boolean first) {
             super(view);
             ButterKnife.bind(this, view);
 
-            if (type == 0) {
+            if (first) {
                 chart.setZoomEnabled(false);
             } else {
                 infoLayout.setVisibility(View.GONE);
             }
             details.setVisibility(View.GONE);
+            imageArrow.setVisibility(View.GONE);
 
         }
     }
