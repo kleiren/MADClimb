@@ -86,6 +86,10 @@ public class InfoFragment extends Fragment {
     ColumnChartView columnChartView;
     @BindView(R.id.infoFrag_latLon)
     TextView textViewLatLon;
+    @BindView(R.id.infoFrag_txtDate)
+    TextView textViewDate;
+    @BindView(R.id.infoFrag_layoutDate)
+    View layoutDate;
     @BindView(R.id.infoFrag_txtInfo)
     TextView txtInfo;
 
@@ -127,7 +131,18 @@ public class InfoFragment extends Fragment {
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
             scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
+
         txtInfo.setText(datum.getDescription());
+        layoutDate.setVisibility(View.GONE);
+
+        if (type.equals("sector"))
+            try {
+                if (!((Sector) datum).getDate().isEmpty()) {
+                    layoutDate.setVisibility(View.VISIBLE);
+                    textViewDate.setText(((Sector) datum).getDate());
+                }
+            } catch (Exception e) {
+            }
 
         textViewLatLon.setText(datum.getLoc());
 
@@ -175,7 +190,10 @@ public class InfoFragment extends Fragment {
         String[] labels = new String[]{"III - V+", "6a - 6c+", "7a - 7c+", "8a - 9c+"};
 
         for (Route route : routes) {
-            gradesFiltered[map.get(route.getGrade()) - 1]++;
+            try {
+                gradesFiltered[map.get(route.getGrade()) - 1]++;
+            } catch (Exception e) {
+            }
         }
 
         int numSubColumns = 1;

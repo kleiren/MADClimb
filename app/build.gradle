@@ -7,8 +7,8 @@ android {
         applicationId "es.kleiren.madclimb"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 16
-        versionName "0.16"
+        versionCode 17
+        versionName "0.17"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -28,7 +28,7 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     // Maps and firebase stuff, must be in the same version supported by firebase-ui
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
