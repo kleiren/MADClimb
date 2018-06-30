@@ -12,30 +12,47 @@ public class Sector extends Datum implements Serializable {
     private int numOfRoutes;
     private String zone_id;
     private String croquis;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getZone_id() {
         return zone_id;
     }
+
     public void setZone_id(String zone_id) {
         this.zone_id = zone_id;
     }
+
     public String getCroquis() {
         return croquis;
     }
+
     public void setCroquis(String croquis) {
         this.croquis = croquis;
     }
+
     public String getZoneName() {
         return zoneName;
     }
+
     public void setZoneName(String zoneName) {
         this.zoneName = zoneName;
     }
+
     public int getNumOfRoutes() {
         return numOfRoutes;
     }
+
     public void setNumOfRoutes(int numOfRoutes) {
         this.numOfRoutes = numOfRoutes;
     }
+
 
 }

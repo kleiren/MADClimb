@@ -14,6 +14,7 @@
     <string name="localization">Localización</string>
     <string name="description">Descripción</string>
     <string name="open_in_maps">Abrir en Maps</string>
-    <string name="info">Info</string>
+    <string name="info">Info y\nUbicación</string>
+    <string name="infoFrag_date">Fecha de última edición:</string>
 
 </resources>

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,7 +65,6 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.keepSynced(true);
 
-
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.sector_row, viewGroup, false);
         return new ViewHolder(view);
     }
@@ -72,11 +72,12 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
     @Override
     public void onBindViewHolder(final SectorDataAdapter.ViewHolder viewHolder, int i) {
 
+        if (i != filteredSectors.size() -1)
+            viewHolder.filler.setVisibility(View.GONE);
+
         viewHolder.txt_name.setText(filteredSectors.get(i).getName());
 
-
         final StorageReference load = mStorageRef.child(filteredSectors.get(i).getImg());
-
 
         GlideApp.with(context)
                 .load(load)
@@ -96,8 +97,6 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
                     }
                 })
                 .into(viewHolder.img);
-
-
     }
 
     @Override
@@ -110,27 +109,18 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-
                 String charString = charSequence.toString();
-
                 if (charString.isEmpty()) {
-
                     filteredSectors = sectors;
                 } else {
-
                     ArrayList<Sector> tempList = new ArrayList<>();
-
                     for (Sector sector : sectors) {
-
                         if (sector.getName().toLowerCase().contains(charString.toLowerCase())) {
-
                             tempList.add(sector);
                         }
                     }
-
                     filteredSectors = tempList;
                 }
-
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = filteredSectors;
                 return filterResults;
@@ -151,6 +141,8 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
         ImageView img;
         @BindView(R.id.sectorRow_progressBar)
         ProgressBar progressBar;
+        @BindView(R.id.filler)
+        LinearLayout filler;
 
         public ViewHolder(View view) {
             super(view);

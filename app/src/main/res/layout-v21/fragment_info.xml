@@ -44,6 +44,38 @@
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp" />
 
+            <LinearLayout
+                android:layout_gravity="center"
+                android:id="@+id/infoFrag_layoutDate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/infoFrag_date"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:typeface="sans" />
+
+                <TextView
+                    android:id="@+id/infoFrag_txtDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:typeface="sans" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
