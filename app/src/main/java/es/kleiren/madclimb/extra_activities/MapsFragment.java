@@ -42,11 +42,9 @@ import es.kleiren.madclimb.R;
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
-
     MapView mMapView;
     private GoogleMap mMap;
     String location, name;
-
 
     private static final String ARG_LOC = "location";
     private static final String ARG_NAME = "name";

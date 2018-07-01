@@ -69,6 +69,7 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.data_classes.Datum;
+import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.R;
@@ -383,7 +384,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
      */
     private class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private final String[] TITLES = new String[]{"Sectores", "Información"};
+        private final String[] TITLES = new String[]{"Sectores", "Mapa", "Información"};
 
         public NavigationAdapter(FragmentManager fm) {
             super(fm);
@@ -399,6 +400,9 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                     f = SectorListFragment.newInstance(zone);
                     break;
                 case 1:
+                    f = SectorMapsFragment.newInstance(zone);
+                    break;
+                case 2:
                     f = InfoFragment.newInstance("zone", zone);
                     break;
             }
