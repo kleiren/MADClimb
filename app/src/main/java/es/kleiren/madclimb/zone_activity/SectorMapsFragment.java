@@ -20,6 +20,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,9 +33,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.android.gms.maps.CameraUpdate;
@@ -54,16 +63,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.root.GlideApp;
+import es.kleiren.madclimb.sector_activity.SectorActivity;
 
-public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener {
+public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
 
     private SectorDataAdapter adapter;
@@ -87,8 +101,6 @@ public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, 
             sectors = (ArrayList<Sector>) newValue;
             adapter = new SectorDataAdapter(sectors, getActivity());
             adapter.notifyDataSetChanged();
-            Log.i("CAARLOS2", "in");
-
 
         }
     };
@@ -187,21 +199,41 @@ public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, 
             mMap.setMyLocationEnabled(true);
 
 
+        mMap.setOnInfoWindowClickListener(this);
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
-            // Use default InfoWindow frame
             @Override
             public View getInfoWindow(Marker arg0) {
                 return null;
             }
 
-            // Defines the contents of the InfoWindow
             @Override
-            public View getInfoContents(Marker arg0) {
+            public View getInfoContents(final Marker arg0) {
 
                 View v = getLayoutInflater().inflate(R.layout.maps_info_window, null);
 
                 ((TextView) v.findViewById(R.id.mapsInfo_txtName)).setText(arg0.getTitle());
+
+                GlideApp.with(getContext())
+                        .load(FirebaseStorage.getInstance().getReference().child(sectorsFromFirebase.get(markers.indexOf(arg0)).getImg()))
+                        .placeholder(R.drawable.mountain_placeholder)
+                        .override(400, 200)
+                        .centerCrop()
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                if (!dataSource.equals(DataSource.MEMORY_CACHE))
+                                    arg0.showInfoWindow();
+                                return false;
+                            }
+                        })
+                        .into((ImageView) v.findViewById(R.id.imageView3));
+
                 return v;
 
             }
@@ -250,7 +282,6 @@ public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, 
 
     }
 
-
     private void centerMapOnMarkers() {
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -269,5 +300,16 @@ public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, 
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
         return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+            Intent intent = new Intent(getActivity(), SectorActivity.class);
+            intent.putExtra("zone", zone);
+            intent.putExtra("sectors", sectorsFromFirebase);
+            intent.putExtra("currentSectorPosition", markers.indexOf(marker));
+            startActivity(intent);
+
     }
 }

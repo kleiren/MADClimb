@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_item1"
+        android:icon="@drawable/ic_github"
+        android:title="Zonas"/>
+    <item
+        android:id="@+id/action_item2"
+        android:icon="@drawable/ic_add"
+        android:title="Mapa"/>
+    <item
+        android:id="@+id/action_item3"
+        android:icon="@drawable/star"
+        android:title="Favoritas"/>
+</menu>

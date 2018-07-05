@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    @BindView(R.id.navigation)
+    BottomNavigationView bottomNavigationView;
     private DatabaseReference mDatabase;
     public ArrayList<ArrayList<String>> zonesFromFirebase = new ArrayList<>();
     private boolean shownNewZones = false;
@@ -80,6 +82,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                        return true;
+                    }
+                });
 
         checkFirstRun();
     }
