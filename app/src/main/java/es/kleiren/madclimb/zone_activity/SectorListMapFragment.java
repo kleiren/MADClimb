@@ -20,12 +20,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -35,13 +32,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -53,7 +47,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -66,8 +59,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -77,7 +68,7 @@ import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.sector_activity.SectorActivity;
 
-public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+public class SectorListMapFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
 
     private SectorDataAdapter adapter;
@@ -105,8 +96,8 @@ public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, 
         }
     };
 
-    public static SectorMapsFragment newInstance(Zone zone) {
-        SectorMapsFragment fragment = new SectorMapsFragment();
+    public static SectorListMapFragment newInstance(Zone zone) {
+        SectorListMapFragment fragment = new SectorListMapFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_ZONE, zone);
         fragment.setArguments(args);
@@ -216,7 +207,7 @@ public class SectorMapsFragment extends Fragment implements OnMapReadyCallback, 
 
                 GlideApp.with(getContext())
                         .load(FirebaseStorage.getInstance().getReference().child(sectorsFromFirebase.get(markers.indexOf(arg0)).getImg()))
-                        .placeholder(R.drawable.mountain_placeholder)
+                        .placeholder(R.drawable.mountain_placeholder_small)
                         .override(400, 200)
                         .centerCrop()
                         .listener(new RequestListener<Drawable>() {

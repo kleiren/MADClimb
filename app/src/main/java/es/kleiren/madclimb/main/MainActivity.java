@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 
 import android.support.v4.view.GravityCompat;
@@ -22,11 +20,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
 import com.github.rubensousa.bottomsheetbuilder.BottomSheetMenuDialog;
-import com.github.rubensousa.bottomsheetbuilder.adapter.BottomSheetItemClickListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -56,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nav_view)
-    NavigationView navigationView;
+    NavigationView sideNavigationView;
     @BindView(R.id.navigation)
     BottomNavigationView bottomNavigationView;
     private DatabaseReference mDatabase;
@@ -81,16 +78,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                        return true;
-                    }
-                });
+        sideNavigationView.setNavigationItemSelectedListener(this);
+        bottomNavigationView.setBackgroundColor(Color.WHITE);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         checkFirstRun();
     }
@@ -154,6 +144,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
                         .withFields(R.string.class.getFields())
                         .start(this);
+                return true;
+
+            case R.id.nav_zones:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, ZoneListFragment.newInstance())
+                        .commit();
+                return true;
+
+            case R.id.nav_map:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, ZoneListMapFragment.newInstance())
+                        .commit();
+                return true;
+
+            case R.id.nav_favs:
+                Toast.makeText(this, "Próximamente :)", Toast.LENGTH_SHORT).show();
                 return true;
 
         }

@@ -45,35 +45,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.signature.ObjectKey;
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.github.ksoichiro.android.observablescrollview.Scrollable;
 import com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.nineoldandroids.view.ViewHelper;
 
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.kleiren.madclimb.data_classes.Datum;
-import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.R;
-import es.kleiren.madclimb.main.ZoneDataAdapter;
 import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.util.SlidingTabLayout;
 import es.kleiren.madclimb.data_classes.Zone;
@@ -400,7 +389,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
                     f = SectorListFragment.newInstance(zone);
                     break;
                 case 1:
-                    f = SectorMapsFragment.newInstance(zone);
+                    f = SectorListMapFragment.newInstance(zone);
                     break;
                 case 2:
                     f = InfoFragment.newInstance("zone", zone);
