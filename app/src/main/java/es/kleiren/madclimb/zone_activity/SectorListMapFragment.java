@@ -283,8 +283,11 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
         int padding = 500;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        mMap.moveCamera(cu);
-        mMap.animateCamera(cu);
+        try {
+            mMap.moveCamera(cu);
+            mMap.animateCamera(cu);
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -296,11 +299,11 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onInfoWindowClick(Marker marker) {
 
-            Intent intent = new Intent(getActivity(), SectorActivity.class);
-            intent.putExtra("zone", zone);
-            intent.putExtra("sectors", sectorsFromFirebase);
-            intent.putExtra("currentSectorPosition", markers.indexOf(marker));
-            startActivity(intent);
+        Intent intent = new Intent(getActivity(), SectorActivity.class);
+        intent.putExtra("zone", zone);
+        intent.putExtra("sectors", sectorsFromFirebase);
+        intent.putExtra("currentSectorPosition", markers.indexOf(marker));
+        startActivity(intent);
 
     }
 }

@@ -148,7 +148,10 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                     zonesFromFirebase.add(zone);
                     String[] latlon = zone.getLoc().split(",");
                     LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
-                    markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
+                    try {
+                        markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
+                    } catch (Exception e) {
+                    }
                 }
 
                 observableZoneList = new ObservableZoneList();
