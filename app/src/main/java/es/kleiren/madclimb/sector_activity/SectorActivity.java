@@ -3,6 +3,7 @@ package es.kleiren.madclimb.sector_activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -36,6 +37,10 @@ public class SectorActivity extends AppCompatActivity {
     private ArrayList<String> sectorTitles = new ArrayList<>();
 
     private Zone zone;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

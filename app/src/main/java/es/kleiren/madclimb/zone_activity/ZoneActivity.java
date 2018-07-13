@@ -31,6 +31,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.TypedValue;
@@ -100,6 +101,9 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
     private boolean mScrolled;
     private Zone zone;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -60,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ArrayList<ArrayList<String>> zonesFromFirebase = new ArrayList<>();
     private boolean shownNewZones = false;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,8 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void checkFirstRun() {
         boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
         if (isFirstRun) {
-            // Place your dialog code here to display the dialog
-
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(this);
 
@@ -183,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         public void onClick(DialogInterface dialog, int which) {
                         }
                     })
-                    .setIcon(getResources().getDrawable(R.drawable.info))
+                    .setIcon(getResources().getDrawable(R.drawable.ic_info_black))
                     .show();
             getSharedPreferences("PREFERENCE", MODE_PRIVATE)
                     .edit()

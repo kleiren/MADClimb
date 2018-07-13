@@ -164,7 +164,10 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                     sectorsFromFirebase.add(sector);
                     String[] latlon = sector.getLoc().split(",");
                     LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
-                    markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName())));
+                    try {
+                        markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName())));
+                    } catch (Exception e) {
+                    }
                 }
 
                 observableSectorList = new ObservableSectorList();
@@ -279,6 +282,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         for (Marker marker : markers) {
             builder.include(marker.getPosition());
         }
+
+        if (markers.isEmpty()) return;
+
         LatLngBounds bounds = builder.build();
 
         int padding = 500;
