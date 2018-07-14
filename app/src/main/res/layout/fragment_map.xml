@@ -1,5 +1,5 @@
 
-<com.github.ksoichiro.android.observablescrollview.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mapFrag_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,8 +23,14 @@
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/transparent_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:color/transparent" />
         <Button
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
@@ -41,4 +47,4 @@
     </RelativeLayout>
 
 
-</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+</LinearLayout>

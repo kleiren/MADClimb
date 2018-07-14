@@ -79,12 +79,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         final LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
 
 
-        final ObservableScrollView scrollView = view.findViewById(R.id.mapFrag_scroll);
         Activity parentActivity = getActivity();
-        scrollView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
+
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 

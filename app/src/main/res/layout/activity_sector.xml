@@ -19,12 +19,13 @@
             android:id="@+id/sectorAct_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="?attr/homeAsUpIndicator"
             android:layout_weight="1"
             android:background="?attr/colorPrimary"
+            app:navigationIcon="?attr/homeAsUpIndicator"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
         </android.support.v7.widget.Toolbar>
+
         <es.kleiren.madclimb.util.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
@@ -37,8 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-        </android.support.v4.view.ViewPager>
+    </android.support.v4.view.ViewPager>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -18,6 +18,7 @@ package es.kleiren.madclimb.zone_activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -28,10 +29,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -77,6 +81,8 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     private Zone zone;
     private static final String ARG_ZONE = "zone";
     private ObservableSectorList observableSectorList;
+    private OnTouchListener mListener;
+
 
     MapView mMapView;
     private GoogleMap mMap;
@@ -124,14 +130,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        final ObservableScrollView scrollView = view.findViewById(R.id.mapFrag_scroll);
-        final Activity parentActivity = getActivity();
-        scrollView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
 
         view.findViewById(R.id.openMaps).setVisibility(View.GONE);
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
+
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -145,7 +146,33 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
         mMapView.getMapAsync(this);
         prepareData();
+        ((FlexibleSpaceExampleActivity) getActivity()).disableScroll();
 
+        ImageView transparentImageView = (ImageView) view.findViewById(R.id.transparent_image);
+
+        transparentImageView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        Log.i("Carlos", "down");
+                        mListener.onTouch();
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        Log.i("Carlos", "up");
+                        mListener.onTouch();
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        return false;
+                    default:
+                        return true;
+                }
+
+            }
+        });
 
         return view;
     }
@@ -311,5 +338,35 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         intent.putExtra("currentSectorPosition", markers.indexOf(marker));
         startActivity(intent);
 
+    }
+
+    public void setListener(OnTouchListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnTouchListener {
+        public abstract void onTouch();
+    }
+
+    public class TouchableWrapper extends FrameLayout {
+
+        public TouchableWrapper(Context context) {
+            super(context);
+        }
+
+        @Override
+        public boolean dispatchTouchEvent(MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.i("Carlos", "down");
+                    mListener.onTouch();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Log.i("Carlos", "up");
+                    mListener.onTouch();
+                    break;
+            }
+            return super.dispatchTouchEvent(event);
+        }
     }
 }

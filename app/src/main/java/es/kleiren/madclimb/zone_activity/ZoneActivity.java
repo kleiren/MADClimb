@@ -371,10 +371,7 @@ public class ZoneActivity extends AppCompatActivity implements ObservableScrollV
         }
     }
 
-    /**
-     * This adapter provides two types of fragments as an example.
-     * {@linkplain #createItem(int)} should be modified if you use this example for your app.
-     */
+
     private class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
         private final String[] TITLES = new String[]{"Sectores", "Mapa", "Información"};
