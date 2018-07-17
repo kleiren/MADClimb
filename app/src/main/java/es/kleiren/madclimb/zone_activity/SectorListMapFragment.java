@@ -156,13 +156,10 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 switch (action) {
-
                     case MotionEvent.ACTION_DOWN:
-                        Log.i("Carlos", "down");
                         mListener.onTouch();
                         return false;
                     case MotionEvent.ACTION_UP:
-                        Log.i("Carlos", "up");
                         mListener.onTouch();
                         return false;
                     case MotionEvent.ACTION_MOVE:

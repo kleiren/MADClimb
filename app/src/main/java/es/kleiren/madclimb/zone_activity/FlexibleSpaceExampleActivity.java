@@ -19,8 +19,10 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Path;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -36,8 +38,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,8 +55,10 @@ import java.util.Map;
 
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.main.MainActivity;
+import es.kleiren.madclimb.root.GlideApp;
 
 public class FlexibleSpaceExampleActivity extends AppCompatActivity
         implements AppBarLayout.OnOffsetChangedListener, ViewPager.OnPageChangeListener {
@@ -77,6 +89,9 @@ public class FlexibleSpaceExampleActivity extends AppCompatActivity
 
         collapsingAppbar = (AppBarLayout) findViewById(R.id.flexible_example_appbar);
         collapsingAppbar.addOnOffsetChangedListener(this);
+        collapsingAppbar = (AppBarLayout) findViewById(R.id.flexible_example_appbar);
+        CollapsingToolbarLayout mCollapsing = findViewById(R.id.flexible_example_collapsing);
+        mCollapsing.setTitle(zone.getName());
 
         viewPager = (ViewPager) findViewById(R.id.materialup_viewpager);
         navigationAdapter = new NavigationAdapter(getSupportFragmentManager());
@@ -97,7 +112,40 @@ public class FlexibleSpaceExampleActivity extends AppCompatActivity
         });
         params.setBehavior(behavior);
 
+        View mImageView = findViewById(R.id.imageZone);
 
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        final StorageReference load = mStorageRef.child(zone.getImg());
+        final ProgressBar progressBar = findViewById(R.id.zoneAct_progressBar);
+
+
+        GlideApp.with(getApplicationContext())
+                .load(load)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into((ImageView) mImageView);
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ImageViewerActivity.class);
+                intent.putExtra("image", zone.getImg());
+                intent.putExtra("title", zone.getName());
+                startActivityForResult(intent, 1);
+            }
+        });
     }
 
     public void disableScroll(){
@@ -160,6 +208,33 @@ public class FlexibleSpaceExampleActivity extends AppCompatActivity
         }
     }
 
+    public void expandToolbar() {
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) collapsingAppbar.getLayoutParams();
+        final AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+
+        params.setBehavior(behavior);
+        if (behavior != null) {
+            ValueAnimator valueAnimator = ValueAnimator.ofInt();
+            valueAnimator.setInterpolator(new DecelerateInterpolator());
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    behavior.setTopAndBottomOffset((Integer) animation.getAnimatedValue());
+                    collapsingAppbar.requestLayout();
+                    behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+                        @Override
+                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                            return false;
+                        }
+                    });
+                }
+            });
+            valueAnimator.setIntValues(0, 900);
+            valueAnimator.setDuration(400);
+            valueAnimator.start();
+        }
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -170,6 +245,8 @@ public class FlexibleSpaceExampleActivity extends AppCompatActivity
     public void onPageSelected(int position) {
         if (position == 1) {
             collapseToolbar();
+        } else {
+            expandToolbar();
         }
 
     }
