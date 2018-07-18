@@ -35,14 +35,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -82,15 +79,11 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     private static final String ARG_ZONE = "zone";
     private ObservableSectorList observableSectorList;
     private OnTouchListener mListener;
-
-
     MapView mMapView;
     private GoogleMap mMap;
-
     private ArrayList<Marker> markers = new ArrayList<>();
-
-
     private ArrayList<Sector> sectors;
+
     private Observer sectorListChanged = new Observer() {
         @Override
         public void update(Observable o, Object newValue) {
@@ -146,7 +139,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
         mMapView.getMapAsync(this);
         prepareData();
-        ((FlexibleSpaceExampleActivity) getActivity()).disableScroll();
+        ((ZoneActivity) getActivity()).disableScroll();
 
         ImageView transparentImageView = (ImageView) view.findViewById(R.id.transparent_image);
 

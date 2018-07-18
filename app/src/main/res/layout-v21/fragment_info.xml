@@ -1,4 +1,4 @@
-<com.github.ksoichiro.android.observablescrollview.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll"
@@ -76,7 +76,6 @@
 
             </LinearLayout>
 
-
         </LinearLayout>
 
         <LinearLayout
@@ -113,8 +112,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/flexible_space_image_height"
                 android:layout_margin="10dp">
-
             </FrameLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -155,11 +154,8 @@
                 tools:layout_constraintLeft_creator="1"
                 tools:layout_constraintTop_creator="1" />
 
-
         </LinearLayout>
-
 
     </LinearLayout>
 
-
-</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+</ScrollView>

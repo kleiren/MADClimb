@@ -37,8 +37,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,16 +61,12 @@ import java.util.Observable;
 import java.util.Observer;
 
 import es.kleiren.madclimb.R;
-import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
-import es.kleiren.madclimb.sector_activity.SectorActivity;
-import es.kleiren.madclimb.zone_activity.ObservableSectorList;
-import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
+
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
 public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
-
 
     private ZoneDataAdapter adapter;
     private Activity parentActivity;

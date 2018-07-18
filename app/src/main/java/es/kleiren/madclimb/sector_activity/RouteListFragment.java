@@ -16,18 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.ObjectKey;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -40,8 +34,6 @@ import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
 
-import static android.content.Context.MODE_PRIVATE;
-
 
 public class RouteListFragment extends Fragment {
 
@@ -52,17 +44,15 @@ public class RouteListFragment extends Fragment {
     private Sector sector;
 
     @BindView(R.id.card_route_view)
-    ObservableRecyclerView recyclerRoute;
+    RecyclerView recyclerRoute;
     @BindView(R.id.route_imgCroquis)
     ImageView imgCroquis;
     @BindView(R.id.route_initial_progress)
     ProgressBar initialProgress;
 
-    public RouteListFragment() {
-    }
+    public RouteListFragment() {}
 
     private static final String ARG_SECTOR = "sector";
-
 
     public static RouteListFragment newInstance(Sector sector) {
         RouteListFragment fragment = new RouteListFragment();
@@ -71,7 +61,6 @@ public class RouteListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,11 +107,9 @@ public class RouteListFragment extends Fragment {
         return routeView;
     }
 
-
     private void prepareData() {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
         mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -141,48 +128,13 @@ public class RouteListFragment extends Fragment {
             }
         });
 
-
     }
 
     private void initViews() {
-
         recyclerRoute.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerRoute.setHasFixedSize(false);
-        recyclerRoute.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
-
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            recyclerRoute.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
-
         recyclerRoute.setAdapter(adapter);
-
-        recyclerRoute.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-            });
-
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
     }
-
 
     private class LoadData extends AsyncTask<String, Void, String> {
 

@@ -2,6 +2,7 @@ package es.kleiren.madclimb.sector_activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -16,26 +17,29 @@ import android.view.MenuItem;
 
 import android.view.View;
 
-import com.google.firebase.database.DatabaseReference;
-
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
-import es.kleiren.madclimb.util.SlidingTabLayout;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.util.SlidingTabLayout;
 
 public class SectorActivity extends AppCompatActivity {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    @BindView(R.id.sectorAct_pager)
+     ViewPager viewPager;
+    @BindView(R.id.sectorAct_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.sectorAct_tabLayout)
+    SlidingTabLayout tabLayout;
+
+    private NavigationAdapter mSectionsPagerAdapter;
     private ArrayList<Sector> sectorsFromFirebase;
-
-    private ViewPager mViewPager;
-    private DatabaseReference mDatabase;
-
     private ArrayList<String> sectorTitles = new ArrayList<>();
-
     private Zone zone;
 
     static {
@@ -47,11 +51,12 @@ public class SectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sector);
 
+        ButterKnife.bind(this);
+
         zone = (Zone) getIntent().getSerializableExtra("zone");
         int currentSectorPosition = getIntent().getIntExtra("currentSectorPosition", 0);
         sectorsFromFirebase = (ArrayList<Sector>) getIntent().getSerializableExtra("sectors");
 
-        Toolbar toolbar = findViewById(R.id.sectorAct_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,18 +68,13 @@ public class SectorActivity extends AppCompatActivity {
 
         for (Sector sector : sectorsFromFirebase) sectorTitles.add(sector.getName());
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(currentSectorPosition);
-
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-        slidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorAccent));
-        slidingTabLayout.setDistributeEvenly(true);
-        slidingTabLayout.setViewPager(mViewPager);
+        mSectionsPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mSectionsPagerAdapter);
+        viewPager.setCurrentItem(currentSectorPosition);
+        tabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
+        tabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorAccent));
+        tabLayout.setDistributeEvenly(true);
+        tabLayout.setViewPager(viewPager);
 
     }
 
@@ -115,9 +115,9 @@ public class SectorActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class NavigationAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public NavigationAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -138,4 +138,6 @@ public class SectorActivity extends AppCompatActivity {
             return f;
         }
     }
+
+
 }

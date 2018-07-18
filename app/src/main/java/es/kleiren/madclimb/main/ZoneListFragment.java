@@ -38,7 +38,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
-import es.kleiren.madclimb.zone_activity.FlexibleSpaceExampleActivity;
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
 public class ZoneListFragment extends Fragment {
@@ -152,12 +151,8 @@ public class ZoneListFragment extends Fragment {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-//                    zone = adapter.getZone(position);
-//                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
-//                    intent.putExtra("zone", zone);
-//                    startActivityForResult(intent, 1);
                     zone = adapter.getZone(position);
-                    Intent intent = new Intent(getActivity(), FlexibleSpaceExampleActivity.class);
+                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
                     intent.putExtra("zone", zone);
                     startActivityForResult(intent, 1);
 

@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +44,7 @@ public class SectorListFragment extends Fragment {
     private ObservableSectorList observableSectorList;
 
     @BindView(R.id.card_sector_view)
-    ObservableRecyclerView recyclerSector;
+    RecyclerView recyclerSector;
     @BindView(R.id.sector_initial_progress)
     ProgressBar initialProgress;
 
@@ -131,11 +129,6 @@ public class SectorListFragment extends Fragment {
 
         recyclerSector.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerSector.setHasFixedSize(false);
-        recyclerSector.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
-
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            recyclerSector.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
 
         adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
         recyclerSector.setAdapter(adapter);
