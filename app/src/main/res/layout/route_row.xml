@@ -62,29 +62,31 @@
         android:background="@drawable/comment_background"
         card_view:cardCornerRadius="0dp">
 
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/idle"
             android:layout_width="match_parent"
-
             android:layout_height="50dp">
-
 
             <TextView
                 android:id="@+id/routeRow_txtRouteName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:text=""
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="2dp"
+                android:autoSizeMaxTextSize="18sp"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/routeRow_arrow"
                 card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                android:layout_marginLeft="20dp" />
+                tools:targetApi="o"
+                android:layout_width="0dp" />
 
             <ImageView
                 android:id="@+id/routeRow_arrow"
@@ -102,17 +104,16 @@
                 android:id="@+id/routeRow_txtRouteGrade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="8dp"
                 android:gravity="end"
                 android:textColor="@android:color/holo_green_light"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintRight_toRightOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                android:layout_marginRight="20dp" />
+                card_view:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout

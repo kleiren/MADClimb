@@ -88,7 +88,8 @@ public class SectorListFragment extends Fragment {
         View zoneView = inflater.inflate(R.layout.fragment_sector_list, container, false);
         ButterKnife.bind(this, zoneView);
 
-        prepareData();
+        if (sectorsFromFirebase.isEmpty())
+            prepareData();
         initViews();
 
         return zoneView;
@@ -102,8 +103,6 @@ public class SectorListFragment extends Fragment {
         mDatabase.child("zones/" + zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);

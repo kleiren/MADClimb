@@ -85,6 +85,7 @@ public class ZoneListFragment extends Fragment {
         ButterKnife.bind(this, zoneView);
         zonesFromFirebase = new ArrayList<>();
         prepareData();
+        initViews();
         return zoneView;
     }
 
@@ -102,8 +103,6 @@ public class ZoneListFragment extends Fragment {
                 observableZoneList = new ObservableZoneList();
                 observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
                 observableZoneList.addObserver(zoneListChanged);
-
-                initViews();
             }
 
             @Override

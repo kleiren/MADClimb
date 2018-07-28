@@ -52,6 +52,7 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class InfoFragment extends Fragment {
+
     String type;
     Datum datum;
 
@@ -59,11 +60,13 @@ public class InfoFragment extends Fragment {
     private static final String ARG_DATUM = "datum";
     private ArrayList<Route> routes;
 
-    Map<String, Integer> map = new HashMap<String, Integer>() {{
+    private Map<String, Integer> map = new HashMap<String, Integer>() {{
         put("3", 1);
         put("3+", 1);
+        put("IV-", 1);
         put("IV", 1);
         put("IV+", 1);
+        put("V-", 1);
         put("V", 1);
         put("V+", 1);
         put("6a", 2);
@@ -78,6 +81,18 @@ public class InfoFragment extends Fragment {
         put("7b+", 2);
         put("7c", 3);
         put("7c+", 3);
+        put("8a", 4);
+        put("8a+", 4);
+        put("8b", 4);
+        put("8b+", 4);
+        put("8c", 4);
+        put("8c+", 4);
+        put("9a", 4);
+        put("9a+", 4);
+        put("9b", 4);
+        put("9b+", 4);
+        put("9c", 4);
+        put("9c+", 4);
     }};
 
     @BindView(R.id.infoFrag_gradeChart)
@@ -90,7 +105,8 @@ public class InfoFragment extends Fragment {
     View layoutDate;
     @BindView(R.id.infoFrag_txtInfo)
     TextView txtInfo;
-
+    @BindView(R.id.infoFrag_layoutDescription)
+    View layoutDescription;
 
     public static InfoFragment newInstance(String type, Datum datum) {
         InfoFragment fragment = new InfoFragment();
@@ -100,7 +116,6 @@ public class InfoFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,14 +138,18 @@ public class InfoFragment extends Fragment {
                 .replace(R.id.infoFrag_mapContainer, MapsFragment.newInstance(datum.getLoc(), datum.getName()))
                 .commit();
 
-        txtInfo.setText(datum.getDescription());
         layoutDate.setVisibility(View.GONE);
+        layoutDescription.setVisibility(View.GONE);
 
         if (type.equals("sector"))
             try {
                 if (!((Sector) datum).getDate().isEmpty()) {
                     layoutDate.setVisibility(View.VISIBLE);
                     textViewDate.setText(((Sector) datum).getDate());
+                }
+                if (!(datum).getDescription().isEmpty()) {
+                    layoutDescription.setVisibility(View.VISIBLE);
+                    txtInfo.setText((datum).getDescription());
                 }
             } catch (Exception e) {
             }

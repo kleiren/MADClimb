@@ -46,8 +46,10 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private Map<String, Integer> map = new HashMap<String, Integer>() {{
         put("3", 1);
         put("3+", 1);
+        put("IV-", 1);
         put("IV", 1);
         put("IV+", 1);
+        put("V-", 1);
         put("V", 1);
         put("V+", 1);
         put("6a", 2);
@@ -62,7 +64,20 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         put("7b+", 2);
         put("7c", 3);
         put("7c+", 3);
+        put("8a", 4);
+        put("8a+", 4);
+        put("8b", 4);
+        put("8b+", 4);
+        put("8c", 4);
+        put("8c+", 4);
+        put("9a", 4);
+        put("9a+", 4);
+        put("9b", 4);
+        put("9b+", 4);
+        put("9c", 4);
+        put("9c+", 4);
     }};
+
     private Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
     private Integer[] colors;
     private String[] labels;
