@@ -92,7 +92,6 @@ public class RouteListFragment extends Fragment {
         imgCroquis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
                 intent.putExtra("image", sector.getCroquis());
                 intent.putExtra("title", sector.getName());

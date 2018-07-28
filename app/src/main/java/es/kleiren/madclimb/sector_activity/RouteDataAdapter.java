@@ -121,7 +121,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         viewHolder.txtDetails.setText(routes.get(i).getDescription());
 
         if (!routes.get(i).getDescription().isEmpty()) {
-
             viewHolder.imageArrow.setVisibility(View.VISIBLE);
             final boolean isExpanded = i == mExpandedPosition;
             viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);

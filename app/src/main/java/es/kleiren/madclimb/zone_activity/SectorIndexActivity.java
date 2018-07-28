@@ -1,41 +1,80 @@
-package es.kleiren.madclimb.sector_activity;
+/*
+ * Copyright (C) 2017
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package es.kleiren.madclimb.zone_activity;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
+import es.kleiren.madclimb.extra_activities.InfoActivity;
+import es.kleiren.madclimb.extra_activities.InfoFragment;
+import es.kleiren.madclimb.root.GlideApp;
+import es.kleiren.madclimb.sector_activity.RouteListFragment;
+import es.kleiren.madclimb.sector_activity.SectorActivity;
 import es.kleiren.madclimb.util.SlidingTabLayout;
 
-public class SectorActivity extends AppCompatActivity {
+public class SectorIndexActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.sectorAct_pager)
-    ViewPager viewPager;
-    @BindView(R.id.sectorAct_toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.sectorAct_tabLayout)
+    @BindView(R.id.sectorIndexAct_tabLayout)
     SlidingTabLayout tabLayout;
+    @BindView(R.id.sectorIndexAct_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.sectorIndexAct_pager)
+    ViewPager viewPager;
 
     private NavigationAdapter mSectionsPagerAdapter;
     private ArrayList<Sector> sectorsFromFirebase;
@@ -49,7 +88,7 @@ public class SectorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sector);
+        setContentView(R.layout.activity_sector_index);
 
         ButterKnife.bind(this);
 
@@ -98,11 +137,11 @@ public class SectorActivity extends AppCompatActivity {
         }
 
         if (id == R.id.error){
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","madclimbapp@gmail.com", null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
-                return true;
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto","madclimbapp@gmail.com", null));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
+            startActivity(Intent.createChooser(emailIntent, "Send email..."));
+            return true;
 
         }
         return super.onOptionsItemSelected(item);
@@ -131,7 +170,7 @@ public class SectorActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             Fragment f;
-            f = RouteListFragment.newInstance(sectorsFromFirebase.get(position));
+            f = SectorIndexListFragment.newInstance(zone);
             return f;
         }
     }
