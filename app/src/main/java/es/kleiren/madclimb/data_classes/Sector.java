@@ -11,11 +11,18 @@ public class Sector extends Datum implements Serializable {
     private String zoneName;
     private int numOfRoutes;
     private String zone_id;
-    private String croquis;
     private String date;
+    private String has_sub_sectors;
+    private String parentSector;
 
     public String getDate() {
         return date;
+    }
+
+    public Boolean hasSubSectors() {
+        if (has_sub_sectors != null) {
+            return has_sub_sectors.equals("true");
+        } else return false;
     }
 
     public void setDate(String date) {
@@ -28,14 +35,6 @@ public class Sector extends Datum implements Serializable {
 
     public void setZone_id(String zone_id) {
         this.zone_id = zone_id;
-    }
-
-    public String getCroquis() {
-        return croquis;
-    }
-
-    public void setCroquis(String croquis) {
-        this.croquis = croquis;
     }
 
     public String getZoneName() {
@@ -54,5 +53,19 @@ public class Sector extends Datum implements Serializable {
         this.numOfRoutes = numOfRoutes;
     }
 
+    public void setHas_sub_sectors(String has_sub_sectors) {
+        this.has_sub_sectors = has_sub_sectors;
+    }
 
+    public String getHas_sub_sectors() {
+        return has_sub_sectors;
+    }
+
+    public String getParentSector() {
+        return parentSector;
+    }
+
+    public void setParentSector(String parentSector) {
+        this.parentSector = parentSector;
+    }
 }

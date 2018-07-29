@@ -26,8 +26,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -42,11 +40,9 @@ import es.kleiren.madclimb.R;
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
-
     MapView mMapView;
     private GoogleMap mMap;
     String location, name;
-
 
     private static final String ARG_LOC = "location";
     private static final String ARG_NAME = "name";
@@ -81,12 +77,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         final LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
 
 
-        final ObservableScrollView scrollView = view.findViewById(R.id.mapFrag_scroll);
         Activity parentActivity = getActivity();
-        scrollView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
+
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 

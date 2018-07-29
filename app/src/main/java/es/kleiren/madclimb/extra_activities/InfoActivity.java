@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.transition.Fade;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.transition.AutoTransition;
 import android.view.View;
@@ -20,6 +21,10 @@ public class InfoActivity extends AppCompatActivity {
     String type;
     @BindView(R.id.infoAct_toolbar)
     Toolbar toolbar;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

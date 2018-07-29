@@ -45,7 +45,7 @@
             app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
     </android.support.v7.widget.CardView>
 
-    <com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/card_route_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

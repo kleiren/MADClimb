@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_zones"
+        android:icon="@drawable/zones_icon"
+        android:title="Zonas"/>
+    <item
+        android:id="@+id/nav_map"
+        android:icon="@drawable/map_marker"
+        android:title="Mapa"/>
+    <item
+        android:id="@+id/nav_favs"
+        android:icon="@drawable/star"
+        android:title="Favoritas"/>
+</menu>

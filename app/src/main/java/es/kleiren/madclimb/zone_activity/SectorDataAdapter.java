@@ -72,13 +72,8 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
     @Override
     public void onBindViewHolder(final SectorDataAdapter.ViewHolder viewHolder, int i) {
 
-        if (i != filteredSectors.size() -1)
-            viewHolder.filler.setVisibility(View.GONE);
-
         viewHolder.txt_name.setText(filteredSectors.get(i).getName());
-
         final StorageReference load = mStorageRef.child(filteredSectors.get(i).getImg());
-
         GlideApp.with(context)
                 .load(load)
                 .placeholder(R.drawable.mountain_placeholder)
@@ -89,7 +84,6 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
                         viewHolder.progressBar.setVisibility(View.GONE);
                         return false;
                     }
-
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         viewHolder.progressBar.setVisibility(View.GONE);
@@ -141,8 +135,6 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
         ImageView img;
         @BindView(R.id.sectorRow_progressBar)
         ProgressBar progressBar;
-        @BindView(R.id.filler)
-        LinearLayout filler;
 
         public ViewHolder(View view) {
             super(view);

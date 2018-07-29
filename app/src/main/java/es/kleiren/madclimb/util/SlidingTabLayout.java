@@ -36,7 +36,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public interface TabColorizer {
 
-
         int getIndicatorColor(int position);
 
     }
@@ -67,14 +66,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false);
-        // Make sure that the Tab Strips fills this View
         setFillViewport(true);
-
         mTitleOffset = (int) (TITLE_OFFSET_DIPS * getResources().getDisplayMetrics().density);
-
         mTabStrip = new SlidingTabStrip(context);
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }

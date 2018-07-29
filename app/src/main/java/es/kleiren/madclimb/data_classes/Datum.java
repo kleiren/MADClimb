@@ -14,10 +14,10 @@ public class Datum implements Serializable {
     private String loc;
     private String img;
 
-
     public String getImg() {
         return img;
     }
+
     public void setImg(String img) {
         this.img = img;
     }
@@ -30,8 +30,6 @@ public class Datum implements Serializable {
         this.id = id;
     }
 
-
-
     public String getLoc() {
         return loc;
     }
@@ -39,8 +37,6 @@ public class Datum implements Serializable {
     public void setLoc(String loc) {
         this.loc = loc;
     }
-
-
 
     public String getName() {
         return name;
@@ -57,7 +53,5 @@ public class Datum implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-
 
 }

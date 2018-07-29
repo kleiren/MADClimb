@@ -8,26 +8,18 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.ObjectKey;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -40,8 +32,6 @@ import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
 
-import static android.content.Context.MODE_PRIVATE;
-
 
 public class RouteListFragment extends Fragment {
 
@@ -52,17 +42,15 @@ public class RouteListFragment extends Fragment {
     private Sector sector;
 
     @BindView(R.id.card_route_view)
-    ObservableRecyclerView recyclerRoute;
+    RecyclerView recyclerRoute;
     @BindView(R.id.route_imgCroquis)
     ImageView imgCroquis;
     @BindView(R.id.route_initial_progress)
     ProgressBar initialProgress;
 
-    public RouteListFragment() {
-    }
+    public RouteListFragment() {}
 
     private static final String ARG_SECTOR = "sector";
-
 
     public static RouteListFragment newInstance(Sector sector) {
         RouteListFragment fragment = new RouteListFragment();
@@ -72,7 +60,6 @@ public class RouteListFragment extends Fragment {
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +67,6 @@ public class RouteListFragment extends Fragment {
             sector = (Sector) getArguments().getSerializable(ARG_SECTOR);
         }
         parentActivity = getActivity();
-
     }
 
     @Override
@@ -93,7 +79,7 @@ public class RouteListFragment extends Fragment {
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        final StorageReference load = mStorageRef.child(sector.getCroquis());
+        final StorageReference load = mStorageRef.child(sector.getImg());
 
         GlideApp.with(getActivity())
                 .load(load)
@@ -103,9 +89,8 @@ public class RouteListFragment extends Fragment {
         imgCroquis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-                intent.putExtra("image", sector.getCroquis());
+                intent.putExtra("image", sector.getImg());
                 intent.putExtra("title", sector.getName());
                 startActivityForResult(intent, 1);
             }
@@ -118,15 +103,16 @@ public class RouteListFragment extends Fragment {
         return routeView;
     }
 
-
     private void prepareData() {
-
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
+        DatabaseReference child;
+        if (sector.getParentSector() != null)
+            child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getParentSector() + "/sub_sectors/" + sector.getId() + "/routes");
+        else
+            child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes");
+        child.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
                     routesFromFirebase.add(route);
@@ -140,49 +126,13 @@ public class RouteListFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
-
     }
 
     private void initViews() {
-
         recyclerRoute.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerRoute.setHasFixedSize(false);
-        recyclerRoute.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
-
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            recyclerRoute.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
-
         recyclerRoute.setAdapter(adapter);
-
-        recyclerRoute.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-            });
-
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
     }
-
 
     private class LoadData extends AsyncTask<String, Void, String> {
 
@@ -200,11 +150,8 @@ public class RouteListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-
             initialProgress.setVisibility(View.GONE);
-
             super.onPostExecute(s);
         }
     }
-
 }

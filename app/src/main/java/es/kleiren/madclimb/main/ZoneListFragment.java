@@ -42,29 +42,22 @@ import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
 public class ZoneListFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
     private ZoneDataAdapter adapter;
     private SearchView searchView;
-    @BindView(R.id.card_recycler_view_zones)
-    RecyclerView recyclerView;
-    private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-    private AlertDialog dialog;
     private ArrayList<Zone> zonesFromFirebase;
-    private Uri fileToUploadUri;
-    TextView txtFileToUpload;
-    private UploadTask uploadTask;
     private Zone zone;
-    ArrayList<Zone> zoneList = new ArrayList<>();
+    private ArrayList<Zone> zoneList = new ArrayList<>();
     private ObservableZoneList observableZoneList;
 
+    @BindView(R.id.card_recycler_view_zones)
+    RecyclerView recyclerView;
 
     public ZoneListFragment() {
     }
 
     public static ZoneListFragment newInstance() {
-        ZoneListFragment fragment = new ZoneListFragment();
-        return fragment;
+        return new ZoneListFragment();
     }
 
     private Observer zoneListChanged = new Observer() {
@@ -72,7 +65,6 @@ public class ZoneListFragment extends Fragment {
         public void update(Observable o, Object newValue) {
 
             zoneList = (ArrayList<Zone>) newValue;
-            zoneList = sortBySectors(zoneList);
             adapter = new ZoneDataAdapter(zoneList, getActivity());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -84,7 +76,6 @@ public class ZoneListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
     @Override
@@ -94,6 +85,7 @@ public class ZoneListFragment extends Fragment {
         ButterKnife.bind(this, zoneView);
         zonesFromFirebase = new ArrayList<>();
         prepareData();
+        initViews();
         return zoneView;
     }
 
@@ -103,7 +95,6 @@ public class ZoneListFragment extends Fragment {
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zonesFromFirebase.add(zone);
@@ -112,8 +103,6 @@ public class ZoneListFragment extends Fragment {
                 observableZoneList = new ObservableZoneList();
                 observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
                 observableZoneList.addObserver(zoneListChanged);
-
-                initViews();
             }
 
             @Override
@@ -165,6 +154,7 @@ public class ZoneListFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), ZoneActivity.class);
                     intent.putExtra("zone", zone);
                     startActivityForResult(intent, 1);
+
                 }
 
                 return false;
@@ -219,43 +209,4 @@ public class ZoneListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent data) {
-        // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1001) {
-            Uri currFileURI = data.getData();
-            fileToUploadUri = currFileURI;
-            txtFileToUpload.setText(fileToUploadUri.getPath());
-        }
-    }
-
-    ArrayList<Zone> sortBySectors(ArrayList<Zone> zones) {
-        ArrayList<Zone> newZones = new ArrayList<>();
-        ArrayList<Zone> zonesWithSectors = new ArrayList<>();
-        ArrayList<Zone> zonesWithoutSectors = new ArrayList<>();
-
-        for (Zone zone : zones) {
-            if (zone.getHasSectors())
-                zonesWithSectors.add(zone);
-            else
-                zonesWithoutSectors.add(zone);
-        }
-        newZones.addAll(zonesWithSectors);
-        newZones.addAll(zonesWithoutSectors);
-
-        return newZones;
-    }
 }

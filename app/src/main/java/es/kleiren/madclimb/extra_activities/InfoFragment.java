@@ -16,7 +16,6 @@
 
 package es.kleiren.madclimb.extra_activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,8 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +51,7 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class InfoFragment extends Fragment {
+
     String type;
     Datum datum;
 
@@ -61,11 +59,13 @@ public class InfoFragment extends Fragment {
     private static final String ARG_DATUM = "datum";
     private ArrayList<Route> routes;
 
-    Map<String, Integer> map = new HashMap<String, Integer>() {{
+    private Map<String, Integer> map = new HashMap<String, Integer>() {{
         put("3", 1);
         put("3+", 1);
+        put("IV-", 1);
         put("IV", 1);
         put("IV+", 1);
+        put("V-", 1);
         put("V", 1);
         put("V+", 1);
         put("6a", 2);
@@ -80,6 +80,18 @@ public class InfoFragment extends Fragment {
         put("7b+", 2);
         put("7c", 3);
         put("7c+", 3);
+        put("8a", 4);
+        put("8a+", 4);
+        put("8b", 4);
+        put("8b+", 4);
+        put("8c", 4);
+        put("8c+", 4);
+        put("9a", 4);
+        put("9a+", 4);
+        put("9b", 4);
+        put("9b+", 4);
+        put("9c", 4);
+        put("9c+", 4);
     }};
 
     @BindView(R.id.infoFrag_gradeChart)
@@ -92,7 +104,8 @@ public class InfoFragment extends Fragment {
     View layoutDate;
     @BindView(R.id.infoFrag_txtInfo)
     TextView txtInfo;
-
+    @BindView(R.id.infoFrag_layoutDescription)
+    View layoutDescription;
 
     public static InfoFragment newInstance(String type, Datum datum) {
         InfoFragment fragment = new InfoFragment();
@@ -103,7 +116,6 @@ public class InfoFragment extends Fragment {
         return fragment;
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +123,6 @@ public class InfoFragment extends Fragment {
         if (getArguments() != null) {
             type = getArguments().getString(ARG_TYPE);
             datum = (Datum) getArguments().getSerializable(ARG_DATUM);
-
         }
     }
 
@@ -125,21 +136,18 @@ public class InfoFragment extends Fragment {
                 .replace(R.id.infoFrag_mapContainer, MapsFragment.newInstance(datum.getLoc(), datum.getName()))
                 .commit();
 
-        final ObservableScrollView scrollView = view.findViewById(R.id.scroll);
-        Activity parentActivity = getActivity();
-        scrollView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            scrollView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
-
-        txtInfo.setText(datum.getDescription());
         layoutDate.setVisibility(View.GONE);
+        layoutDescription.setVisibility(View.GONE);
 
         if (type.equals("sector"))
             try {
                 if (!((Sector) datum).getDate().isEmpty()) {
                     layoutDate.setVisibility(View.VISIBLE);
                     textViewDate.setText(((Sector) datum).getDate());
+                }
+                if (!(datum).getDescription().isEmpty()) {
+                    layoutDescription.setVisibility(View.VISIBLE);
+                    txtInfo.setText((datum).getDescription());
                 }
             } catch (Exception e) {
             }
@@ -159,20 +167,20 @@ public class InfoFragment extends Fragment {
     private void prepareData() {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
         routes = new ArrayList<>();
-
-        mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + datum.getId() + "/routes").addValueEventListener(new ValueEventListener() {
+        DatabaseReference child;
+        if (((Sector) datum).getParentSector() != null)
+            child = mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + ((Sector) datum).getParentSector() + "/sub_sectors/" +  datum.getId() + "/routes");
+        else
+            child = mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + datum.getId() + "/routes");
+        child.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
                     routes.add(route);
                 }
                 generateData();
-
             }
 
             @Override
@@ -180,8 +188,6 @@ public class InfoFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
-
     }
 
     private void generateData() {

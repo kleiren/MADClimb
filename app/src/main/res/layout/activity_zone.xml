@@ -1,93 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
 
-<com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/annonce.main.coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="RtlHardcoded">
 
-    <FrameLayout
-        android:id="@+id/pager_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/header"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/zoneAct_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-
-        <com.github.chrisbanes.photoview.PhotoView
-            android:id="@+id/imageZone"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/zoneAct_collapTollbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/flexible_space_image_height"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/mountain_placeholder" />
+            android:layout_height="220dp"
+            app:contentScrim="?colorPrimary"
+            app:expandedTitleMarginBottom="24dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="Title">
 
-        <View
-            android:id="@+id/overlay"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/flexible_space_image_height"
-            android:background="?attr/colorPrimary" />
-
-
-        <es.kleiren.madclimb.util.SlidingTabLayout
-            android:id="@+id/sliding_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
-            android:background="@color/colorTranslucent" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/flexible_space_image_height">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="54dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:minHeight="?attr/actionBarSize"
-                android:paddingLeft="10dp"
-                android:paddingStart="10dp"
-                android:text="Title"
-                android:textColor="@android:color/white"
-                style="@style/ShadowedText"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
+            <com.github.chrisbanes.photoview.PhotoView
+                android:id="@+id/zoneAct_imageZone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/flexible_space_image_height"
-                android:background="@android:color/transparent" />
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/mountain_placeholder" />
 
             <ProgressBar
                 android:id="@+id/zoneAct_progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
+                android:layout_centerVertical="true"
+                android:layout_gravity="center" />
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/zoneAct_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@null"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/abc_ic_ab_back_material"
+                />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/zoneAct_tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            app:navigationIcon="?attr/homeAsUpIndicator"
-            app:popupTheme="@style/ToolbarThemeWhite"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </FrameLayout>
+            android:layout_gravity="bottom"
+            android:layout_height="36dp"
+            android:background="@color/colorTranslucent"
+            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabIndicatorHeight="4dp"
+            app:tabSelectedTextColor="@color/white" />
 
+    </android.support.design.widget.AppBarLayout>
 
-</com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/zoneAct_nestedScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/zoneAct_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

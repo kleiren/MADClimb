@@ -46,8 +46,10 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private Map<String, Integer> map = new HashMap<String, Integer>() {{
         put("3", 1);
         put("3+", 1);
+        put("IV-", 1);
         put("IV", 1);
         put("IV+", 1);
+        put("V-", 1);
         put("V", 1);
         put("V+", 1);
         put("6a", 2);
@@ -62,7 +64,20 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         put("7b+", 2);
         put("7c", 3);
         put("7c+", 3);
+        put("8a", 4);
+        put("8a+", 4);
+        put("8b", 4);
+        put("8b+", 4);
+        put("8c", 4);
+        put("8c+", 4);
+        put("9a", 4);
+        put("9a+", 4);
+        put("9b", 4);
+        put("9b+", 4);
+        put("9c", 4);
+        put("9c+", 4);
     }};
+
     private Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
     private Integer[] colors;
     private String[] labels;
@@ -106,7 +121,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         viewHolder.txtDetails.setText(routes.get(i).getDescription());
 
         if (!routes.get(i).getDescription().isEmpty()) {
-
             viewHolder.imageArrow.setVisibility(View.VISIBLE);
             final boolean isExpanded = i == mExpandedPosition;
             viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -201,11 +215,9 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         @BindView(R.id.routeRow_arrow)
         ImageView imageArrow;
 
-
         ViewHolder(View view, boolean first) {
             super(view);
             ButterKnife.bind(this, view);
-
             if (first) {
                 chart.setZoomEnabled(false);
             } else {
@@ -213,7 +225,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             }
             details.setVisibility(View.GONE);
             imageArrow.setVisibility(View.GONE);
-
         }
     }
 }

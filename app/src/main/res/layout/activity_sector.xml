@@ -19,26 +19,29 @@
             android:id="@+id/sectorAct_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="?attr/homeAsUpIndicator"
             android:layout_weight="1"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-        </android.support.v7.widget.Toolbar>
         <es.kleiren.madclimb.util.SlidingTabLayout
-            android:id="@+id/sliding_tabs"
+            android:id="@+id/sectorAct_tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
-            android:background="@color/colorTranslucent" />
+            android:layout_gravity="bottom"
+            android:layout_height="36dp"
+            android:background="@color/colorTranslucent"
+            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabIndicatorHeight="4dp"
+            app:tabSelectedTextColor="@color/white"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+        android:id="@+id/sectorAct_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-        </android.support.v4.view.ViewPager>
+    </android.support.v4.view.ViewPager>
 
 </android.support.design.widget.CoordinatorLayout>
