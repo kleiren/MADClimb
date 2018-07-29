@@ -215,11 +215,9 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         @BindView(R.id.routeRow_arrow)
         ImageView imageArrow;
 
-
         ViewHolder(View view, boolean first) {
             super(view);
             ButterKnife.bind(this, view);
-
             if (first) {
                 chart.setZoomEnabled(false);
             } else {
@@ -227,7 +225,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             }
             details.setVisibility(View.GONE);
             imageArrow.setVisibility(View.GONE);
-
         }
     }
 }

@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -69,7 +67,6 @@ public class RouteListFragment extends Fragment {
             sector = (Sector) getArguments().getSerializable(ARG_SECTOR);
         }
         parentActivity = getActivity();
-
     }
 
     @Override
@@ -82,7 +79,7 @@ public class RouteListFragment extends Fragment {
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        final StorageReference load = mStorageRef.child(sector.getCroquis());
+        final StorageReference load = mStorageRef.child(sector.getImg());
 
         GlideApp.with(getActivity())
                 .load(load)
@@ -93,7 +90,7 @@ public class RouteListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-                intent.putExtra("image", sector.getCroquis());
+                intent.putExtra("image", sector.getImg());
                 intent.putExtra("title", sector.getName());
                 startActivityForResult(intent, 1);
             }
@@ -107,12 +104,15 @@ public class RouteListFragment extends Fragment {
     }
 
     private void prepareData() {
-
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes").addValueEventListener(new ValueEventListener() {
+        DatabaseReference child;
+        if (sector.getParentSector() != null)
+            child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getParentSector() + "/sub_sectors/" + sector.getId() + "/routes");
+        else
+            child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes");
+        child.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
                     routesFromFirebase.add(route);
@@ -126,7 +126,6 @@ public class RouteListFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
     }
 
     private void initViews() {
@@ -151,11 +150,8 @@ public class RouteListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-
             initialProgress.setVisibility(View.GONE);
-
             super.onPostExecute(s);
         }
     }
-
 }

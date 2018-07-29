@@ -1,8 +1,6 @@
 package es.kleiren.madclimb.zone_activity;
 
 import android.app.Activity;
-import android.os.AsyncTask;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,8 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
-import es.kleiren.madclimb.sector_activity.SectorActivity;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.sector_activity.SectorIndexActivity;
 
 
 public class SectorListFragment extends Fragment {
@@ -95,7 +93,6 @@ public class SectorListFragment extends Fragment {
         return zoneView;
     }
 
-
     private void prepareData() {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -103,16 +100,13 @@ public class SectorListFragment extends Fragment {
         mDatabase.child("zones/" + zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sectorsFromFirebase.add(sector);
                 }
-
                 observableSectorList = new ObservableSectorList();
                 observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
                 observableSectorList.addObserver(sectorListChanged);
-
             }
 
             @Override
@@ -120,9 +114,7 @@ public class SectorListFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
     }
-
 
     private void initViews() {
 
@@ -149,14 +141,13 @@ public class SectorListFragment extends Fragment {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-
                     Intent intent = new Intent(getActivity(), SectorIndexActivity.class);
                     intent.putExtra("zone", zone);
+                    intent.putExtra("sector", sectorsFromFirebase.get(position));
                     intent.putExtra("sectors", sectorsFromFirebase);
                     intent.putExtra("currentSectorPosition", position);
                     startActivity(intent);
                 }
-
                 return false;
             }
 
@@ -171,5 +162,4 @@ public class SectorListFragment extends Fragment {
             }
         });
     }
-
 }

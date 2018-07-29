@@ -68,9 +68,10 @@ import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.sector_activity.SectorActivity;
+import es.kleiren.madclimb.sector_activity.SectorIndexActivity;
+
 
 public class SectorListMapFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
-
 
     private SectorDataAdapter adapter;
     private ArrayList<Sector> sectorsFromFirebase = new ArrayList<>();
@@ -87,11 +88,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     private Observer sectorListChanged = new Observer() {
         @Override
         public void update(Observable o, Object newValue) {
-
             sectors = (ArrayList<Sector>) newValue;
             adapter = new SectorDataAdapter(sectors, getActivity());
             adapter.notifyDataSetChanged();
-
         }
     };
 
@@ -116,13 +115,11 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-
 
         view.findViewById(R.id.openMaps).setVisibility(View.GONE);
 
@@ -167,7 +164,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         return view;
     }
 
-
     private void prepareData() {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -189,9 +185,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
                 observableSectorList = new ObservableSectorList();
                 observableSectorList.addObserver(sectorListChanged);
-
                 centerMapOnMarkers();
-
             }
 
             @Override
@@ -208,7 +202,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             mMap.setMyLocationEnabled(true);
-
 
         mMap.setOnInfoWindowClickListener(this);
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -244,12 +237,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                             }
                         })
                         .into((ImageView) v.findViewById(R.id.imageView3));
-
                 return v;
-
             }
         });
-
     }
 
     @Override
@@ -321,13 +311,12 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
-        Intent intent = new Intent(getActivity(), SectorActivity.class);
+        Intent intent = new Intent(getActivity(), SectorIndexActivity.class);
         intent.putExtra("zone", zone);
+        intent.putExtra("sector", sectorsFromFirebase.get( markers.indexOf(marker)));
         intent.putExtra("sectors", sectorsFromFirebase);
         intent.putExtra("currentSectorPosition", markers.indexOf(marker));
         startActivity(intent);
-
     }
 
     public void setListener(OnTouchListener listener) {
@@ -348,11 +337,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         public boolean dispatchTouchEvent(MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Log.i("Carlos", "down");
                     mListener.onTouch();
                     break;
                 case MotionEvent.ACTION_UP:
-                    Log.i("Carlos", "up");
                     mListener.onTouch();
                     break;
             }

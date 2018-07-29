@@ -123,7 +123,6 @@ public class ZoneActivity extends AppCompatActivity
                         progressBar.setVisibility(View.GONE);
                         return false;
                     }
-
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
@@ -157,22 +156,12 @@ public class ZoneActivity extends AppCompatActivity
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if (mMaxScrollSize == 0)
-            mMaxScrollSize = appBarLayout.getTotalScrollRange();
-
-        int currentScrollPercentage = (Math.abs(i)) * 100
-                / mMaxScrollSize;
-
-        if (currentScrollPercentage >= PERCENTAGE_TO_SHOW_IMAGE) {
-            if (!mIsImageHidden) {
-                mIsImageHidden = true;
-            }
-        }
-        if (currentScrollPercentage < PERCENTAGE_TO_SHOW_IMAGE) {
-            if (mIsImageHidden) {
-                mIsImageHidden = false;
-            }
-        }
+        if (mMaxScrollSize == 0) mMaxScrollSize = appBarLayout.getTotalScrollRange();
+        int currentScrollPercentage = (Math.abs(i)) * 100 / mMaxScrollSize;
+        if (currentScrollPercentage >= PERCENTAGE_TO_SHOW_IMAGE && !mIsImageHidden)
+            mIsImageHidden = true;
+        if (currentScrollPercentage < PERCENTAGE_TO_SHOW_IMAGE && mIsImageHidden)
+            mIsImageHidden = false;
     }
 
     public void collapseToolbar() {

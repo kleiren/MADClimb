@@ -16,7 +16,6 @@
 
 package es.kleiren.madclimb.extra_activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -124,7 +123,6 @@ public class InfoFragment extends Fragment {
         if (getArguments() != null) {
             type = getArguments().getString(ARG_TYPE);
             datum = (Datum) getArguments().getSerializable(ARG_DATUM);
-
         }
     }
 
@@ -169,20 +167,20 @@ public class InfoFragment extends Fragment {
     private void prepareData() {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
         routes = new ArrayList<>();
-
-        mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + datum.getId() + "/routes").addValueEventListener(new ValueEventListener() {
+        DatabaseReference child;
+        if (((Sector) datum).getParentSector() != null)
+            child = mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + ((Sector) datum).getParentSector() + "/sub_sectors/" +  datum.getId() + "/routes");
+        else
+            child = mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + datum.getId() + "/routes");
+        child.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
                     routes.add(route);
                 }
                 generateData();
-
             }
 
             @Override
@@ -190,8 +188,6 @@ public class InfoFragment extends Fragment {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
-
     }
 
     private void generateData() {

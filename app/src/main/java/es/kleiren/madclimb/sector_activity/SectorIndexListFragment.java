@@ -1,4 +1,4 @@
-package es.kleiren.madclimb.zone_activity;
+package es.kleiren.madclimb.sector_activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -33,8 +34,10 @@ import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
+import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.root.GlideApp;
-import es.kleiren.madclimb.sector_activity.SectorActivity;
+import es.kleiren.madclimb.zone_activity.ObservableSectorList;
+import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
 
 
 public class SectorIndexListFragment extends Fragment {
@@ -42,8 +45,10 @@ public class SectorIndexListFragment extends Fragment {
     private SectorDataAdapter adapter;
     private ArrayList<Sector> sectorsFromFirebase = new ArrayList<>();
     private Activity parentActivity;
+    private Sector sector;
     private Zone zone;
     private static final String ARG_ZONE = "zone";
+    private static final String ARG_SECTOR = "sector";
     private ObservableSectorList observableSectorList;
 
     @BindView(R.id.card_sectorIndex_view)
@@ -52,6 +57,8 @@ public class SectorIndexListFragment extends Fragment {
     ProgressBar initialProgress;
     @BindView(R.id.sectorIndex_imgCroquis)
     ImageView imgCroquis;
+    @BindView(R.id.sectorIndex_btnInfo)
+    ImageButton btnInfo;
 
     public SectorIndexListFragment() {
     }
@@ -70,10 +77,11 @@ public class SectorIndexListFragment extends Fragment {
         }
     };
 
-    public static SectorIndexListFragment newInstance(Zone zone) {
+    public static SectorIndexListFragment newInstance(Zone zone, Sector sector) {
         SectorIndexListFragment fragment = new SectorIndexListFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_ZONE, zone);
+        args.putSerializable(ARG_SECTOR, sector);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,6 +92,7 @@ public class SectorIndexListFragment extends Fragment {
         parentActivity = getActivity();
         if (getArguments() != null) {
             zone = (Zone) getArguments().getSerializable(ARG_ZONE);
+            sector = (Sector) getArguments().getSerializable(ARG_SECTOR);
         }
     }
 
@@ -99,7 +108,7 @@ public class SectorIndexListFragment extends Fragment {
 
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        final StorageReference load = mStorageRef.child(zone.getImg());
+        final StorageReference load = mStorageRef.child(sector.getImg());
 
         GlideApp.with(getActivity())
                 .load(load)
@@ -110,9 +119,19 @@ public class SectorIndexListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-                intent.putExtra("image", zone.getImg());
-                intent.putExtra("title", zone.getName());
+                intent.putExtra("image", sector.getImg());
+                intent.putExtra("title", sector.getName());
                 startActivityForResult(intent, 1);
+            }
+        });
+
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), InfoActivity.class);
+                intent.putExtra("type", "sector_index");
+                intent.putExtra("datum", sector);
+                getActivity().startActivity(intent);
             }
         });
 
@@ -123,20 +142,17 @@ public class SectorIndexListFragment extends Fragment {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("zones/" + zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/sub_sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sectorsFromFirebase.add(sector);
                 }
-
                 observableSectorList = new ObservableSectorList();
                 observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
                 observableSectorList.addObserver(sectorListChanged);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
