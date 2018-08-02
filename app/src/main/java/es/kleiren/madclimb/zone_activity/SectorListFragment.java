@@ -107,6 +107,7 @@ public class SectorListFragment extends Fragment {
                 observableSectorList = new ObservableSectorList();
                 observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
                 observableSectorList.addObserver(sectorListChanged);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

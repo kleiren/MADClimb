@@ -152,6 +152,7 @@ public class SectorIndexListFragment extends Fragment {
                 observableSectorList = new ObservableSectorList();
                 observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
                 observableSectorList.addObserver(sectorListChanged);
+                adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
