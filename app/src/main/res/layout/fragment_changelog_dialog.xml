@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +14,7 @@
         android:layout_marginEnd="8dp"
         android:text="Últimos cambios"
         android:textAlignment="center"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,7 +29,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
 
     <ScrollView
         android:id="@+id/scroll"
@@ -51,153 +49,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/infoFrag_chartLayout"
+            <TextView
+                android:id="@+id/text_updates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/information"
-                    android:textAlignment="center"
-                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="100dp"
-                    android:layout_marginEnd="100dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <lecho.lib.hellocharts.view.ColumnChartView
-                    android:id="@+id/infoFrag_gradeChart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginBottom="8dp" />
-
-                <LinearLayout
-                    android:id="@+id/infoFrag_layoutDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:text="@string/infoFrag_date"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:typeface="sans" />
-
-                    <TextView
-                        android:id="@+id/infoFrag_txtDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:padding="10dp"
-                        android:textSize="16sp"
-                        android:typeface="sans" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/localization"
-                    android:textAlignment="center"
-                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="100dp"
-                    android:layout_marginEnd="100dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <TextView
-                    android:id="@+id/infoFrag_latLon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textAlignment="center"
-                    android:textIsSelectable="true"
-                    android:textSize="16sp" />
-
-                <FrameLayout
-                    android:id="@+id/infoFrag_mapContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/flexible_space_image_height"
-                    android:layout_margin="10dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/infoFrag_layoutDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/description"
-                    android:textAlignment="center"
-                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="100dp"
-                    android:layout_marginEnd="100dp"
-                    android:background="@color/colorPrimaryDark" />
-
-                <TextView
-                    android:id="@+id/infoFrag_txtInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:padding="10dp"
-                    android:textSize="18sp"
-                    android:typeface="sans"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_constraintLeft_creator="1"
-                    tools:layout_constraintTop_creator="1" />
-
-            </LinearLayout>
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
 
     </ScrollView>
-
-
 
 </android.support.constraint.ConstraintLayout>

@@ -7,8 +7,8 @@ android {
         applicationId "es.kleiren.madclimb"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 21
-        versionName "0.21"
+        versionCode 22
+        versionName "0.22"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // About libraries
-    implementation('com.mikepenz:aboutlibraries:6.0.1@aar') {
+    implementation('com.mikepenz:aboutlibraries:6.0.2@aar') {
         transitive = true
     }
     // Gson
