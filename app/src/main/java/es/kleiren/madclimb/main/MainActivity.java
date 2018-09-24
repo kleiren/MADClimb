@@ -261,15 +261,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                updates = dataSnapshot.child("text").getValue().toString();
-
-                updateId = dataSnapshot.child("id").getValue().toString();
-                if (!updateId.equals(getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("updateId", ""))) {
-                    getSharedPreferences("PREFERENCE", MODE_PRIVATE)
-                            .edit()
-                            .putString("updateId", updateId)
-                            .apply();
-                    if (show) showChangelog();
+                try {
+                    updates = dataSnapshot.child("text").getValue().toString();
+                    updateId = dataSnapshot.child("id").getValue().toString();
+                    if (!updateId.equals(getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("updateId", ""))) {
+                        getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                                .edit()
+                                .putString("updateId", updateId)
+                                .apply();
+                        if (show) showChangelog();
+                    }
+                } catch (Exception e) {
                 }
             }
 
