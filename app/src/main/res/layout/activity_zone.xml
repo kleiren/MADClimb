@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -44,21 +43,21 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@null"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/abc_ic_ab_back_material"
-                />
+                android:fitsSystemWindows="true"
+                app:navigationIcon="@drawable/abc_ic_ab_back_material" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/zoneAct_tabLayout"
             android:layout_width="match_parent"
-            android:layout_gravity="bottom"
             android:layout_height="36dp"
+            android:layout_gravity="bottom"
             android:background="@color/colorTranslucent"
             app:tabIndicatorColor="@color/colorPrimary"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabIndicatorHeight="4dp"
-            app:tabSelectedTextColor="@color/white" />
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -70,10 +69,10 @@
         android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/zoneAct_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/zoneAct_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.NestedScrollView>
 

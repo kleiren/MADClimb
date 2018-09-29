@@ -111,7 +111,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         if (getArguments() != null) {
             zone = (Zone) getArguments().getSerializable(ARG_ZONE);
         }
-
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
@@ -125,7 +124,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
         mMapView.onResume();
 
         try {
@@ -157,7 +155,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                     default:
                         return true;
                 }
-
             }
         });
 
@@ -203,6 +200,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             mMap.setMyLocationEnabled(true);
 
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 

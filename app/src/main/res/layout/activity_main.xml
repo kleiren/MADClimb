@@ -9,12 +9,10 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -41,12 +39,12 @@
 
             <FrameLayout
                 android:id="@+id/container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/navigation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_height="0dp"
-                android:layout_width="0dp"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.design.widget.BottomNavigationView
                 android:id="@+id/navigation"
@@ -60,9 +58,7 @@
                 app:menu="@menu/bottom_navigation_items" />
         </android.support.constraint.ConstraintLayout>
 
-
     </LinearLayout>
-
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -71,9 +67,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer">
-
-    </android.support.design.widget.NavigationView>
-
+        app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

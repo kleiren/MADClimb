@@ -186,7 +186,6 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
 
                 GlideApp.with(getContext())
                         .load(FirebaseStorage.getInstance().getReference().child(zonesFromFirebase.get(markers.indexOf(marker)).getImg()))
-                        .placeholder(R.drawable.mountain_placeholder_small)
                         .override(400, 200)
                         .centerCrop()
                         .listener(new RequestListener<Drawable>() {

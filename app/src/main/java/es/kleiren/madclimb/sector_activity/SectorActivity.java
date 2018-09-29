@@ -85,25 +85,20 @@ public class SectorActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
         if (id == R.id.info) {
-
             Intent intent = new Intent(this, InfoActivity.class);
             intent.putExtra("type", "zone");
             intent.putExtra("datum", zone);
             startActivity(intent);
             return true;
         }
-
         if (id == R.id.error){
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","madclimbapp@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 return true;
-
         }
         return super.onOptionsItemSelected(item);
     }

@@ -37,7 +37,7 @@
 
     <item
         android:id="@+id/nav_rate"
-        android:icon="@drawable/star"
+        android:icon="@drawable/ic_star"
         android:title="Puntuar" />
 
     <item

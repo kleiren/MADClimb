@@ -72,17 +72,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-
         final String [] latlon =location.split(",");
         final LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
 
-
-        Activity parentActivity = getActivity();
-
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.onResume();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -94,9 +89,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 mMap.addMarker(new MarkerOptions().position(loc));
-
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
@@ -118,6 +112,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         String [] latlon =location.split(",");
         LatLng loc = new LatLng(Long.parseLong(latlon[0]),Long.parseLong(latlon[1]));
         mMap.addMarker(new MarkerOptions().position(loc));

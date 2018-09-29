@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="es.kleiren.madclimb.sector_activity.SectorActivity">
 
-
     <item
         android:id="@+id/info"
         android:icon="@drawable/ic_info_white"

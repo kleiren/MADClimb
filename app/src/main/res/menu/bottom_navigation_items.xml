@@ -10,6 +10,6 @@
         android:title="Mapa"/>
     <item
         android:id="@+id/nav_favs"
-        android:icon="@drawable/star"
+        android:icon="@drawable/ic_star"
         android:title="Favoritas"/>
 </menu>
