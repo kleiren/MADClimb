@@ -61,6 +61,10 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         return filteredZones.get(i);
     }
 
+    public ArrayList<Zone> getFilteredZones() {
+        return filteredZones;
+    }
+
     @Override
     public ZoneDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
@@ -95,7 +99,6 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
                     }
                 })
                 .into(viewHolder.imgSector);
-
     }
 
     @Override

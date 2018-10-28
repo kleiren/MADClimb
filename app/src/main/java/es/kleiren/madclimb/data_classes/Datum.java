@@ -8,11 +8,12 @@ import java.io.Serializable;
 
 public class Datum implements Serializable {
 
-    String name;
-    String id;
-    String description;
+    private String name;
+    private String id;
+    private String description;
     private String loc;
     private String img;
+    private Integer position;
 
     public String getImg() {
         return img;
@@ -40,6 +41,14 @@ public class Datum implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public void setName(String name) {

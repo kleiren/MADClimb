@@ -31,12 +31,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
@@ -63,12 +66,10 @@ public class ZoneListFragment extends Fragment {
     private Observer zoneListChanged = new Observer() {
         @Override
         public void update(Observable o, Object newValue) {
-
             zoneList = (ArrayList<Zone>) newValue;
             adapter = new ZoneDataAdapter(zoneList, getActivity());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-
         }
     };
 
@@ -99,7 +100,14 @@ public class ZoneListFragment extends Fragment {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zonesFromFirebase.add(zone);
                 }
-
+                Collections.sort(zonesFromFirebase, new Comparator<Zone>() {
+                    public int compare(Zone o1, Zone o2) {
+                        if (o1.getPosition() != null && o2.getPosition() != null)
+                            return o1.getPosition().compareTo(o2.getPosition());
+                        else
+                            return o1.getName().compareTo(o2.getName());
+                    }
+                });
                 observableZoneList = new ObservableZoneList();
                 observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
                 observableZoneList.addObserver(zoneListChanged);
@@ -154,9 +162,7 @@ public class ZoneListFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), ZoneActivity.class);
                     intent.putExtra("zone", zone);
                     startActivityForResult(intent, 1);
-
                 }
-
                 return false;
             }
 
@@ -166,7 +172,6 @@ public class ZoneListFragment extends Fragment {
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
             }
         });
     }
@@ -183,7 +188,6 @@ public class ZoneListFragment extends Fragment {
         MenuItem searchViewMenuItem = menu.findItem(R.id.search);
         searchView = (SearchView) searchViewMenuItem.getActionView();
         search(searchView);
-
     }
 
     @Override
@@ -191,7 +195,6 @@ public class ZoneListFragment extends Fragment {
 
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.search) {
             if (searchView.getVisibility() == View.VISIBLE)
                 searchView.setVisibility(View.GONE);

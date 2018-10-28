@@ -70,6 +70,8 @@ import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.sector_activity.SectorActivity;
 import es.kleiren.madclimb.sector_activity.SectorIndexActivity;
 
+import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
+
 
 public class SectorListMapFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
@@ -158,6 +160,16 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
             }
         });
 
+        view.findViewById(R.id.changeMode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                else
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
+        });
+
         return view;
     }
 
@@ -175,7 +187,10 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                     String[] latlon = sector.getLoc().split(",");
                     LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
                     try {
-                        markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName())));
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName()).icon(getBitmapDescriptor(parentActivity, R.drawable.map_marker_colored))));
+                        else
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName())));
                     } catch (Exception e) {
                     }
                 }
@@ -311,7 +326,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(getActivity(), SectorIndexActivity.class);
         intent.putExtra("zone", zone);
-        intent.putExtra("sector", sectorsFromFirebase.get( markers.indexOf(marker)));
+        intent.putExtra("sector", sectorsFromFirebase.get(markers.indexOf(marker)));
         intent.putExtra("sectors", sectorsFromFirebase);
         intent.putExtra("currentSectorPosition", markers.indexOf(marker));
         startActivity(intent);

@@ -17,21 +17,33 @@
 package es.kleiren.madclimb.main;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -44,6 +56,7 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -66,11 +79,14 @@ import es.kleiren.madclimb.root.GlideApp;
 
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
+import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
+
 public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private ZoneDataAdapter adapter;
     private Activity parentActivity;
     private Zone zone;
+    private SearchView searchView;
     private ArrayList<Zone> zonesFromFirebase = new ArrayList<>();
     private ObservableZoneList observableZoneList;
     private ArrayList<Zone> zones;
@@ -83,10 +99,28 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
     private Observer zoneListChanged = new Observer() {
         @Override
         public void update(Observable o, Object newValue) {
-
             zoneList = (ArrayList<Zone>) newValue;
             adapter = new ZoneDataAdapter(zoneList, getActivity());
-
+            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onChanged() {
+                    super.onChanged();
+                    markers.clear();
+                    mMap.clear();
+                    for (Zone zone : adapter.getFilteredZones()) {
+                        String[] latlon = zone.getLoc().split(",");
+                        LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
+                        try {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                                markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName()).icon(getBitmapDescriptor(parentActivity, R.drawable.map_marker_colored))));
+                            else
+                                markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
+                        } catch (Exception e) {
+                        }
+                    }
+                    centerMapOnMarkers();
+                }
+            });
         }
     };
 
@@ -101,11 +135,11 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parentActivity = getActivity();
+        setHasOptionsMenu(true);
 
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
-
     }
 
     @Override
@@ -126,6 +160,16 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         mMapView.getMapAsync(this);
         prepareData();
 
+        view.findViewById(R.id.changeMode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                else
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
+        });
+
         return view;
     }
 
@@ -143,7 +187,10 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                     String[] latlon = zone.getLoc().split(",");
                     LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
                     try {
-                        markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName()).icon(getBitmapDescriptor(parentActivity, R.drawable.map_marker_colored))));
+                        else
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
                     } catch (Exception e) {
                     }
                 }
@@ -160,7 +207,6 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
             }
         });
-
     }
 
     @Override
@@ -205,7 +251,29 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                 return v;
             }
         });
+    }
 
+    private void search(SearchView searchView) {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem searchViewMenuItem = menu.findItem(R.id.search);
+        searchView = (SearchView) searchViewMenuItem.getActionView();
+        search(searchView);
     }
 
     @Override
@@ -259,8 +327,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         LatLngBounds bounds = builder.build();
         int padding = 200;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        mMap.moveCamera(cu);
-        mMap.animateCamera(cu);
+        mMap.animateCamera(cu, 300, null);
     }
 
     @Override
@@ -275,5 +342,24 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         Intent intent = new Intent(getActivity(), ZoneActivity.class);
         intent.putExtra("zone", zone);
         startActivityForResult(intent, 1);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.search) {
+            if (searchView.getVisibility() == View.VISIBLE)
+                searchView.setVisibility(View.GONE);
+            else if (searchView.getVisibility() == View.GONE) {
+                searchView.setFocusableInTouchMode(true);
+                searchView.setVisibility(View.VISIBLE);
+                searchView.requestFocus();
+                searchView.onActionViewExpanded();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
