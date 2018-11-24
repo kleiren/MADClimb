@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +34,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.survivingwithandroid.weather.lib.StandardHttpClient;
+import com.survivingwithandroid.weather.lib.WeatherClient;
+import com.survivingwithandroid.weather.lib.WeatherConfig;
+import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
+import com.survivingwithandroid.weather.lib.exception.WeatherProviderInstantiationException;
+import com.survivingwithandroid.weather.lib.model.City;
+import com.survivingwithandroid.weather.lib.model.CurrentWeather;
+import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
+import com.survivingwithandroid.weather.lib.request.WeatherRequest;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +73,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private String updateId;
 
+    WeatherClient.WeatherEventListener weatherEventListener = new WeatherClient.WeatherEventListener() {
+        @Override
+        public void onWeatherRetrieved(CurrentWeather weather) {
+            Toast.makeText(MainActivity.this, "" + weather.weather.temperature.getMinTemp(), Toast.LENGTH_SHORT).show();
+            Log.i("CARLOS", "" + weather.weather.currentCondition.getCondition());
+        }
+
+        @Override
+        public void onWeatherError(WeatherLibException wle) {
+
+            wle.printStackTrace();
+
+        }
+
+        @Override
+        public void onConnectionError(Throwable t) {
+
+            Log.e("CARLOS", "" + t.getMessage());
+
+        }
+    };
+    private WeatherClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +118,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         checkFirstRun();
+
+
+
+
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -138,6 +179,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_news:
                 showChangelog();
+                try {
+                    WeatherConfig weatherConfig = new WeatherConfig();
+                    weatherConfig.ApiKey = getResources().getString(R.string.weather_key);
+                    client = (new WeatherClient.ClientBuilder()).attach(this)
+                            .httpClient(com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient.class)
+                            .provider(new OpenweathermapProviderType())
+                            .config(weatherConfig)
+                            .build();
+
+                    WeatherRequest weatherRequest = new WeatherRequest(40.4010736,-3.762422);
+                    client.getCurrentCondition(weatherRequest, weatherEventListener);
+                } catch (WeatherProviderInstantiationException e) {
+                    e.printStackTrace();
+                }
                 return true;
 
             case R.id.nav_about:
