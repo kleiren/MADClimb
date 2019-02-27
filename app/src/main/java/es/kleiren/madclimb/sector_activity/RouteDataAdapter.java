@@ -6,6 +6,7 @@ package es.kleiren.madclimb.sector_activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
@@ -116,11 +117,42 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         try {
             viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade()) - 1]);
         } catch (Exception e) {
+            viewHolder.txtGrade.setTextColor(Color.GRAY);
         }
 
-        viewHolder.txtDetails.setText(routes.get(i).getDescription());
-
+        boolean expandable = false, extras = false;
         if (!routes.get(i).getDescription().isEmpty()) {
+            viewHolder.txtDetails.setText(routes.get(i).getDescription());
+            expandable = true;
+            viewHolder.txtDetails.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.txtDetails.setVisibility(View.GONE);
+        }
+
+        if (routes.get(i).getQd() != 0) {
+            viewHolder.txtQuickDraws.setText(Integer.toString(routes.get(i).getQd()));
+            expandable = true;
+            extras = true;
+            viewHolder.layoutTxtQuickDraws.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.layoutTxtQuickDraws.setVisibility(View.GONE);
+        }
+
+        if (routes.get(i).getHeight() != 0) {
+            viewHolder.txtRouteHeight.setText(Integer.toString(routes.get(i).getHeight()));
+            expandable = true;
+            extras = true;
+            viewHolder.layoutTxtRouteHeight.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.layoutTxtRouteHeight.setVisibility(View.GONE);
+        }
+
+        if (!extras)
+            viewHolder.layoutExtras.setVisibility(View.GONE);
+        else
+            viewHolder.layoutExtras.setVisibility(View.VISIBLE);
+
+        if (expandable) {
             viewHolder.imageArrow.setVisibility(View.VISIBLE);
             final boolean isExpanded = i == mExpandedPosition;
             viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -130,13 +162,13 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 @Override
                 public void onClick(View v) {
                     mExpandedPosition = isExpanded ? -1 : i;
-                    TransitionManager.beginDelayedTransition(viewHolder.recyclerView);
                     notifyDataSetChanged();
                 }
             });
+        } else{
+            viewHolder.imageArrow.setVisibility(View.GONE);
         }
     }
-
 
     private void generateData() {
         grades = new ArrayList<>();
@@ -214,6 +246,16 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         ConstraintLayout infoLayout;
         @BindView(R.id.routeRow_arrow)
         ImageView imageArrow;
+        @BindView(R.id.routeRow_layoutExtras)
+        View layoutExtras;
+        @BindView(R.id.routeRow_txtRouteHeight)
+        TextView txtRouteHeight;
+        @BindView(R.id.routeRow_txtQuickDraws)
+        TextView txtQuickDraws;
+        @BindView(R.id.routeRow_layoutTxtQuickDraws)
+        View layoutTxtQuickDraws;
+        @BindView(R.id.routeRow_layoutTxtRouteHeight)
+        View layoutTxtRouteHeight;
 
         ViewHolder(View view, boolean first) {
             super(view);
