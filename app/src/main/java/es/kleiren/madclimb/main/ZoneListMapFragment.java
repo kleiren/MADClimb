@@ -344,22 +344,4 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         startActivityForResult(intent, 1);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.search) {
-            if (searchView.getVisibility() == View.VISIBLE)
-                searchView.setVisibility(View.GONE);
-            else if (searchView.getVisibility() == View.GONE) {
-                searchView.setFocusableInTouchMode(true);
-                searchView.setVisibility(View.VISIBLE);
-                searchView.requestFocus();
-                searchView.onActionViewExpanded();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
