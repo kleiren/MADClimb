@@ -140,6 +140,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showChangelog();
                 return true;
 
+            case R.id.nav_policy:
+                Intent goToPrivacy = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/madclimb-privacy-policy"));
+                startActivity(goToPrivacy);
+                return true;
+
             case R.id.nav_about:
                 new LibsBuilder()
                         .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
