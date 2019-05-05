@@ -191,7 +191,7 @@ public class ZoneActivity extends AppCompatActivity
                 }
             });
             valueAnimator.setIntValues(0, -900);
-            valueAnimator.setDuration(400);
+            valueAnimator.setDuration(600);
             valueAnimator.start();
         }
     }
@@ -216,8 +216,8 @@ public class ZoneActivity extends AppCompatActivity
                     });
                 }
             });
-            valueAnimator.setIntValues(0, 900);
-            valueAnimator.setDuration(400);
+            valueAnimator.setIntValues(-900, 0);
+            valueAnimator.setDuration(600);
             valueAnimator.start();
         }
     }

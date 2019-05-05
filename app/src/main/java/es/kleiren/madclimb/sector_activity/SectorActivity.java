@@ -103,10 +103,6 @@ public class SectorActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class NavigationAdapter extends FragmentPagerAdapter {
 
         public NavigationAdapter(FragmentManager fm) {

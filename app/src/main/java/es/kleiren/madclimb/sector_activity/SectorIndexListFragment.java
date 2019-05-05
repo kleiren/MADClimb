@@ -44,7 +44,6 @@ public class SectorIndexListFragment extends Fragment {
 
     private SectorDataAdapter adapter;
     private ArrayList<Sector> sectorsFromFirebase = new ArrayList<>();
-    private Activity parentActivity;
     private Sector sector;
     private Zone zone;
     private static final String ARG_ZONE = "zone";
@@ -89,7 +88,6 @@ public class SectorIndexListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parentActivity = getActivity();
         if (getArguments() != null) {
             zone = (Zone) getArguments().getSerializable(ARG_ZONE);
             sector = (Sector) getArguments().getSerializable(ARG_SECTOR);

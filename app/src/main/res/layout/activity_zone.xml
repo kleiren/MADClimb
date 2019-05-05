@@ -20,6 +20,7 @@
             app:contentScrim="?colorPrimary"
             app:expandedTitleMarginBottom="24dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:textStyle="bold"
             app:title="Title">
 
             <com.github.chrisbanes.photoview.PhotoView
@@ -28,6 +29,13 @@
                 android:layout_height="@dimen/flexible_space_image_height"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/mountain_placeholder" />
+
+            <com.github.chrisbanes.photoview.PhotoView
+                android:id="@+id/zoneAct_imageZoneShadow"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/flexible_space_image_height"
+                android:background="@drawable/gradient_bottom"
+                android:scaleType="centerCrop" />
 
             <ProgressBar
                 android:id="@+id/zoneAct_progressBar"
@@ -42,8 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@null"
-                app:layout_collapseMode="pin"
                 android:fitsSystemWindows="true"
+                app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/abc_ic_ab_back_material" />
 
         </android.support.design.widget.CollapsingToolbarLayout>

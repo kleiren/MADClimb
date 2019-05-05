@@ -37,6 +37,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import es.kleiren.madclimb.R;
 
+import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
@@ -91,6 +93,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 mMap = googleMap;
                 mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 mMap.addMarker(new MarkerOptions().position(loc));
+                try {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                        mMap.addMarker(new MarkerOptions().position(loc).icon(getBitmapDescriptor(getActivity(), R.drawable.map_marker_colored)));
+                    else
+                        mMap.addMarker(new MarkerOptions().position(loc));
+                } catch (Exception e) {
+                }
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
