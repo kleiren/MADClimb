@@ -1,8 +1,13 @@
 package es.kleiren.madclimb.sector_activity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +33,6 @@ import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.util.SlidingTabLayout;
 
 public class SectorActivity extends AppCompatActivity {
-
 
     @BindView(R.id.sectorAct_pager)
     ViewPager viewPager;
@@ -80,6 +84,10 @@ public class SectorActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sector_activity, menu);
+        for (int i = 0; i < menu.size(); ++i) {
+            final MenuItem item = menu.getItem(i);
+            item.getIcon().setColorFilter(getResources().getColor(R.color.colorSecondary_text), PorterDuff.Mode.SRC_ATOP);
+        }
         return true;
     }
 
@@ -93,12 +101,12 @@ public class SectorActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
-        if (id == R.id.error){
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","madclimbapp@gmail.com", null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
-                return true;
+        if (id == R.id.error) {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "madclimbapp@gmail.com", null));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
+            startActivity(Intent.createChooser(emailIntent, "Send email..."));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

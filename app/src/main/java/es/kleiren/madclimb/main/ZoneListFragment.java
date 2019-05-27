@@ -1,8 +1,10 @@
 package es.kleiren.madclimb.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -135,8 +138,18 @@ public class ZoneListFragment extends Fragment {
         });
     }
 
+    private int getActionBarHeight(){
+        TypedValue tv = new TypedValue();
+        if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            return TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+        return 0;
+    }
+
     private void initViews() {
         recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration( new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
@@ -212,4 +225,20 @@ public class ZoneListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = verticalSpaceHeight;
+            }
+        }
+    }
 }

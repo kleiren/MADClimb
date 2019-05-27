@@ -170,58 +170,6 @@ public class ZoneActivity extends AppCompatActivity
             mIsImageHidden = false;
     }
 
-    public void collapseToolbar() {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) collapsingAppbar.getLayoutParams();
-        final AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        params.setBehavior(behavior);
-        if (behavior != null) {
-            ValueAnimator valueAnimator = ValueAnimator.ofInt();
-            valueAnimator.setInterpolator(new DecelerateInterpolator());
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    behavior.setTopAndBottomOffset((Integer) animation.getAnimatedValue());
-                    collapsingAppbar.requestLayout();
-                    behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                        @Override
-                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                            return false;
-                        }
-                    });
-                }
-            });
-            valueAnimator.setIntValues(0, -900);
-            valueAnimator.setDuration(600);
-            valueAnimator.start();
-        }
-    }
-
-    public void expandToolbar() {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) collapsingAppbar.getLayoutParams();
-        final AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        params.setBehavior(behavior);
-        if (behavior != null) {
-            ValueAnimator valueAnimator = ValueAnimator.ofInt();
-            valueAnimator.setInterpolator(new DecelerateInterpolator());
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    behavior.setTopAndBottomOffset((Integer) animation.getAnimatedValue());
-                    collapsingAppbar.requestLayout();
-                    behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                        @Override
-                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                            return false;
-                        }
-                    });
-                }
-            });
-            valueAnimator.setIntValues(-900, 0);
-            valueAnimator.setDuration(600);
-            valueAnimator.start();
-        }
-    }
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
@@ -229,9 +177,9 @@ public class ZoneActivity extends AppCompatActivity
     @Override
     public void onPageSelected(int position) {
         if (position == 1) {
-            collapseToolbar();
+            collapsingAppbar.setExpanded(false, true);
         } else {
-            expandToolbar();
+            collapsingAppbar.setExpanded(true, true);
         }
     }
 
@@ -280,7 +228,6 @@ public class ZoneActivity extends AppCompatActivity
         private FragmentManager mFragmentManager;
 
         public NavigationAdapter(FragmentManager fm) {
-
             super(fm);
             mFragmentManager = fm;
             mFragmentTags = new HashMap<>();

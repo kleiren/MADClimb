@@ -2,15 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#8dffffff"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:paddingTop="@dimen/appbar_padding_top"
+        android:background="@color/white"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -24,15 +22,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:navigationIcon="?attr/homeAsUpIndicator"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
-
             </android.support.v7.widget.Toolbar>
 
         </android.support.constraint.ConstraintLayout>
-
 
     </android.support.design.widget.AppBarLayout>
 
@@ -41,6 +40,5 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/appbar" />
-
 
 </android.support.constraint.ConstraintLayout>

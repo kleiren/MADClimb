@@ -12,6 +12,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -19,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_weight="1"
-            android:background="?attr/colorPrimary"
             app:navigationIcon="?attr/homeAsUpIndicator"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
@@ -29,7 +29,7 @@
             android:layout_gravity="bottom"
             android:layout_height="36dp"
             android:background="@color/colorTranslucent"
-            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabIndicatorColor="@color/colorAccent"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabIndicatorHeight="4dp"
             app:tabSelectedTextColor="@color/white"/>

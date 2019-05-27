@@ -92,7 +92,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
                 mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                mMap.addMarker(new MarkerOptions().position(loc));
                 try {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
                         mMap.addMarker(new MarkerOptions().position(loc).icon(getBitmapDescriptor(getActivity(), R.drawable.map_marker_colored)));
@@ -131,9 +130,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        String[] latlon = location.split(",");
-        LatLng loc = new LatLng(Long.parseLong(latlon[0]), Long.parseLong(latlon[1]));
-        mMap.addMarker(new MarkerOptions().position(loc));
     }
 
     @Override

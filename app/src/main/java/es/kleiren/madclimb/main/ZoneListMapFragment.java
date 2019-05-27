@@ -307,9 +307,6 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                 location.getLongitude()));
 
         markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
-        markers.add(mMap.addMarker(markerOptions));
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(location.getLatitude(), location
