@@ -214,9 +214,22 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             mMap.setMyLocationEnabled(true);
-
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.setOnInfoWindowClickListener(this);
+
+        String parking = zone.getParking();
+        if (!parking.isEmpty()) {
+            String[] latlon = parking.split(",");
+            LatLng parkingLocation = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
+            try {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                    markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking").icon(getBitmapDescriptor(parentActivity, R.drawable.ic_parking_marker))));
+                else
+                    markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking")));
+            } catch (Exception e) {
+            }
+        }
+
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             @Override

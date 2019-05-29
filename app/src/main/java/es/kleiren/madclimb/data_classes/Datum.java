@@ -14,6 +14,7 @@ public class Datum implements Serializable {
     private String loc;
     private String img;
     private Integer position;
+    private String parking;
 
     public String getImg() {
         return img;
@@ -63,4 +64,11 @@ public class Datum implements Serializable {
         this.description = description;
     }
 
+    public String getParking() {
+        return parking;
+    }
+
+    public void setParking(String parking) {
+        this.parking = parking;
+    }
 }

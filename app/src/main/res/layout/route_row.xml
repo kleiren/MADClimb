@@ -154,7 +154,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        card_view:srcCompat="@drawable/ic_quickdraw" />
+                        card_view:srcCompat="@drawable/ic_parabolt" />
 
                     <TextView
                         android:id="@+id/routeRow_txtQuickDraws"
