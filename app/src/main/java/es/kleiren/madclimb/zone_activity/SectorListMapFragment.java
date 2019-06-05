@@ -70,6 +70,7 @@ import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.sector_activity.SectorActivity;
 import es.kleiren.madclimb.sector_activity.SectorIndexActivity;
 
+import static android.content.Context.MODE_PRIVATE;
 import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
 
 
@@ -113,8 +114,15 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         if (getArguments() != null) {
             zone = (Zone) getArguments().getSerializable(ARG_ZONE);
         }
-        if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        if (!parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("locAsked", false)) {
+            if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("locAllowed", true).apply();
+            }
+            parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("locAsked", true).apply();
         }
     }
 
@@ -218,6 +226,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         mMap.setOnInfoWindowClickListener(this);
 
         String parking = zone.getParking();
+        if(parking != null)
         if (!parking.isEmpty()) {
             String[] latlon = parking.split(",");
             LatLng parkingLocation = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));

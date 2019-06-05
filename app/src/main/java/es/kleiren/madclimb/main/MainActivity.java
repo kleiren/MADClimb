@@ -11,15 +11,18 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public String updates;
     private boolean shownNewZones = false;
 
+    private SwitchCompat switcher;
+
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -82,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         checkFirstRun();
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -169,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .replace(R.id.container, ZoneListFavFragment.newInstance())
                         .commit();
                 return true;
+
+            case R.id.loc_enabled:
+                switcher.setChecked(!switcher.isChecked());
+                Snackbar.make(item.getActionView(), (switcher.isChecked()) ? "is checked" : "not checked", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                return true;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -210,6 +222,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        switcher = (SwitchCompat) findViewById(R.id.switcher);
+        switcher.setChecked(true);
+        switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (switcher.isChecked()) ? "is checked!!!" : "not checked!!!", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
         return true;
     }
 

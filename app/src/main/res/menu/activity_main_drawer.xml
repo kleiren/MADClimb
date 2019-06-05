@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/nav_share"
@@ -29,6 +30,12 @@
         android:id="@+id/nav_news"
         android:icon="@drawable/ic_new_box"
         android:title="Últimos cambios" />
+
+    <item
+        android:id="@+id/loc_enabled"
+        app:actionLayout="@layout/action_view_switch"
+        android:icon="@drawable/clipboard_text"
+        android:title="Localización" />
 
     <item
         android:id="@+id/nav_about"

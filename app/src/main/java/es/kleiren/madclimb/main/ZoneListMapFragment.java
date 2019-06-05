@@ -19,7 +19,9 @@ package es.kleiren.madclimb.main;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -35,6 +37,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +45,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +83,7 @@ import es.kleiren.madclimb.root.GlideApp;
 
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
+import static android.content.Context.MODE_PRIVATE;
 import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
 
 public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
@@ -93,6 +98,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
     private ArrayList<Zone> zoneList = new ArrayList<>();
     MapView mMapView;
     private GoogleMap mMap;
+    private View btnChangeMode;
 
     private ArrayList<Marker> markers = new ArrayList<>();
 
@@ -137,8 +143,15 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         parentActivity = getActivity();
         setHasOptionsMenu(true);
 
-        if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        if (!parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("locAsked", false)) {
+            if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("locAllowed", true).apply();
+            }
+            parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("locAsked", true).apply();
         }
     }
 
@@ -147,6 +160,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         view.findViewById(R.id.openMaps).setVisibility(View.GONE);
+        btnChangeMode = view.findViewById(R.id.changeMode);
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
@@ -159,8 +173,15 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
 
         mMapView.getMapAsync(this);
         prepareData();
-
-        view.findViewById(R.id.changeMode).setOnClickListener(new View.OnClickListener() {
+        int px = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                82,
+                getResources().getDisplayMetrics()
+        );
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) btnChangeMode.getLayoutParams();
+        lp.topMargin = px;
+        btnChangeMode.setLayoutParams(lp);
+        btnChangeMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
@@ -212,9 +233,14 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        int px = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                70,
+                getResources().getDisplayMetrics()
+        );
+        mMap.setPadding(0, px, 0, 0);
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             mMap.setMyLocationEnabled(true);
-
         mMap.setOnInfoWindowClickListener(this);
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
