@@ -1,9 +1,11 @@
 package es.kleiren.madclimb.main;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -154,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_about:
                 new LibsBuilder()
-                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        .withActivityTheme(R.style.WhiteTheme)
                         .withFields(R.string.class.getFields())
                         .start(this);
                 return true;
@@ -175,11 +178,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, ZoneListFavFragment.newInstance())
                         .commit();
-                return true;
-
-            case R.id.loc_enabled:
-                switcher.setChecked(!switcher.isChecked());
-                Snackbar.make(item.getActionView(), (switcher.isChecked()) ? "is checked" : "not checked", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 return true;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -222,14 +220,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
-        switcher = (SwitchCompat) findViewById(R.id.switcher);
-        switcher.setChecked(true);
-        switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, (switcher.isChecked()) ? "is checked!!!" : "not checked!!!", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
         return true;
     }
 

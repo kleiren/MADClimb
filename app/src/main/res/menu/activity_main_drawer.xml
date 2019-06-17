@@ -32,12 +32,6 @@
         android:title="Últimos cambios" />
 
     <item
-        android:id="@+id/loc_enabled"
-        app:actionLayout="@layout/action_view_switch"
-        android:icon="@drawable/clipboard_text"
-        android:title="Localización" />
-
-    <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_info_black"
         android:title="Sobre la app" />
