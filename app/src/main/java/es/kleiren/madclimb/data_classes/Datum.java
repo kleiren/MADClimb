@@ -15,6 +15,7 @@ public class Datum implements Serializable {
     private String img;
     private Integer position;
     private String parking;
+    private String parkings;
 
     public String getImg() {
         return img;
@@ -68,7 +69,22 @@ public class Datum implements Serializable {
         return parking;
     }
 
+    public String[] getParkings() {
+        if (parking != null) {
+            if (parkings.contains(";")) {
+                return parkings.split(";");
+            } else {
+                return new String[]{parkings};
+            }
+        }
+        return null;
+    }
+
     public void setParking(String parking) {
         this.parking = parking;
+    }
+
+    public void setParkings(String parkings) {
+        this.parkings = parkings;
     }
 }

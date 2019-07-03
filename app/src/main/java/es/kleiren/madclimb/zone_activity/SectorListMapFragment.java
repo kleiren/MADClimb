@@ -87,8 +87,8 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     private GoogleMap mMap;
     private ArrayList<Marker> markers = new ArrayList<>();
     private ArrayList<Sector> sectors;
-    private boolean hasParking;
-
+    private boolean hasParkings = false;
+    private String[] parkings;
     private Observer sectorListChanged = new Observer() {
         @Override
         public void update(Observable o, Object newValue) {
@@ -217,7 +217,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -226,20 +225,23 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.setOnInfoWindowClickListener(this);
 
-        String parking = zone.getParking();
-        hasParking =  parking != null;
-        if (parking != null)
-            if (!parking.isEmpty()) {
-                String[] latlon = parking.split(",");
-                LatLng parkingLocation = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
-                try {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-                        markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking").icon(getBitmapDescriptor(parentActivity, R.drawable.ic_parking_marker))));
-                    else
-                        markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking")));
-                } catch (Exception e) {
+        parkings = zone.getParkings();
+        if (parkings != null) {
+            hasParkings = !parkings[0].isEmpty();
+            if (hasParkings) {
+                for (String parking : parkings) {
+                    String[] latlon = parking.split(",");
+                    LatLng parkingLocation = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                            markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking").icon(getBitmapDescriptor(parentActivity, R.drawable.ic_parking_marker))));
+                        else
+                            markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking")));
+                    } catch (Exception e) {
+                    }
                 }
             }
+        }
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -255,9 +257,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
                 ((TextView) v.findViewById(R.id.mapsInfo_txtName)).setText(marker.getTitle());
 
-                if (hasParking && markers.indexOf(marker) == 0) return v;
+                if (hasParkings && markers.indexOf(marker) < parkings.length) return null;
                 GlideApp.with(getContext())
-                        .load(FirebaseStorage.getInstance().getReference().child(sectorsFromFirebase.get(hasParking ? markers.indexOf(marker) - 1 : markers.indexOf(marker)).getImg()))
+                        .load(FirebaseStorage.getInstance().getReference().child(sectorsFromFirebase.get(hasParkings ? markers.indexOf(marker) - parkings.length : markers.indexOf(marker)).getImg()))
                         .placeholder(R.drawable.mountain_placeholder_small)
                         .override(400, 200)
                         .centerCrop()
@@ -346,12 +348,12 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if (hasParking && markers.indexOf(marker) == 0) return;
+        if (hasParkings && markers.indexOf(marker) < parkings.length) return;
         Intent intent = new Intent(getActivity(), SectorIndexActivity.class);
         intent.putExtra("zone", zone);
-        intent.putExtra("sector", sectorsFromFirebase.get(hasParking ? markers.indexOf(marker) - 1 : markers.indexOf(marker)));
+        intent.putExtra("sector", sectorsFromFirebase.get(hasParkings ? markers.indexOf(marker) - parkings.length : markers.indexOf(marker)));
         intent.putExtra("sectors", sectorsFromFirebase);
-        intent.putExtra("currentSectorPosition", hasParking ? markers.indexOf(marker) - 1 : markers.indexOf(marker));
+        intent.putExtra("currentSectorPosition", hasParkings ? markers.indexOf(marker) - parkings.length : markers.indexOf(marker));
         startActivity(intent);
     }
 
