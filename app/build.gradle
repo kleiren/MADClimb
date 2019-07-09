@@ -7,8 +7,8 @@ android {
         applicationId "es.kleiren.madclimb"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 32
-        versionName "0.32"
+        versionCode 33
+        versionName "0.33"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -54,7 +54,5 @@ dependencies {
     implementation('com.mikepenz:aboutlibraries:6.0.2@aar') {
         transitive = true
     }
-    // Gson
-    implementation 'com.google.code.gson:gson:2.8.2'
 }
 apply plugin: 'com.google.gms.google-services'
