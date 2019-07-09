@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,10 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.github.rubensousa.bottomsheetbuilder.BottomSheetBuilder;
-import com.github.rubensousa.bottomsheetbuilder.BottomSheetMenuDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -35,12 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
-import java.util.ArrayList;
-import java.util.Collection;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
@@ -58,12 +50,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.navigation)
     BottomNavigationView bottomNavigationView;
     private DatabaseReference mDatabase;
-    public ArrayList<ArrayList<String>> zonesFromFirebase = new ArrayList<>();
-    private boolean shownNewZones = false;
+    public String updates;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
+    private String updateId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         checkFirstRun();
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -112,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
 
             case R.id.nav_twitter:
-
                 Intent intent;
                 try {
                     getApplicationContext().getPackageManager().getPackageInfo("com.twitter.android", 0);
@@ -125,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
 
             case R.id.nav_rate:
-
                 Uri uri = Uri.parse("market://details?id=" + getPackageName());
                 Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
                 goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
@@ -143,9 +135,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(browserIntent);
                 return true;
 
+            case R.id.nav_news:
+                showChangelog();
+                return true;
+
+            case R.id.nav_policy:
+                Intent goToPrivacy = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/madclimb-privacy-policy"));
+                startActivity(goToPrivacy);
+                return true;
+
             case R.id.nav_about:
                 new LibsBuilder()
-                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        .withActivityTheme(R.style.WhiteTheme)
                         .withFields(R.string.class.getFields())
                         .start(this);
                 return true;
@@ -163,22 +164,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
 
             case R.id.nav_favs:
-                Toast.makeText(this, "Próximamente :)", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, ZoneListFavFragment.newInstance())
+                        .commit();
                 return true;
-
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     public void checkFirstRun() {
         boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
         if (isFirstRun) {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(this);
-
             builder.setTitle(R.string.welcome)
                     .setMessage(R.string.welcome_message)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -191,14 +190,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .edit()
                     .putBoolean("isFirstRun", false)
                     .apply();
+            checkFirebaseNews(false);
         } else {
-            //checkFirebaseChanges();
+            checkFirebaseNews(true);
         }
+    }
+
+    private void showChangelog() {
+        try {
+            if (!getSupportFragmentManager().findFragmentByTag("changelog_fragment").isVisible())
+                new ChangelogDialogFragment().show(getSupportFragmentManager(), "changelog_fragment");
+        } catch (Exception e) {
+            new ChangelogDialogFragment().show(getSupportFragmentManager(), "changelog_fragment");
+        }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
         return true;
     }
@@ -233,110 +242,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    void showNewZones() {
-        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        Gson gson2 = new Gson();
-        String json2 = mPrefs.getString("SerializableObject", "");
-        ArrayList<ArrayList<String>> zonesFromPreferences = gson2.fromJson(json2, new TypeToken<ArrayList<ArrayList<String>>>() {
-        }.getType());
-        try {
-            Log.i("ZonesFromPreferences", zonesFromPreferences.toString());
-            Log.i("ZonesFromFirebase", zonesFromFirebase.toString());
-        } catch (Exception e) {
-            return;
-        }
-        Gson gson = new Gson();
-        String json = gson.toJson(zonesFromFirebase);
-        prefsEditor.putString("SerializableObject", json);
-        prefsEditor.apply();
-
-        if (zonesFromPreferences.size() != 0) {
-            StringBuilder newZones = new StringBuilder();
-            iLoop:
-            for (int i = 0; i < zonesFromFirebase.size(); i++) {
-                if (!zonesFromFirebase.get(i).isEmpty()) {
-                    for (int j = 0; j < zonesFromPreferences.size(); j++) {
-                        Log.i("num", i + " " + j);
-                        Log.i("1", zonesFromFirebase.get(i).toString());
-                        Log.i("2", zonesFromPreferences.get(j).toString());
-
-                        if (zonesFromFirebase.get(i).get(0).equals(zonesFromPreferences.get(j).get(0))) {
-                            String zoneName = zonesFromFirebase.get(i).get(0);
-
-                            Log.i("1", zonesFromFirebase.get(i).get(0).toString());
-                            Log.i("2", zonesFromPreferences.get(j).get(0).toString());
-
-                            Collection firstList = zonesFromPreferences.get(j);
-                            Collection secondList = zonesFromFirebase.get(i);
-                            Log.i("COLL1", secondList.toString());
-                            Log.i("COLL2", firstList.toString());
-                            secondList.removeAll(firstList);
-
-                            if (!secondList.isEmpty()) {
-                                newZones.append("Zona: " + zoneName + "\n    Nuevos sectores: ");
-
-                                for (String sector : zonesFromFirebase.get(i)) {
-                                    newZones.append(sector).append(" ");
-                                }
-                                newZones.append("\n");
-                            }
-                            continue iLoop;
-                        } else {
-
-                            if (j >= zonesFromPreferences.size() - 1) {
-                                newZones.append("Nueva zona: " + zonesFromFirebase.get(i).get(0) + "\n    Con sectores: ");
-                                for (i = 1; i < zonesFromFirebase.get(i).size(); i++) {
-                                    newZones.append(zonesFromFirebase.get(i)).append(" ");
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
-            if (!newZones.toString().isEmpty()) {
-                final BottomSheetMenuDialog dialog = new BottomSheetBuilder(this, R.style.BottomSheetBuilder_DialogStyle)
-                        .setMode(BottomSheetBuilder.MODE_LIST)
-                        .setTitleTextColor(getResources().getColor(R.color.colorPrimaryDark))
-                        .addTitleItem("Zonas y sectores añadidos desde última conexión")
-                        .setTitleTextColor(getResources().getColor(R.color.black_overlay))
-                        .addTitleItem(newZones.toString())
-                        .expandOnStart(false)
-                        .createDialog();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.show();
-                    }
-                });
-            }
-        }
-    }
-
-    void checkFirebaseChanges() {
+    void checkFirebaseNews(final boolean show) {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("updates").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Log.i("FIREBASE", postSnapshot.child("sectors").toString());
-                    ArrayList<String> zoneFromFirebase = new ArrayList<>();
-                    zoneFromFirebase.add(postSnapshot.child("name").getValue().toString());
-                    for (DataSnapshot postPostSnapshot : postSnapshot.child("sectors").getChildren()) {
-                        zoneFromFirebase.add(postPostSnapshot.child("name").getValue().toString());
+                try {
+                    updates = dataSnapshot.child("text").getValue().toString();
+                    updateId = dataSnapshot.child("id").getValue().toString();
+                    if (!updateId.equals(getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("updateId", ""))) {
+                        getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                                .edit()
+                                .putString("updateId", updateId)
+                                .apply();
+                        if (show) showChangelog();
                     }
-                    zonesFromFirebase.add(zoneFromFirebase);
-                }
-
-                if (!shownNewZones) {
-                    showNewZones();
-                    shownNewZones = true;
+                } catch (Exception e) {
                 }
             }
 
@@ -346,6 +269,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
 
 }

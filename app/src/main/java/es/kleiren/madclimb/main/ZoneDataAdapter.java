@@ -61,6 +61,10 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         return filteredZones.get(i);
     }
 
+    public ArrayList<Zone> getFilteredZones() {
+        return filteredZones;
+    }
+
     @Override
     public ZoneDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
@@ -75,12 +79,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
-
         viewHolder.txtRouteName.setText(filteredZones.get(i).getName());
-
-        if (filteredZones.get(i).getHasSectors()) viewHolder.imgNoSectors.setVisibility(View.GONE);
-        else viewHolder.imgNoSectors.setVisibility(View.VISIBLE);
-
 
         final StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
         GlideApp.with(context)
@@ -100,7 +99,6 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
                     }
                 })
                 .into(viewHolder.imgSector);
-
     }
 
     @Override
@@ -143,8 +141,6 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         TextView txtRouteName;
         @BindView(R.id.zoneRow_imgSector)
         ImageView imgSector;
-        @BindView(R.id.zoneRow_imgNoSector)
-        ImageView imgNoSectors;
         @BindView(R.id.zoneRow_progressBar)
         ProgressBar progressBar;
 

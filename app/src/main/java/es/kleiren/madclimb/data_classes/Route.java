@@ -12,21 +12,20 @@ public class Route implements Serializable{
     private String sectorName;
     private int resource;
     private String grade;
+    private int qd;
+    private int height;
     String name;
     String description;
 
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -54,5 +53,16 @@ public class Route implements Serializable{
     public void setResource(int resource) {
         this.resource = resource;
     }
-
+    public int getQd() {
+        return qd;
+    }
+    public void setQd(int qd) {
+        this.qd = qd;
+    }
+    public int getHeight() {
+        return height;
+    }
+    public void setHeight(int height) {
+        this.height = height;
+    }
 }

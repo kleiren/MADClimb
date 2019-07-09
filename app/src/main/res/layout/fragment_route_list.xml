@@ -6,7 +6,6 @@
     android:animateLayoutChanges="true"
     tools:context="es.kleiren.madclimb.main.ZoneListFragment">
 
-
     <ProgressBar
         android:id="@+id/route_initial_progress"
         style="?android:attr/progressBarStyle"
@@ -43,6 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.RecyclerView

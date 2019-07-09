@@ -24,20 +24,6 @@
             card_view:srcCompat="@drawable/mountain_placeholder"
             android:layout_alignParentStart="true" />
 
-        <ImageView
-            android:id="@+id/zoneRow_imgNoSector"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:foregroundGravity="center"
-            card_view:layout_constraintHorizontal_bias="0.0"
-            card_view:layout_constraintLeft_toLeftOf="parent"
-            card_view:layout_constraintRight_toRightOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/mountain_placeholder"
-            android:layout_alignParentStart="true" />
-
         <ProgressBar
             android:id="@+id/zoneRow_progressBar"
             android:layout_width="wrap_content"

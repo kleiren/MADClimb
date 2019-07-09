@@ -56,7 +56,6 @@ public class ObservableZoneList extends Observable {
 
         this.zones = zones;
 
-
         for (Zone zone : this.zones) {
             getZoneFromFirebaseZone(zone, context);
         }

@@ -1,8 +1,10 @@
 package es.kleiren.madclimb.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,12 +34,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
@@ -63,12 +69,10 @@ public class ZoneListFragment extends Fragment {
     private Observer zoneListChanged = new Observer() {
         @Override
         public void update(Observable o, Object newValue) {
-
             zoneList = (ArrayList<Zone>) newValue;
             adapter = new ZoneDataAdapter(zoneList, getActivity());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-
         }
     };
 
@@ -99,7 +103,14 @@ public class ZoneListFragment extends Fragment {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zonesFromFirebase.add(zone);
                 }
-
+                Collections.sort(zonesFromFirebase, new Comparator<Zone>() {
+                    public int compare(Zone o1, Zone o2) {
+                        if (o1.getPosition() != null && o2.getPosition() != null)
+                            return o1.getPosition().compareTo(o2.getPosition());
+                        else
+                            return o1.getName().compareTo(o2.getName());
+                    }
+                });
                 observableZoneList = new ObservableZoneList();
                 observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
                 observableZoneList.addObserver(zoneListChanged);
@@ -127,8 +138,18 @@ public class ZoneListFragment extends Fragment {
         });
     }
 
+    private int getActionBarHeight(){
+        TypedValue tv = new TypedValue();
+        if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            return TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+        return 0;
+    }
+
     private void initViews() {
         recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration( new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
@@ -154,9 +175,7 @@ public class ZoneListFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), ZoneActivity.class);
                     intent.putExtra("zone", zone);
                     startActivityForResult(intent, 1);
-
                 }
-
                 return false;
             }
 
@@ -166,7 +185,6 @@ public class ZoneListFragment extends Fragment {
 
             @Override
             public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
             }
         });
     }
@@ -183,7 +201,6 @@ public class ZoneListFragment extends Fragment {
         MenuItem searchViewMenuItem = menu.findItem(R.id.search);
         searchView = (SearchView) searchViewMenuItem.getActionView();
         search(searchView);
-
     }
 
     @Override
@@ -191,7 +208,6 @@ public class ZoneListFragment extends Fragment {
 
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.search) {
             if (searchView.getVisibility() == View.VISIBLE)
                 searchView.setVisibility(View.GONE);
@@ -209,4 +225,20 @@ public class ZoneListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = verticalSpaceHeight;
+            }
+        }
+    }
 }

@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -104,9 +106,18 @@ public class SectorListFragment extends Fragment {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sectorsFromFirebase.add(sector);
                 }
+                Collections.sort(sectorsFromFirebase, new Comparator<Sector>() {
+                    public int compare(Sector o1, Sector o2) {
+                        if (o1.getPosition() != null && o2.getPosition() != null)
+                            return o1.getPosition().compareTo(o2.getPosition());
+                        else
+                            return o1.getName().compareTo(o2.getName());
+                    }
+                });
                 observableSectorList = new ObservableSectorList();
                 observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
                 observableSectorList.addObserver(sectorListChanged);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

@@ -37,6 +37,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import es.kleiren.madclimb.R;
 
+import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
@@ -62,8 +64,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            location =  getArguments().getString(ARG_LOC);
-            name =  getArguments().getString(ARG_NAME);
+            location = getArguments().getString(ARG_LOC);
+            name = getArguments().getString(ARG_NAME);
 
         }
     }
@@ -72,17 +74,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-
-        final String [] latlon =location.split(",");
-        final LatLng loc = new LatLng(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
-
-
-        Activity parentActivity = getActivity();
+        final String[] latlon = location.split(",");
+        final LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
 
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.onResume();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -94,9 +91,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-
-                mMap.addMarker(new MarkerOptions().position(loc));
-
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                try {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                        mMap.addMarker(new MarkerOptions().position(loc).icon(getBitmapDescriptor(getActivity(), R.drawable.map_marker_colored)));
+                    else
+                        mMap.addMarker(new MarkerOptions().position(loc));
+                } catch (Exception e) {
+                }
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
@@ -106,9 +108,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Uri uri = Uri.parse("geo:0,0?q=" + loc.latitude + "," + loc.longitude + " (" + name + ")");
-                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
+            }
+        });
 
+        view.findViewById(R.id.changeMode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                else
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
         });
 
@@ -118,9 +129,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        String [] latlon =location.split(",");
-        LatLng loc = new LatLng(Long.parseLong(latlon[0]),Long.parseLong(latlon[1]));
-        mMap.addMarker(new MarkerOptions().position(loc));
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 
     @Override

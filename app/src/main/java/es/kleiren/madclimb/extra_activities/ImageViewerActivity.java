@@ -82,8 +82,6 @@ public class ImageViewerActivity extends AppCompatActivity {
                     }
                 })
                 .into((ImageView) findViewById(R.id.imageView));
-
     }
-
 
 }

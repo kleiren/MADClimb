@@ -8,11 +8,14 @@ import java.io.Serializable;
 
 public class Datum implements Serializable {
 
-    String name;
-    String id;
-    String description;
+    private String name;
+    private String id;
+    private String description;
     private String loc;
     private String img;
+    private Integer position;
+    private String parking;
+    private String parkings;
 
     public String getImg() {
         return img;
@@ -42,6 +45,14 @@ public class Datum implements Serializable {
         return name;
     }
 
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -54,4 +65,26 @@ public class Datum implements Serializable {
         this.description = description;
     }
 
+    public String getParking() {
+        return parking;
+    }
+
+    public String[] getParkings() {
+        if (parking != null) {
+            if (parkings.contains(";")) {
+                return parkings.split(";");
+            } else {
+                return new String[]{parkings};
+            }
+        }
+        return null;
+    }
+
+    public void setParking(String parking) {
+        this.parking = parking;
+    }
+
+    public void setParkings(String parkings) {
+        this.parkings = parkings;
+    }
 }

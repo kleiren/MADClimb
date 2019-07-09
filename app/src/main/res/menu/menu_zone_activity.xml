@@ -4,13 +4,9 @@
     tools:context="es.kleiren.madclimb.zone_activity.ZoneActivity">
 
     <item
-        android:id="@+id/error"
-        android:icon="@android:drawable/stat_notify_error"
-        android:title="info"
+        android:id="@+id/fav"
+        android:icon="@drawable/ic_star_outline"
+        android:title="favourite"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/addRoute"
-        android:icon="@drawable/ic_add"
-        android:title="info"
-        app:showAsAction="always" />
+
 </menu>

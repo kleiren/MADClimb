@@ -70,6 +70,9 @@ import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.sector_activity.SectorActivity;
 import es.kleiren.madclimb.sector_activity.SectorIndexActivity;
 
+import static android.content.Context.MODE_PRIVATE;
+import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
+
 
 public class SectorListMapFragment extends Fragment implements OnMapReadyCallback, LocationSource.OnLocationChangedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
@@ -84,7 +87,8 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     private GoogleMap mMap;
     private ArrayList<Marker> markers = new ArrayList<>();
     private ArrayList<Sector> sectors;
-
+    private boolean hasParkings = false;
+    private String[] parkings;
     private Observer sectorListChanged = new Observer() {
         @Override
         public void update(Observable o, Object newValue) {
@@ -111,9 +115,15 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         if (getArguments() != null) {
             zone = (Zone) getArguments().getSerializable(ARG_ZONE);
         }
-
-        if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        if (!parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("locAsked", false)) {
+            if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(parentActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(parentActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("locAllowed", true).apply();
+            }
+            parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("locAsked", true).apply();
         }
     }
 
@@ -125,7 +135,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
         mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
         mMapView.onResume();
 
         try {
@@ -157,7 +166,16 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                     default:
                         return true;
                 }
+            }
+        });
 
+        view.findViewById(R.id.changeMode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                else
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
         });
 
@@ -178,7 +196,10 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                     String[] latlon = sector.getLoc().split(",");
                     LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
                     try {
-                        markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName())));
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName()).icon(getBitmapDescriptor(parentActivity, R.drawable.map_marker_colored))));
+                        else
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(sector.getName())));
                     } catch (Exception e) {
                     }
                 }
@@ -196,30 +217,49 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             mMap.setMyLocationEnabled(true);
-
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.setOnInfoWindowClickListener(this);
+
+        parkings = zone.getParkings();
+        if (parkings != null) {
+            hasParkings = !parkings[0].isEmpty();
+            if (hasParkings) {
+                for (String parking : parkings) {
+                    String[] latlon = parking.split(",");
+                    LatLng parkingLocation = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                            markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking").icon(getBitmapDescriptor(parentActivity, R.drawable.ic_parking_marker))));
+                        else
+                            markers.add(mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Parking")));
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }
+
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             @Override
-            public View getInfoWindow(Marker arg0) {
+            public View getInfoWindow(Marker marker) {
                 return null;
             }
 
             @Override
-            public View getInfoContents(final Marker arg0) {
+            public View getInfoContents(final Marker marker) {
 
                 View v = getLayoutInflater().inflate(R.layout.maps_info_window, null);
 
-                ((TextView) v.findViewById(R.id.mapsInfo_txtName)).setText(arg0.getTitle());
+                ((TextView) v.findViewById(R.id.mapsInfo_txtName)).setText(marker.getTitle());
 
+                if (hasParkings && markers.indexOf(marker) < parkings.length) return null;
                 GlideApp.with(getContext())
-                        .load(FirebaseStorage.getInstance().getReference().child(sectorsFromFirebase.get(markers.indexOf(arg0)).getImg()))
+                        .load(FirebaseStorage.getInstance().getReference().child(sectorsFromFirebase.get(hasParkings ? markers.indexOf(marker) - parkings.length : markers.indexOf(marker)).getImg()))
                         .placeholder(R.drawable.mountain_placeholder_small)
                         .override(400, 200)
                         .centerCrop()
@@ -232,7 +272,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                                 if (!dataSource.equals(DataSource.MEMORY_CACHE))
-                                    arg0.showInfoWindow();
+                                    marker.showInfoWindow();
                                 return false;
                             }
                         })
@@ -284,14 +324,11 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private void centerMapOnMarkers() {
-
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        if (markers.isEmpty()) return;
         for (Marker marker : markers) {
             builder.include(marker.getPosition());
         }
-
-        if (markers.isEmpty()) return;
-
         LatLngBounds bounds = builder.build();
 
         int padding = 500;
@@ -311,11 +348,12 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        if (hasParkings && markers.indexOf(marker) < parkings.length) return;
         Intent intent = new Intent(getActivity(), SectorIndexActivity.class);
         intent.putExtra("zone", zone);
-        intent.putExtra("sector", sectorsFromFirebase.get( markers.indexOf(marker)));
+        intent.putExtra("sector", sectorsFromFirebase.get(hasParkings ? markers.indexOf(marker) - parkings.length : markers.indexOf(marker)));
         intent.putExtra("sectors", sectorsFromFirebase);
-        intent.putExtra("currentSectorPosition", markers.indexOf(marker));
+        intent.putExtra("currentSectorPosition", hasParkings ? markers.indexOf(marker) - parkings.length : markers.indexOf(marker));
         startActivity(intent);
     }
 

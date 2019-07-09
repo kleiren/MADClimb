@@ -6,10 +6,20 @@
     <color name="colorAccent">#607D8B</color>
     <color name="colorPrimary_text">#212121</color>
     <color name="colorSecondary_text">#757575</color>
-    <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="white">#FFFFFF</color>
-
-
     <color name="colorTranslucent">#af000000</color>
+    <color name="launcherBackground">#CA1226</color>
+    <color name="launcherForeground">#3C090E</color>
+
+    <!--RED!-->
+    <!--<color name="colorPrimary">#F44336</color>-->
+    <!--<color name="colorPrimaryDark">#D32F2F</color>-->
+    <!--<color name="colorPrimaryLight">#FFCDD2</color>-->
+    <!--<color name="colorAccent">#FF5722</color>-->
+    <!--<color name="colorPrimary_text">#212121</color>-->
+    <!--<color name="colorSecondary_text">#757575</color>-->
+    <!--<color name="colorIcons">#FFFFFF</color>-->
+    <!--<color name="colorDivider">#BDBDBD</color>-->
+
 </resources>

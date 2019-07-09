@@ -18,6 +18,4 @@ public class Zone extends Datum implements Serializable {
         this.hasSectors = hasSectors;
     }
 
-
-
 }

@@ -32,6 +32,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -81,6 +83,7 @@ public class ZoneActivity extends AppCompatActivity
     private boolean mIsImageHidden;
     private Zone zone;
     private NavigationAdapter navigationAdapter;
+    private boolean isFavourite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,7 @@ public class ZoneActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         zone = (Zone) getIntent().getSerializableExtra("zone");
+        setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +106,8 @@ public class ZoneActivity extends AppCompatActivity
         viewPager.setAdapter(navigationAdapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(this);
+
+        isFavourite = getSharedPreferences("FAVOURITES", MODE_PRIVATE).getBoolean(zone.getId(), false);
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) collapsingAppbar.getLayoutParams();
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -164,58 +170,6 @@ public class ZoneActivity extends AppCompatActivity
             mIsImageHidden = false;
     }
 
-    public void collapseToolbar() {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) collapsingAppbar.getLayoutParams();
-        final AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        params.setBehavior(behavior);
-        if (behavior != null) {
-            ValueAnimator valueAnimator = ValueAnimator.ofInt();
-            valueAnimator.setInterpolator(new DecelerateInterpolator());
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    behavior.setTopAndBottomOffset((Integer) animation.getAnimatedValue());
-                    collapsingAppbar.requestLayout();
-                    behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                        @Override
-                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                            return false;
-                        }
-                    });
-                }
-            });
-            valueAnimator.setIntValues(0, -900);
-            valueAnimator.setDuration(400);
-            valueAnimator.start();
-        }
-    }
-
-    public void expandToolbar() {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) collapsingAppbar.getLayoutParams();
-        final AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        params.setBehavior(behavior);
-        if (behavior != null) {
-            ValueAnimator valueAnimator = ValueAnimator.ofInt();
-            valueAnimator.setInterpolator(new DecelerateInterpolator());
-            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    behavior.setTopAndBottomOffset((Integer) animation.getAnimatedValue());
-                    collapsingAppbar.requestLayout();
-                    behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                        @Override
-                        public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                            return false;
-                        }
-                    });
-                }
-            });
-            valueAnimator.setIntValues(0, 900);
-            valueAnimator.setDuration(400);
-            valueAnimator.start();
-        }
-    }
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
@@ -223,14 +177,48 @@ public class ZoneActivity extends AppCompatActivity
     @Override
     public void onPageSelected(int position) {
         if (position == 1) {
-            collapseToolbar();
+            collapsingAppbar.setExpanded(false, true);
         } else {
-            expandToolbar();
+            collapsingAppbar.setExpanded(true, true);
         }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_zone_activity, menu);
+        setFavouriteStar(menu.getItem(0), isFavourite);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.fav) {
+            isFavourite = getSharedPreferences("FAVOURITES", MODE_PRIVATE).getBoolean(zone.getId(), false);
+            isFavourite = setFavourite(!isFavourite);
+            setFavouriteStar(item, isFavourite);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean setFavourite(boolean add){
+        getSharedPreferences("FAVOURITES", MODE_PRIVATE)
+                .edit()
+                .putBoolean(zone.getId(), add)
+                .apply();
+        return add;
+    }
+
+    private void setFavouriteStar(MenuItem item, boolean isFavourite){
+        if (isFavourite)
+            item.setIcon(R.drawable.ic_star);
+        else
+            item.setIcon(R.drawable.ic_star_outline);
     }
 
     private class NavigationAdapter extends FragmentPagerAdapter {
@@ -240,7 +228,6 @@ public class ZoneActivity extends AppCompatActivity
         private FragmentManager mFragmentManager;
 
         public NavigationAdapter(FragmentManager fm) {
-
             super(fm);
             mFragmentManager = fm;
             mFragmentTags = new HashMap<>();

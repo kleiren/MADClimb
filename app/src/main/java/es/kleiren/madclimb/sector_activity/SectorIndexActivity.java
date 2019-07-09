@@ -16,6 +16,7 @@
 package es.kleiren.madclimb.sector_activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,7 +54,6 @@ public class SectorIndexActivity extends AppCompatActivity {
     private ArrayList<Sector> sectorsFromFirebase;
     private ArrayList<String> sectorTitles = new ArrayList<>();
     private Zone zone;
-    private Sector sector;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -67,7 +67,6 @@ public class SectorIndexActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         zone = (Zone) getIntent().getSerializableExtra("zone");
-        sector = (Sector) getIntent().getSerializableExtra("sector");
         int currentSectorPosition = getIntent().getIntExtra("currentSectorPosition", 0);
         sectorsFromFirebase = (ArrayList<Sector>) getIntent().getSerializableExtra("sectors");
 
@@ -94,6 +93,10 @@ public class SectorIndexActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_sector_activity, menu);
+        for (int i = 0; i < menu.size(); ++i) {
+            final MenuItem item = menu.getItem(i);
+            item.getIcon().setColorFilter(getResources().getColor(R.color.colorSecondary_text), PorterDuff.Mode.SRC_ATOP);
+        }
         return true;
     }
 
@@ -121,13 +124,9 @@ public class SectorIndexActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class NavigationAdapter extends FragmentPagerAdapter {
 
-        public NavigationAdapter(FragmentManager fm) {
+        NavigationAdapter(FragmentManager fm) {
             super(fm);
         }
 
