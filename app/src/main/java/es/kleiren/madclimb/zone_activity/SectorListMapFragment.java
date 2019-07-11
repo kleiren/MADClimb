@@ -331,7 +331,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         }
         LatLngBounds bounds = builder.build();
 
-        int padding = 500;
+        int padding = 250;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         try {
             mMap.moveCamera(cu);

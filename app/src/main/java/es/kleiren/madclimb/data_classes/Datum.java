@@ -70,7 +70,7 @@ public class Datum implements Serializable {
     }
 
     public String[] getParkings() {
-        if (parking != null) {
+        if (parkings != null) {
             if (parkings.contains(";")) {
                 return parkings.split(";");
             } else {
