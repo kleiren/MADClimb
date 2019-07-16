@@ -1,10 +1,8 @@
 package es.kleiren.madclimb.zone_activity;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.widget.Toast;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -25,10 +23,6 @@ import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.root.MyAppGlideModule;
-
-/**
- * Created by carlos on 12/12/17.
- */
 
 public class ObservableSectorList extends Observable {
 
