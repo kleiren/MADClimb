@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -29,8 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +45,6 @@ public class ZoneListFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ArrayList<Zone> zonesFromFirebase;
     private Zone zone;
-    private ArrayList<Zone> zoneList = new ArrayList<>();
-    private ObservableZoneList observableZoneList;
 
     @BindView(R.id.card_recycler_view_zones)
     RecyclerView recyclerView;
@@ -57,16 +55,6 @@ public class ZoneListFragment extends Fragment {
     public static ZoneListFragment newInstance() {
         return new ZoneListFragment();
     }
-
-    private Observer zoneListChanged = new Observer() {
-        @Override
-        public void update(Observable o, Object newValue) {
-            zoneList = (ArrayList<Zone>) newValue;
-            adapter = new ZoneDataAdapter(zoneList, getActivity());
-            recyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,21 +79,19 @@ public class ZoneListFragment extends Fragment {
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                zonesFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zonesFromFirebase.add(zone);
                 }
-                Collections.sort(zonesFromFirebase, new Comparator<Zone>() {
-                    public int compare(Zone o1, Zone o2) {
-                        if (o1.getPosition() != null && o2.getPosition() != null)
-                            return o1.getPosition().compareTo(o2.getPosition());
-                        else
-                            return o1.getName().compareTo(o2.getName());
-                    }
+                Collections.sort(zonesFromFirebase, (o1, o2) -> {
+                    if (o1.getPosition() != null && o2.getPosition() != null)
+                        return o1.getPosition().compareTo(o2.getPosition());
+                    else
+                        return o1.getName().compareTo(o2.getName());
                 });
-                observableZoneList = new ObservableZoneList();
-                observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
-                observableZoneList.addObserver(zoneListChanged);
+                if (adapter != null)
+                    adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -130,18 +116,17 @@ public class ZoneListFragment extends Fragment {
         });
     }
 
-    private int getActionBarHeight(){
+    private int getActionBarHeight() {
         TypedValue tv = new TypedValue();
-        if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-        {
-            return TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
         return 0;
     }
 
     private void initViews() {
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration( new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());

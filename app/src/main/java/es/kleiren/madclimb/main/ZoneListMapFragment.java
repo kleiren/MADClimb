@@ -47,8 +47,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
@@ -66,42 +64,11 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
     private Zone zone;
     private SearchView searchView;
     private ArrayList<Zone> zonesFromFirebase = new ArrayList<>();
-    private ObservableZoneList observableZoneList;
-    private ArrayList<Zone> zones;
-    private ArrayList<Zone> zoneList = new ArrayList<>();
     MapView mMapView;
     private GoogleMap mMap;
     private View btnChangeMode;
 
     private ArrayList<Marker> markers = new ArrayList<>();
-
-    private Observer zoneListChanged = new Observer() {
-        @Override
-        public void update(Observable o, Object newValue) {
-            zoneList = (ArrayList<Zone>) newValue;
-            adapter = new ZoneDataAdapter(zoneList, getActivity());
-            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-                @Override
-                public void onChanged() {
-                    super.onChanged();
-                    markers.clear();
-                    mMap.clear();
-                    for (Zone zone : adapter.getFilteredZones()) {
-                        String[] latlon = zone.getLoc().split(",");
-                        LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
-                        try {
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-                                markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName()).icon(getBitmapDescriptor(parentActivity, R.drawable.map_marker_colored))));
-                            else
-                                markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
-                        } catch (Exception e) {
-                        }
-                    }
-                    centerMapOnMarkers();
-                }
-            });
-        }
-    };
 
     public ZoneListMapFragment() {
     }
@@ -154,14 +121,11 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) btnChangeMode.getLayoutParams();
         lp.topMargin = px;
         btnChangeMode.setLayoutParams(lp);
-        btnChangeMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
-                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                else
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            }
+        btnChangeMode.setOnClickListener(v -> {
+            if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            else
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         });
 
         return view;
@@ -174,7 +138,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                zonesFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zonesFromFirebase.add(zone);
@@ -187,12 +151,9 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                             markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
                     } catch (Exception e) {
                     }
+                    if (adapter != null)
+                        adapter.notifyDataSetChanged();
                 }
-
-                observableZoneList = new ObservableZoneList();
-                observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
-                observableZoneList.addObserver(zoneListChanged);
-
                 centerMapOnMarkers();
             }
 
@@ -229,7 +190,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
 
                 ((TextView) v.findViewById(R.id.mapsInfo_txtName)).setText(marker.getTitle());
 
-                GlideApp.with(getContext())
+                GlideApp.with(parentActivity)
                         .load(FirebaseStorage.getInstance().getReference().child(zonesFromFirebase.get(markers.indexOf(marker)).getImg()))
                         .override(400, 200)
                         .centerCrop()
@@ -248,6 +209,28 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                         })
                         .into((ImageView) v.findViewById(R.id.imageView3));
                 return v;
+            }
+        });
+
+        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                markers.clear();
+                mMap.clear();
+                for (Zone zone : adapter.getFilteredZones()) {
+                    String[] latlon = zone.getLoc().split(",");
+                    LatLng loc = new LatLng(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName()).icon(getBitmapDescriptor(parentActivity, R.drawable.map_marker_colored))));
+                        else
+                            markers.add(mMap.addMarker(new MarkerOptions().position(loc).title(zone.getName())));
+                    } catch (Exception e) {
+                    }
+                }
+                centerMapOnMarkers();
             }
         });
     }
@@ -323,7 +306,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
         LatLngBounds bounds = builder.build();
         int padding = 200;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        mMap.animateCamera(cu, 300, null);
+        mMap.animateCamera(cu, 1, null);
     }
 
     @Override

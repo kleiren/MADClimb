@@ -38,6 +38,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
 
+
     ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
         this.context = context;
         this.zones = zones;
@@ -136,4 +137,6 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
             ButterKnife.bind(this, view);
         }
     }
+
+
 }

@@ -27,8 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +43,6 @@ public class ZoneListFavFragment extends Fragment {
     private DatabaseReference mDatabase;
     private ArrayList<Zone> zonesFromFirebase;
     private Zone zone;
-    private ArrayList<Zone> zoneList = new ArrayList<>();
-    private ObservableZoneList observableZoneList;
 
     @BindView(R.id.card_recycler_view_zones)
     RecyclerView recyclerView;
@@ -59,16 +55,6 @@ public class ZoneListFavFragment extends Fragment {
     public static ZoneListFavFragment newInstance() {
         return new ZoneListFavFragment();
     }
-
-    private Observer zoneListChanged = new Observer() {
-        @Override
-        public void update(Observable o, Object newValue) {
-            zoneList = (ArrayList<Zone>) newValue;
-            adapter = new ZoneDataAdapter(zoneList, getActivity());
-            recyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +77,7 @@ public class ZoneListFavFragment extends Fragment {
         mDatabase.child("zones").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                zonesFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     if (getActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE).getBoolean(zone.getId(), false))
@@ -100,9 +87,8 @@ public class ZoneListFavFragment extends Fragment {
                     emptyFavView.setVisibility(View.VISIBLE);
                 else
                     emptyFavView.setVisibility(View.GONE);
-                observableZoneList = new ObservableZoneList();
-                observableZoneList.getZonesFromFirebaseZoneList(zonesFromFirebase, getActivity());
-                observableZoneList.addObserver(zoneListChanged);
+                if (adapter != null)
+                    adapter.notifyDataSetChanged();
             }
 
             @Override
