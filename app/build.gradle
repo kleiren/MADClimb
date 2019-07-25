@@ -1,21 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.1'
     defaultConfig {
         applicationId "es.kleiren.madclimb"
         minSdkVersion 17
-        targetSdkVersion 28
-        versionCode 33
-        versionName "0.33"
+        targetSdkVersion 29
+        versionCode 100
+        versionName "1.00"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexKeepFile file('multidex-config.txt')
         }
     }
     packagingOptions {
@@ -36,10 +38,10 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    // Maps and firebase stuff, must be in the same version supported by firebase-ui
+    // Maps and firebase stuff, must be in a version supported by firebase-ui
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.firebase:firebase-storage:18.1.0'
-    implementation 'com.google.firebase:firebase-database:18.0.0'
+    implementation 'com.google.firebase:firebase-storage:18.1.1'
+    implementation 'com.google.firebase:firebase-database:18.0.1'
     implementation 'com.google.firebase:firebase-auth:18.1.0'
     implementation 'com.google.firebase:firebase-core:17.0.1'
     // Allows zooming on imageViews

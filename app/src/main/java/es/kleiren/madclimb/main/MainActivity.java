@@ -176,16 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void checkFirstRun() {
         boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
         if (isFirstRun) {
-            AlertDialog.Builder builder;
-            builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.welcome)
-                    .setMessage(R.string.welcome_message)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .setIcon(getResources().getDrawable(R.drawable.ic_info_black))
-                    .show();
             getSharedPreferences("PREFERENCE", MODE_PRIVATE)
                     .edit()
                     .putBoolean("isFirstRun", false)

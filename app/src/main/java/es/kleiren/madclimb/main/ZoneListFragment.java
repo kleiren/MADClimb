@@ -30,7 +30,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -177,6 +176,7 @@ public class ZoneListFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
         MenuItem searchViewMenuItem = menu.findItem(R.id.search);
         searchView = (SearchView) searchViewMenuItem.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         search(searchView);
     }
 

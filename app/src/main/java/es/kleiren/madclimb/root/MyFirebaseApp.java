@@ -1,10 +1,10 @@
 package es.kleiren.madclimb.root;
 
-import android.app.Application;
+import androidx.multidex.MultiDexApplication;
 
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MyFirebaseApp extends Application {
+public class MyFirebaseApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
