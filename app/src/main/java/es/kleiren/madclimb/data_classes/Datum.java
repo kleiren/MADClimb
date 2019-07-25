@@ -2,10 +2,6 @@ package es.kleiren.madclimb.data_classes;
 
 import java.io.Serializable;
 
-/**
- * Created by carlos on 22/11/17.
- */
-
 public class Datum implements Serializable {
 
     private String name;
@@ -70,7 +66,7 @@ public class Datum implements Serializable {
     }
 
     public String[] getParkings() {
-        if (parking != null) {
+        if (parkings != null) {
             if (parkings.contains(";")) {
                 return parkings.split(";");
             } else {

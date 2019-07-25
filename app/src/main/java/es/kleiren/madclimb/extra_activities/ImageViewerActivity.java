@@ -2,13 +2,12 @@ package es.kleiren.madclimb.extra_activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.transition.Fade;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.transition.AutoTransition;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;

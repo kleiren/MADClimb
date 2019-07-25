@@ -43,7 +43,7 @@
             android:name="es.kleiren.madclimb.extra_activities.ImageViewerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ImageViewerTheme" />
 
         <activity
             android:name="es.kleiren.madclimb.extra_activities.InfoActivity"

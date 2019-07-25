@@ -1,19 +1,3 @@
-/*
- * Copyright 2014 Soichiro Kashima
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package es.kleiren.madclimb.zone_activity;
 
 import android.Manifest;
@@ -24,9 +8,11 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -60,14 +46,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
-import es.kleiren.madclimb.sector_activity.SectorActivity;
 import es.kleiren.madclimb.sector_activity.SectorIndexActivity;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -81,22 +64,12 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
     private Activity parentActivity;
     private Zone zone;
     private static final String ARG_ZONE = "zone";
-    private ObservableSectorList observableSectorList;
     private OnTouchListener mListener;
-    MapView mMapView;
+    private MapView mMapView;
     private GoogleMap mMap;
     private ArrayList<Marker> markers = new ArrayList<>();
-    private ArrayList<Sector> sectors;
     private boolean hasParkings = false;
     private String[] parkings;
-    private Observer sectorListChanged = new Observer() {
-        @Override
-        public void update(Observable o, Object newValue) {
-            sectors = (ArrayList<Sector>) newValue;
-            adapter = new SectorDataAdapter(sectors, getActivity());
-            adapter.notifyDataSetChanged();
-        }
-    };
 
     public static SectorListMapFragment newInstance(Zone zone) {
         SectorListMapFragment fragment = new SectorListMapFragment();
@@ -189,7 +162,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         mDatabase.child("zones/" + zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                sectorsFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sectorsFromFirebase.add(sector);
@@ -203,9 +176,8 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                     } catch (Exception e) {
                     }
                 }
-
-                observableSectorList = new ObservableSectorList();
-                observableSectorList.addObserver(sectorListChanged);
+                if (adapter != null)
+                    adapter.notifyDataSetChanged();
                 centerMapOnMarkers();
             }
 
@@ -224,7 +196,6 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
             mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.setOnInfoWindowClickListener(this);
-
         parkings = zone.getParkings();
         if (parkings != null) {
             hasParkings = !parkings[0].isEmpty();
@@ -280,6 +251,8 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                 return v;
             }
         });
+        adapter = new SectorDataAdapter(sectorsFromFirebase, getActivity());
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -331,10 +304,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         }
         LatLngBounds bounds = builder.build();
 
-        int padding = 500;
+        int padding = 250;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         try {
-            mMap.moveCamera(cu);
             mMap.animateCamera(cu);
         } catch (Exception e) {
         }

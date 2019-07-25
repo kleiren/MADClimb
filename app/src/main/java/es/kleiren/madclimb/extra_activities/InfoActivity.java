@@ -1,16 +1,15 @@
 package es.kleiren.madclimb.extra_activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Datum;
-
 
 public class InfoActivity extends AppCompatActivity {
 

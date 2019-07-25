@@ -2,10 +2,6 @@ package es.kleiren.madclimb.data_classes;
 
 import java.io.Serializable;
 
-/**
- * Created by Carlos on 11/05/2017.
- */
-
 public class Sector extends Datum implements Serializable {
 
     private String zoneName;

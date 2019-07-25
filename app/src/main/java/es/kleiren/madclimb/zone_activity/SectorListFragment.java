@@ -1,11 +1,13 @@
 package es.kleiren.madclimb.zone_activity;
 
-import android.app.Activity;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -23,8 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,10 +38,8 @@ public class SectorListFragment extends Fragment {
 
     private SectorDataAdapter adapter;
     private ArrayList<Sector> sectorsFromFirebase = new ArrayList<>();
-    private Activity parentActivity;
     private Zone zone;
     private static final String ARG_ZONE = "zone";
-    private ObservableSectorList observableSectorList;
 
     @BindView(R.id.card_sector_view)
     RecyclerView recyclerSector;
@@ -50,20 +48,6 @@ public class SectorListFragment extends Fragment {
 
     public SectorListFragment() {
     }
-
-    private ArrayList<Sector> sectors;
-    private Observer sectorListChanged = new Observer() {
-        @Override
-        public void update(Observable o, Object newValue) {
-
-            sectors = (ArrayList<Sector>) newValue;
-            adapter = new SectorDataAdapter(sectors, getActivity());
-            recyclerSector.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-            initialProgress.setVisibility(View.GONE);
-
-        }
-    };
 
     public static SectorListFragment newInstance(Zone zone) {
         SectorListFragment fragment = new SectorListFragment();
@@ -76,7 +60,6 @@ public class SectorListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parentActivity = getActivity();
         if (getArguments() != null) {
             zone = (Zone) getArguments().getSerializable(ARG_ZONE);
         }
@@ -102,6 +85,7 @@ public class SectorListFragment extends Fragment {
         mDatabase.child("zones/" + zone.getId() + "/sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                sectorsFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sectorsFromFirebase.add(sector);
@@ -114,10 +98,8 @@ public class SectorListFragment extends Fragment {
                             return o1.getName().compareTo(o2.getName());
                     }
                 });
-                observableSectorList = new ObservableSectorList();
-                observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
-                observableSectorList.addObserver(sectorListChanged);
-                adapter.notifyDataSetChanged();
+                if (adapter != null)
+                    adapter.notifyDataSetChanged();
             }
 
             @Override

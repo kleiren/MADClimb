@@ -2,10 +2,6 @@ package es.kleiren.madclimb.data_classes;
 
 import java.io.Serializable;
 
-/**
- * Created by carlos on 5/17/17.
- */
-
 public class Route implements Serializable{
 
     private String zoneName;

@@ -1,11 +1,10 @@
 package es.kleiren.madclimb.sector_activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -36,7 +35,6 @@ import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.root.GlideApp;
-import es.kleiren.madclimb.zone_activity.ObservableSectorList;
 import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
 
 
@@ -48,7 +46,6 @@ public class SectorIndexListFragment extends Fragment {
     private Zone zone;
     private static final String ARG_ZONE = "zone";
     private static final String ARG_SECTOR = "sector";
-    private ObservableSectorList observableSectorList;
 
     @BindView(R.id.card_sectorIndex_view)
     RecyclerView recyclerSector;
@@ -143,13 +140,12 @@ public class SectorIndexListFragment extends Fragment {
         mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/sub_sectors").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                sectorsFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sectorsFromFirebase.add(sector);
                 }
-                observableSectorList = new ObservableSectorList();
-                observableSectorList.getSectorImagesFromFirebase(sectorsFromFirebase, getActivity());
-                observableSectorList.addObserver(sectorListChanged);
+                if (adapter != null)
                 adapter.notifyDataSetChanged();
             }
             @Override
