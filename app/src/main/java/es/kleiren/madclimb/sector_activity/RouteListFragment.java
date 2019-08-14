@@ -1,14 +1,20 @@
 package es.kleiren.madclimb.sector_activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+
 import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -45,10 +51,13 @@ public class RouteListFragment extends Fragment {
     RecyclerView recyclerRoute;
     @BindView(R.id.route_imgCroquis)
     ImageView imgCroquis;
+    @BindView(R.id.route_cardViewCroquis)
+    View cardViewCroquis;
     @BindView(R.id.route_initial_progress)
     ProgressBar initialProgress;
 
-    public RouteListFragment() {}
+    public RouteListFragment() {
+    }
 
     private static final String ARG_SECTOR = "sector";
 
@@ -69,6 +78,7 @@ public class RouteListFragment extends Fragment {
         parentActivity = getActivity();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,7 +105,19 @@ public class RouteListFragment extends Fragment {
                 startActivityForResult(intent, 1);
             }
         });
-
+        cardViewCroquis.setOnTouchListener((v, event) -> {
+            int y = (int) event.getY() + 15;
+            if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                if (y < 400)
+                    cardViewCroquis.getLayoutParams().height = 400;
+                else if (y > 1400)
+                    cardViewCroquis.getLayoutParams().height = 1400;
+                else
+                    cardViewCroquis.getLayoutParams().height = y;
+                cardViewCroquis.requestLayout();
+            }
+            return true;
+        });
         routesFromFirebase = new ArrayList<>();
 
         (new LoadData()).execute();
