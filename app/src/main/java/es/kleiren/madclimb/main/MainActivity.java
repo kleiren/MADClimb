@@ -36,6 +36,7 @@ import com.mikepenz.aboutlibraries.LibsBuilder;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.util.ThemeHelper;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemSelectedListener {
@@ -135,14 +136,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(browserIntent);
                 return true;
 
-            case R.id.nav_news:
-                showChangelog();
-                return true;
+//            case R.id.nav_news:
+//                showChangelog();
+//                return true;
 
             case R.id.nav_policy:
-                Intent goToPrivacy = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/madclimb-privacy-policy"));
-                startActivity(goToPrivacy);
+                ThemeHelper.applyTheme(ThemeHelper.DARK_MODE);
+                recreate();
                 return true;
+
+            case R.id.nav_news:
+                ThemeHelper.applyTheme(ThemeHelper.LIGHT_MODE);
+                recreate();
+                return true;
+
+//            case R.id.nav_policy:
+//                Intent goToPrivacy = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/madclimb-privacy-policy"));
+//                startActivity(goToPrivacy);
+//                return true;
 
             case R.id.nav_about:
                 new LibsBuilder()
