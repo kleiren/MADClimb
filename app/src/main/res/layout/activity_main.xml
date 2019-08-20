@@ -53,11 +53,10 @@
                 app:layout_constraintTop_toTopOf="@+id/container">
 
                 <androidx.appcompat.widget.Toolbar
+                    android:theme="@style/AppTheme.PopupOverlay"
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@color/white"
-                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+                    android:layout_height="?attr/actionBarSize" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/zoneAct_appbar"
         android:layout_width="match_parent"
-        android:background="@color/white"
+        android:background="@color/colorPrimaryBackground"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -66,7 +66,7 @@
             android:background="@color/colorTranslucent"
             app:tabIndicatorColor="@color/colorAccent"
             app:tabIndicatorHeight="4dp"
-            app:tabSelectedTextColor="@color/white"
+            app:tabSelectedTextColor="@color/colorPrimaryBackground"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
 
     </com.google.android.material.appbar.AppBarLayout>

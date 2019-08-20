@@ -1,7 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,9 +9,8 @@
     </style>
 
     <style name="WhiteTheme" parent="AboutLibrariesTheme.Light">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/white</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryBackground</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryBackground</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -25,7 +24,9 @@
 
     <style name="AppTheme.AppBarOverlayDark" parent="ThemeOverlay.AppCompat.Dark" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.DayNight">
+        <item name="android:background">@color/colorPrimaryBackground</item>
+    </style>
 
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
@@ -48,9 +49,9 @@
     </style>
 
     <style name="ToolbarThemeWhite" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="colorControlNormal">@color/colorPrimaryBackground</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryBackground</item>
+        <item name="android:textColorSecondary">@color/colorPrimaryBackground</item>
 
     </style>
 

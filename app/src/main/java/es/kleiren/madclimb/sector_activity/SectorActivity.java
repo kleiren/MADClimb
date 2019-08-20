@@ -18,6 +18,8 @@ import android.view.MenuItem;
 
 import android.view.View;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;

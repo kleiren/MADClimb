@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -25,7 +27,7 @@ import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.util.SlidingTabLayout;
 
-public class SectorIndexActivity extends AppCompatActivity {
+public class SectorIndexActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
 
     @BindView(R.id.sectorIndexAct_tabLayout)
@@ -72,8 +74,7 @@ public class SectorIndexActivity extends AppCompatActivity {
         tabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
         tabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorAccent));
         tabLayout.setDistributeEvenly(true);
-        tabLayout.setViewPager(viewPager);
-    }
+        tabLayout.setViewPager(viewPager);    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,6 +108,21 @@ public class SectorIndexActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     public class NavigationAdapter extends FragmentPagerAdapter {

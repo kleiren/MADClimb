@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         sideNavigationView.setNavigationItemSelectedListener(this);
-        bottomNavigationView.setBackgroundColor(Color.WHITE);
+        bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBackground));
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         checkFirstRun();
