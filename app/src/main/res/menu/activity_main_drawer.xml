@@ -32,6 +32,12 @@
         android:title="Últimos cambios" />
 
     <item
+        android:id="@+id/nav_dark"
+        app:actionLayout="@layout/action_view_switch"
+        android:icon="@drawable/ic_dark"
+        android:title="Modo oscuro" />
+
+    <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_info_black"
         android:title="Sobre la app" />

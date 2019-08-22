@@ -1,20 +1,20 @@
 package es.kleiren.madclimb.main;
 
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     BottomNavigationView bottomNavigationView;
     private DatabaseReference mDatabase;
     public String updates;
+    private SwitchCompat switcher;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -62,10 +63,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction()
@@ -136,24 +135,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(browserIntent);
                 return true;
 
-//            case R.id.nav_news:
-//                showChangelog();
-//                return true;
+            case R.id.nav_news:
+                showChangelog();
+                return true;
+
+            case R.id.nav_dark:
+                switcher.setChecked(!switcher.isChecked());
+                setDarkModePreference(switcher.isChecked());
+                ThemeHelper.applyDarkTheme(switcher.isChecked());
+                recreate();
+                return true;
 
             case R.id.nav_policy:
-                ThemeHelper.applyTheme(ThemeHelper.DARK_MODE);
-                recreate();
+                Intent goToPrivacy = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/madclimb-privacy-policy"));
+                startActivity(goToPrivacy);
                 return true;
-
-            case R.id.nav_news:
-                ThemeHelper.applyTheme(ThemeHelper.LIGHT_MODE);
-                recreate();
-                return true;
-
-//            case R.id.nav_policy:
-//                Intent goToPrivacy = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/madclimb-privacy-policy"));
-//                startActivity(goToPrivacy);
-//                return true;
 
             case R.id.nav_about:
                 new LibsBuilder()
@@ -197,6 +193,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public void setDarkModePreference(boolean pref) {
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                .edit()
+                .putBoolean("isDarkModeEnabled", pref)
+                .apply();
+    }
+
     private void showChangelog() {
         try {
             if (!getSupportFragmentManager().findFragmentByTag("changelog_fragment").isVisible())
@@ -210,6 +213,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        switcher = findViewById(R.id.switcher);
+        boolean isDarkModeEnabled = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isDarkModeEnabled", false);
+        switcher.setChecked(isDarkModeEnabled);
+        switcher.setOnClickListener(v -> {
+            setDarkModePreference(switcher.isChecked());
+            ThemeHelper.applyDarkTheme(switcher.isChecked());
+            recreate();
+        });
         return true;
     }
 
