@@ -91,19 +91,16 @@ public class RouteListFragment extends Fragment {
 
         final StorageReference load = mStorageRef.child(sector.getImg());
 
-        GlideApp.with(getActivity())
+        GlideApp.with(parentActivity)
                 .load(load)
                 .placeholder(R.drawable.mountain_placeholder)
                 .into(imgCroquis);
 
-        imgCroquis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-                intent.putExtra("image", sector.getImg());
-                intent.putExtra("title", sector.getName());
-                startActivityForResult(intent, 1);
-            }
+        imgCroquis.setOnClickListener(v -> {
+            Intent intent = new Intent(parentActivity, ImageViewerActivity.class);
+            intent.putExtra("image", sector.getImg());
+            intent.putExtra("title", sector.getName());
+            startActivityForResult(intent, 1);
         });
         cardViewCroquis.setOnTouchListener((v, event) -> {
             int y = (int) event.getY() + 15;
