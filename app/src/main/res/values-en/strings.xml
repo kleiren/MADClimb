@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MADClimb</string>
+    <string name="changelog_dialog_changelog">Lattest changes</string>
+    <string name="description">Description</string>
+    <string name="info">Info and Location</string>
+    <string name="infoFrag_date">Date of last update:</string>
+    <string name="information">Information</string>
+    <string name="localization">Location</string>
+    <string name="open_in_maps">Open in Maps</string>
+    <string name="recommend_app">I recommend this app</string>
+    <string name="welcome">Welcome</string>
+</resources>

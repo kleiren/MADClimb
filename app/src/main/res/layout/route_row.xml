@@ -90,14 +90,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="end"
+                android:hint="8a"
                 android:textColor="@android:color/holo_green_light"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintRight_toRightOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@id/checkBox"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="368dp" />
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

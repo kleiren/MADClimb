@@ -14,14 +14,4 @@
     <color name="launcherForeground">#3C090E</color>
     <color name="black_overlay">#66000000</color>
 
-    <!--RED!-->
-    <!--<color name="colorPrimary">#F44336</color>-->
-    <!--<color name="colorPrimaryDark">#D32F2F</color>-->
-    <!--<color name="colorPrimaryLight">#FFCDD2</color>-->
-    <!--<color name="colorAccent">#FF5722</color>-->
-    <!--<color name="colorPrimary_text">#212121</color>-->
-    <!--<color name="colorSecondary_text">#757575</color>-->
-    <!--<color name="colorIcons">#FFFFFF</color>-->
-    <!--<color name="colorDivider">#BDBDBD</color>-->
-
 </resources>

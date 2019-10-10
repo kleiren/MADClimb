@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_SUBJECT, "MADClimb");
-                String sAux = "\nTe recomiendo esta app\n\n";
+                String sAux = getString(R.string.recommend_app);
                 sAux = sAux + "https://play.google.com/store/apps/details?id=es.kleiren.madclimb \n\n";
                 i.putExtra(Intent.EXTRA_TEXT, sAux);
                 startActivity(Intent.createChooser(i, "choose one"));
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_send:
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto", "madclimbapp@gmail.com", null));
+                        "mailto", getString(R.string.dev_email), null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 return true;
