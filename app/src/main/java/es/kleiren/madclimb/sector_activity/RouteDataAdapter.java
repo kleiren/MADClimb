@@ -1,19 +1,32 @@
 package es.kleiren.madclimb.sector_activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +45,10 @@ import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.ViewHolder> {
+    private final Activity activity;
     private ArrayList<Route> routes;
     private Sector sector;
     private Context context;
@@ -78,9 +94,11 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
     private Integer[] colors;
     private String[] labels;
+    private DatePickerDialog datePickerDialog;
 
-    public RouteDataAdapter(ArrayList<Route> routes, Context context, Sector sector) {
-        this.context = context;
+    public RouteDataAdapter(ArrayList<Route> routes, Activity activity, Sector sector) {
+        this.context = activity;
+        this.activity = activity;
         this.routes = routes;
         this.sector = sector;
     }
@@ -161,9 +179,54 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                     notifyDataSetChanged();
                 }
             });
-        } else{
+        } else {
             viewHolder.imageArrow.setVisibility(View.GONE);
         }
+
+
+        viewHolder.doneCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDoneDialog(i);
+            }
+        });
+    }
+
+    private void showDoneDialog(int i) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        final View doneView = inflater.inflate(R.layout.dialog_route_done, null);
+        builder.setPositiveButton("Hecho!", null);
+        builder.setView(doneView);
+        AlertDialog dialog = builder.create();
+        ((TextView)doneView.findViewById(R.id.doneDialog_routeName)).setText(routes.get(i).getName());
+        Calendar cal = Calendar.getInstance();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
+        String formattedDate = df.format(date);
+        TextView dateText = doneView.findViewById(R.id.doneDialog_dateText);
+        dateText.setText(formattedDate);
+        dateText.setOnClickListener(v -> {
+            datePickerDialog = new DatePickerDialog(
+                    context, (view, year, month, dayOfMonth) -> dateText.setText(new StringBuilder().append(dayOfMonth).append("/").append(month + 1).append("/").append(year)), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.show();
+        });
+        dialog.setOnShowListener(dialogInterface -> dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
+            SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+            SharedPreferences.Editor prefsEditor = mPrefs.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(routes.get(i));
+
+            mPrefs.getString("savedroute", "");
+            Route obj = gson.fromJson(json, Route.class);
+            if (obj != null)
+                Toast.makeText(activity, obj.getName(), Toast.LENGTH_SHORT).show();
+
+            prefsEditor.putString("savedroute", json);
+            prefsEditor.commit();
+            dialog.dismiss();
+        }));
+        dialog.show();
     }
 
     private void generateData() {
@@ -252,6 +315,8 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         View layoutTxtQuickDraws;
         @BindView(R.id.routeRow_layoutTxtRouteHeight)
         View layoutTxtRouteHeight;
+        @BindView(R.id.routeRow_doneCheckBox)
+        CheckBox doneCheckBox;
 
         ViewHolder(View view, boolean first) {
             super(view);

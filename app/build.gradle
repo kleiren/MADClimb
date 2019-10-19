@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.1'
+    buildToolsVersion '29.0.2'
     defaultConfig {
         applicationId "es.kleiren.madclimb"
         minSdkVersion 17
@@ -32,18 +32,18 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
-    implementation 'com.google.android.material:material:1.1.0-alpha08'
-    implementation 'androidx.vectordrawable:vectordrawable:1.1.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta05'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     // Maps and firebase stuff, must be in a version supported by firebase-ui
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.firebase:firebase-storage:18.1.1'
-    implementation 'com.google.firebase:firebase-database:18.0.1'
-    implementation 'com.google.firebase:firebase-auth:18.1.0'
-    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
     // Allows zooming on imageViews
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     // Glide
@@ -57,9 +57,11 @@ dependencies {
     // Charts
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     // Butter
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
     // About libraries
     implementation "com.mikepenz:aboutlibraries:7.0.1"
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 apply plugin: 'com.google.gms.google-services'

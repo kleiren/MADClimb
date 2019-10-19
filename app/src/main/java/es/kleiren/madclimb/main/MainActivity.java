@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,11 +32,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.util.ThemeHelper;
 
 
@@ -80,6 +83,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         checkFirstRun();
+
+        Gson gson = new Gson();
+        String json = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("savedroute", "");
+        Route obj = gson.fromJson(json, Route.class);
+        if (obj != null)
+                Toast.makeText(this, obj.getName(), Toast.LENGTH_SHORT).show();
 
     }
 

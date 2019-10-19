@@ -134,6 +134,8 @@ public class RouteListFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
+                    DatabaseReference ref = postSnapshot.getRef();
+                    route.setReference(ref.toString());
                     routesFromFirebase.add(route);
                     adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector);
                 }
