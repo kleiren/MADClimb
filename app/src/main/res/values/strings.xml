@@ -19,5 +19,9 @@
     <string name="changelog_dialog_changelog">Últimos cambios</string>
     <string name="dev_email" translatable="false">madclimbapp@gmail.com</string>
     <string name="recommend_app">Te recomiendo esta app</string>
+    <string name="zones">Zonas</string>
+    <string name="map">Mapa</string>
+    <string name="favourites">Favoritas</string>
+    <string name="history">Histórico</string>
 
 </resources>

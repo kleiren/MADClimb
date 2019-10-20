@@ -83,13 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         checkFirstRun();
-
-        Gson gson = new Gson();
-        String json = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("savedroute", "");
-        Route obj = gson.fromJson(json, Route.class);
-        if (obj != null)
-                Toast.makeText(this, obj.getName(), Toast.LENGTH_SHORT).show();
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -182,6 +175,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_favs:
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, ZoneListFavFragment.newInstance())
+                        .commit();
+                return true;
+
+            case R.id.nav_history:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, HistoryFragment.newInstance())
                         .commit();
                 return true;
         }

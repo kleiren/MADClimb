@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -183,6 +184,10 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             viewHolder.imageArrow.setVisibility(View.GONE);
         }
 
+        if (routes.get(i).getDoneDate()!= null){
+            viewHolder.txtDoneDate.setText(routes.get(i).getDoneDate());
+        }
+
 
         viewHolder.doneCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +201,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = activity.getLayoutInflater();
         final View doneView = inflater.inflate(R.layout.dialog_route_done, null);
-        builder.setPositiveButton("Hecho!", null);
+        builder.setPositiveButton("OK", null);
         builder.setView(doneView);
         AlertDialog dialog = builder.create();
         ((TextView)doneView.findViewById(R.id.doneDialog_routeName)).setText(routes.get(i).getName());
@@ -212,18 +217,26 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             datePickerDialog.show();
         });
         dialog.setOnShowListener(dialogInterface -> dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
+
+            Route routeDone = routes.get(i);
+            routeDone.setDoneDate((String) dateText.getText());
             SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
+
             Gson gson = new Gson();
-            String json = gson.toJson(routes.get(i));
 
-            mPrefs.getString("savedroute", "");
-            Route obj = gson.fromJson(json, Route.class);
-            if (obj != null)
-                Toast.makeText(activity, obj.getName(), Toast.LENGTH_SHORT).show();
+            String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
+            ArrayList<Route> arRoutes = new ArrayList<>();
+            if (! jsonSaved.isEmpty()){
+                Route[] obj = gson.fromJson(jsonSaved, Route[].class);
+                arRoutes = new ArrayList<>(Arrays.asList(obj));
+            }
 
-            prefsEditor.putString("savedroute", json);
-            prefsEditor.commit();
+            arRoutes.add(routes.get(i));
+            String json = gson.toJson(arRoutes);
+
+            prefsEditor.putString("DONE_ROUTES", json);
+            prefsEditor.apply();
             dialog.dismiss();
         }));
         dialog.show();
@@ -317,6 +330,8 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         View layoutTxtRouteHeight;
         @BindView(R.id.routeRow_doneCheckBox)
         CheckBox doneCheckBox;
+        @BindView(R.id.routeRow_txtDoneDate)
+        TextView txtDoneDate;
 
         ViewHolder(View view, boolean first) {
             super(view);

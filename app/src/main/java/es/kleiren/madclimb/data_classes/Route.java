@@ -1,5 +1,7 @@
 package es.kleiren.madclimb.data_classes;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.Serializable;
 
 public class Route implements Serializable {
@@ -15,6 +17,10 @@ public class Route implements Serializable {
 
 
     private String ref;
+
+
+
+    private String doneDate;
 
     public String getName() {
         return name;
@@ -85,5 +91,12 @@ public class Route implements Serializable {
     }
     public String getRef() {
         return ref;
+    }
+
+    public void setDoneDate(String doneDate) {
+        this.doneDate = doneDate;
+    }
+    public String getDoneDate() {
+        return doneDate;
     }
 }
