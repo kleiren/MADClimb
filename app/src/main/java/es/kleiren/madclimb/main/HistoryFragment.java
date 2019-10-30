@@ -105,12 +105,15 @@ public class HistoryFragment extends Fragment {
             Route[] obj = gson.fromJson(json, Route[].class);
             arRoutes = new ArrayList<>(Arrays.asList(obj));
 
-            for (Route route : arRoutes) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(route.getRef());
+            for (Route routeDone : arRoutes) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(routeDone.getRef());
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Route route = dataSnapshot.getValue(Route.class);
+                        route.setDoneDate(routeDone.getDoneDate());
+                        route.setSectorName(routeDone.getSectorName());
+                        route.setZoneName(routeDone.getZoneName());
                         routesFromFirebase.add(route);
                         adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), null);
                         initViews();

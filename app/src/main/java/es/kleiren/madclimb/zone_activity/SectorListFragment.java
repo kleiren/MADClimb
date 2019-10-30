@@ -88,6 +88,7 @@ public class SectorListFragment extends Fragment {
                 sectorsFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
+                    sector.setZoneName(zone.getName());
                     sectorsFromFirebase.add(sector);
                 }
                 Collections.sort(sectorsFromFirebase, new Comparator<Sector>() {

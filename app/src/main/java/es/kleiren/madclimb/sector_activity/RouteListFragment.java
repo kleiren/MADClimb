@@ -27,8 +27,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +39,8 @@ import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class RouteListFragment extends Fragment {
@@ -123,19 +127,32 @@ public class RouteListFragment extends Fragment {
     }
 
     private void prepareData() {
+
+        Gson gson = new Gson();
+        String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("DONE_ROUTES", "");
+        ArrayList<Route> arRoutes = new ArrayList<>();
+        if (!json.isEmpty()) {
+            Route[] obj = gson.fromJson(json, Route[].class);
+            arRoutes = new ArrayList<>(Arrays.asList(obj));
+        }
+
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference child;
         if (sector.getParentSector() != null)
             child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getParentSector() + "/sub_sectors/" + sector.getId() + "/routes");
         else
             child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes");
+        ArrayList<Route> finalArRoutes = arRoutes;
         child.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Route route = postSnapshot.getValue(Route.class);
-                    DatabaseReference ref = postSnapshot.getRef();
-                    route.setReference(ref.toString());
+                    String ref = postSnapshot.getRef().toString();
+                    route.setReference(ref);
+                    for (Route routeDone : finalArRoutes)
+                        if (routeDone.getRef().equals(ref))
+                            route = routeDone;
                     routesFromFirebase.add(route);
                     adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector);
                 }

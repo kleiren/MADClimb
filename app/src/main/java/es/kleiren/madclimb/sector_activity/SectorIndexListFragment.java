@@ -143,6 +143,7 @@ public class SectorIndexListFragment extends Fragment {
                 sectorsFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
+                    sector.setZoneName(zone.getName());
                     sectorsFromFirebase.add(sector);
                 }
                 if (adapter != null)

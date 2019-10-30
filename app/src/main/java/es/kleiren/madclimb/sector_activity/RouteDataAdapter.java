@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -173,53 +174,76 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             viewHolder.details.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
             viewHolder.imageArrow.setImageDrawable(isExpanded ? context.getResources().getDrawable(R.drawable.arrow_up) : context.getResources().getDrawable(R.drawable.arrow_down));
             viewHolder.itemView.setActivated(isExpanded);
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mExpandedPosition = isExpanded ? -1 : i;
-                    notifyDataSetChanged();
-                }
+            viewHolder.itemView.setOnClickListener(v -> {
+                mExpandedPosition = isExpanded ? -1 : i;
+                notifyDataSetChanged();
             });
         } else {
             viewHolder.imageArrow.setVisibility(View.GONE);
         }
 
-        if (routes.get(i).getDoneDate()!= null){
+        if (routes.get(i).getDoneDate() != null) {
+            viewHolder.viewDoneDetails.setVisibility(View.VISIBLE);
             viewHolder.txtDoneDate.setText(routes.get(i).getDoneDate());
+            viewHolder.txtZoneSector.setText(routes.get(i).getZoneName() + " > " + routes.get(i).getSectorName());
+            viewHolder.doneCheckBox.setChecked(true);
         }
-
-
-        viewHolder.doneCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDoneDialog(i);
-            }
+        viewHolder.doneCheckBox.setOnClickListener(v -> {
+            if (!viewHolder.doneCheckBox.isChecked())
+                showDeleteDoneDialog(i, viewHolder.doneCheckBox);
+            else
+                showDoneDialog(i, viewHolder.doneCheckBox );
         });
     }
 
-    private void showDoneDialog(int i) {
+    private void showDeleteDoneDialog(int i, CheckBox doneCheckBox) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setPositiveButton("Borrar", (dialog, which) -> {
+            Route routeDone = routes.get(i);
+            SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+            SharedPreferences.Editor prefsEditor = mPrefs.edit();
+            Gson gson = new Gson();
+            String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
+            ArrayList<Route> arRoutes = new ArrayList<>();
+            if (!jsonSaved.isEmpty()) {
+                Route[] obj = gson.fromJson(jsonSaved, Route[].class);
+                arRoutes = new ArrayList<>(Arrays.asList(obj));
+            }
+            for (Route route : arRoutes) {
+                if (route.getRef().equals(routeDone.getRef())) {
+                    arRoutes.remove(route);
+                    break;
+                }
+            }
+            String json = gson.toJson(arRoutes);
+            prefsEditor.putString("DONE_ROUTES", json);
+            prefsEditor.apply();
+            dialog.dismiss();
+        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            doneCheckBox.setChecked(true);
+            dialog.dismiss();
+        });
+        builder.setOnCancelListener(dialog -> {
+            doneCheckBox.setChecked(true);
+            dialog.dismiss();
+        });
+        builder.setTitle("Borrar ruta hecha");
+        builder.setMessage("¿Seguro que quieres borrar la ruta hecha?");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showDoneDialog(int i, CheckBox doneCheckBox) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = activity.getLayoutInflater();
         final View doneView = inflater.inflate(R.layout.dialog_route_done, null);
-        builder.setPositiveButton("OK", null);
-        builder.setView(doneView);
-        AlertDialog dialog = builder.create();
-        ((TextView)doneView.findViewById(R.id.doneDialog_routeName)).setText(routes.get(i).getName());
-        Calendar cal = Calendar.getInstance();
-        Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
-        String formattedDate = df.format(date);
         TextView dateText = doneView.findViewById(R.id.doneDialog_dateText);
-        dateText.setText(formattedDate);
-        dateText.setOnClickListener(v -> {
-            datePickerDialog = new DatePickerDialog(
-                    context, (view, year, month, dayOfMonth) -> dateText.setText(new StringBuilder().append(dayOfMonth).append("/").append(month + 1).append("/").append(year)), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.show();
-        });
-        dialog.setOnShowListener(dialogInterface -> dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
-
+        builder.setPositiveButton("OK", (dialog, which) -> {
             Route routeDone = routes.get(i);
             routeDone.setDoneDate((String) dateText.getText());
+            routeDone.setSectorName(sector.getName());
+            routeDone.setZoneName(sector.getZoneName());
             SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
 
@@ -227,7 +251,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
             String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
             ArrayList<Route> arRoutes = new ArrayList<>();
-            if (! jsonSaved.isEmpty()){
+            if (!jsonSaved.isEmpty()) {
                 Route[] obj = gson.fromJson(jsonSaved, Route[].class);
                 arRoutes = new ArrayList<>(Arrays.asList(obj));
             }
@@ -238,7 +262,28 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             prefsEditor.putString("DONE_ROUTES", json);
             prefsEditor.apply();
             dialog.dismiss();
-        }));
+        });
+        builder.setView(doneView);
+        ((TextView) doneView.findViewById(R.id.doneDialog_routeName)).setText(routes.get(i).getName());
+        Calendar cal = Calendar.getInstance();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
+        String formattedDate = df.format(date);
+        dateText.setText(formattedDate);
+        dateText.setOnClickListener(v -> {
+            datePickerDialog = new DatePickerDialog(
+                    context, (view, year, month, dayOfMonth) -> dateText.setText(new StringBuilder().append(dayOfMonth).append("/").append(month + 1).append("/").append(year)), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.show();
+        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            doneCheckBox.setChecked(false);
+            dialog.dismiss();
+        });
+        builder.setOnCancelListener(dialog -> {
+            doneCheckBox.setChecked(false);
+            dialog.dismiss();
+        });
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
@@ -332,6 +377,10 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         CheckBox doneCheckBox;
         @BindView(R.id.routeRow_txtDoneDate)
         TextView txtDoneDate;
+        @BindView(R.id.routeRow_txtZoneSector)
+        TextView txtZoneSector;
+        @BindView(R.id.routeRow_doneDetails)
+        View viewDoneDetails;
 
         ViewHolder(View view, boolean first) {
             super(view);
@@ -341,6 +390,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             } else {
                 infoLayout.setVisibility(View.GONE);
             }
+            viewDoneDetails.setVisibility(View.GONE);
             details.setVisibility(View.GONE);
             imageArrow.setVisibility(View.GONE);
         }
