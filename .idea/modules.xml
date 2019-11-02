@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MADClimb.iml" filepath="$PROJECT_DIR$/MADClimb.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Leviathan.iml" filepath="$PROJECT_DIR$/Leviathan.iml" group="Leviathan" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Leviathan/app" />
     </modules>
   </component>
 </project>

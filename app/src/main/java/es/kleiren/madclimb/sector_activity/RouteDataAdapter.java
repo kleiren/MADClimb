@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -16,11 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -51,6 +49,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.ViewHolder> {
     private final Activity activity;
+    private final Boolean isInHistoryFragment;
     private ArrayList<Route> routes;
     private Sector sector;
     private Context context;
@@ -98,11 +97,12 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private String[] labels;
     private DatePickerDialog datePickerDialog;
 
-    public RouteDataAdapter(ArrayList<Route> routes, Activity activity, Sector sector) {
+    public RouteDataAdapter(ArrayList<Route> routes, Activity activity, Sector sector, Boolean isInHistoryFragment) {
         this.context = activity;
         this.activity = activity;
         this.routes = routes;
         this.sector = sector;
+        this.isInHistoryFragment = isInHistoryFragment;
     }
 
     @Override
@@ -117,14 +117,11 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         if (i == 0) {
             generateData();
             viewHolder.chart.setColumnChartData(data);
-            viewHolder.btnInfo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, InfoActivity.class);
-                    intent.putExtra("type", "sector");
-                    intent.putExtra("datum", sector);
-                    context.startActivity(intent);
-                }
+            viewHolder.btnInfo.setOnClickListener(view -> {
+                Intent intent = new Intent(context, InfoActivity.class);
+                intent.putExtra("type", "sector");
+                intent.putExtra("datum", sector);
+                context.startActivity(intent);
             });
         }
 
@@ -183,16 +180,24 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         }
 
         if (routes.get(i).getDoneDate() != null) {
-            viewHolder.viewDoneDetails.setVisibility(View.VISIBLE);
-            viewHolder.txtDoneDate.setText(routes.get(i).getDoneDate());
-            viewHolder.txtZoneSector.setText(routes.get(i).getZoneName() + " > " + routes.get(i).getSectorName());
-            viewHolder.doneCheckBox.setChecked(true);
+            if (isInHistoryFragment) {
+                viewHolder.viewDoneDetails.setVisibility(View.VISIBLE);
+                viewHolder.txtDoneAttempt.setText(routes.get(i).getDoneAttempt());
+                viewHolder.txtDoneDate.setText(routes.get(i).getDoneDate());
+                viewHolder.txtZoneSector.setText(routes.get(i).getZoneName() + " > " + routes.get(i).getSectorName());
+                viewHolder.doneCheckBox.setChecked(true);
+            }else {
+                viewHolder.viewDoneDetailsInSector.setVisibility(View.VISIBLE);
+                viewHolder.txtDoneDateInSector.setText(routes.get(i).getDoneDate());
+                viewHolder.txtDoneAttemptInSector.setText(routes.get(i).getDoneAttempt());
+                viewHolder.doneCheckBox.setChecked(true);
+            }
         }
         viewHolder.doneCheckBox.setOnClickListener(v -> {
             if (!viewHolder.doneCheckBox.isChecked())
                 showDeleteDoneDialog(i, viewHolder.doneCheckBox);
             else
-                showDoneDialog(i, viewHolder.doneCheckBox );
+                showDoneDialog(i, viewHolder.doneCheckBox);
         });
     }
 
@@ -239,26 +244,24 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         LayoutInflater inflater = activity.getLayoutInflater();
         final View doneView = inflater.inflate(R.layout.dialog_route_done, null);
         TextView dateText = doneView.findViewById(R.id.doneDialog_dateText);
+        builder.setTitle(R.string.route_completed);
         builder.setPositiveButton("OK", (dialog, which) -> {
             Route routeDone = routes.get(i);
             routeDone.setDoneDate((String) dateText.getText());
             routeDone.setSectorName(sector.getName());
             routeDone.setZoneName(sector.getZoneName());
+            routeDone.setDoneAttempt(((Spinner)doneView.findViewById(R.id.spinDoneRoute)).getSelectedItem().toString());
             SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
-
             Gson gson = new Gson();
-
             String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
             ArrayList<Route> arRoutes = new ArrayList<>();
             if (!jsonSaved.isEmpty()) {
                 Route[] obj = gson.fromJson(jsonSaved, Route[].class);
                 arRoutes = new ArrayList<>(Arrays.asList(obj));
             }
-
             arRoutes.add(routes.get(i));
             String json = gson.toJson(arRoutes);
-
             prefsEditor.putString("DONE_ROUTES", json);
             prefsEditor.apply();
             dialog.dismiss();
@@ -270,11 +273,8 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
         String formattedDate = df.format(date);
         dateText.setText(formattedDate);
-        dateText.setOnClickListener(v -> {
-            datePickerDialog = new DatePickerDialog(
-                    context, (view, year, month, dayOfMonth) -> dateText.setText(new StringBuilder().append(dayOfMonth).append("/").append(month + 1).append("/").append(year)), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.show();
-        });
+        dateText.setOnClickListener(v -> showDatePicker(dateText, cal));
+        doneView.findViewById(R.id.btnEditDate).setOnClickListener(v -> showDatePicker(dateText, cal));
         builder.setNegativeButton("Cancelar", (dialog, which) -> {
             doneCheckBox.setChecked(false);
             dialog.dismiss();
@@ -285,6 +285,12 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void showDatePicker(TextView dateText, Calendar cal) {
+        datePickerDialog = new DatePickerDialog(
+                context, (view, year, month, dayOfMonth) -> dateText.setText(new StringBuilder().append(dayOfMonth).append("/").append(month + 1).append("/").append(year)), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 
     private void generateData() {
@@ -377,22 +383,36 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         CheckBox doneCheckBox;
         @BindView(R.id.routeRow_txtDoneDate)
         TextView txtDoneDate;
+        @BindView(R.id.routeRow_txtDoneDateInSector)
+        TextView txtDoneDateInSector;
+        @BindView(R.id.routeRow_txtDoneAttemptInSector)
+        TextView txtDoneAttemptInSector;
+        @BindView(R.id.routeRow_txtDoneAttempt)
+        TextView txtDoneAttempt;
         @BindView(R.id.routeRow_txtZoneSector)
         TextView txtZoneSector;
         @BindView(R.id.routeRow_doneDetails)
         View viewDoneDetails;
+        @BindView(R.id.routeRow_doneDetailsInSector)
+        View viewDoneDetailsInSector;
 
         ViewHolder(View view, boolean first) {
             super(view);
             ButterKnife.bind(this, view);
-            if (first) {
-                chart.setZoomEnabled(false);
+
+            if (!isInHistoryFragment) {
+                if (first) {
+                    chart.setZoomEnabled(false);
+                } else {
+                    infoLayout.setVisibility(View.GONE);
+                }
             } else {
                 infoLayout.setVisibility(View.GONE);
             }
-            viewDoneDetails.setVisibility(View.GONE);
             details.setVisibility(View.GONE);
             imageArrow.setVisibility(View.GONE);
+            viewDoneDetails.setVisibility(View.GONE);
+            viewDoneDetailsInSector.setVisibility(View.GONE);
         }
     }
 }

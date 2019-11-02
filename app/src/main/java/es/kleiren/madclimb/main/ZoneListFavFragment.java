@@ -204,7 +204,7 @@ public class ZoneListFavFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+    static class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
         private final int verticalSpaceHeight;
 
