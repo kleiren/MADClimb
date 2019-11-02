@@ -61,19 +61,34 @@
                 android:layout_marginEnd="20dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/routeRow_txtDoneDate"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    tools:text="00/00/0000" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/routeRow_txtDoneDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        tools:text="00/00/0000" />
+
+                    <TextView
+                        android:id="@+id/routeRow_txtDoneAttempt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        tools:text="Redpoint" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/routeRow_txtZoneSector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="La Pedriza > El Emilio" />
+
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -146,6 +161,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/routeRow_doneDetailsInSector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/date_done"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/routeRow_txtDoneDateInSector"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        tools:text="00/00/0000" />
+
+                    <TextView
+                        android:id="@+id/routeRow_txtDoneAttemptInSector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        tools:text="Redponit" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/routeRow_layoutExtras"

@@ -86,7 +86,6 @@ public class RouteListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View routeView = inflater.inflate(R.layout.fragment_route_list, container, false);
 
         ButterKnife.bind(this, routeView);
@@ -154,7 +153,7 @@ public class RouteListFragment extends Fragment {
                         if (routeDone.getRef().equals(ref))
                             route = routeDone;
                     routesFromFirebase.add(route);
-                    adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector);
+                    adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector, false);
                 }
                 initViews();
             }

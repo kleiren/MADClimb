@@ -3,6 +3,7 @@ package es.kleiren.madclimb.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,28 +82,19 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View routeView = inflater.inflate(R.layout.fragment_history, container, false);
-
         ButterKnife.bind(this, routeView);
-
-        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        (new LoadData()).execute();
-
-
+        prepareData();
+        initViews();
         return routeView;
     }
 
     private void prepareData() {
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference child;
         routesFromFirebase = new ArrayList<>();
-
         Gson gson = new Gson();
         String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("DONE_ROUTES", "");
-        ArrayList<Route> arRoutes = new ArrayList<>();
-        if (! json.isEmpty()) {
+        ArrayList<Route> arRoutes;
+        if (!json.isEmpty()) {
             Route[] obj = gson.fromJson(json, Route[].class);
             arRoutes = new ArrayList<>(Arrays.asList(obj));
 
@@ -114,9 +107,10 @@ public class HistoryFragment extends Fragment {
                         route.setDoneDate(routeDone.getDoneDate());
                         route.setSectorName(routeDone.getSectorName());
                         route.setZoneName(routeDone.getZoneName());
+                        route.setDoneAttempt(routeDone.getDoneAttempt());
                         routesFromFirebase.add(route);
-                        adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), null);
-                        initViews();
+                        if (adapter != null)
+                            adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -127,29 +121,36 @@ public class HistoryFragment extends Fragment {
             }
         }
     }
+    private int getActionBarHeight() {
+        TypedValue tv = new TypedValue();
+        if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+        return 0;
+    }
 
     private void initViews() {
+        recyclerRoute.addItemDecoration( new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         recyclerRoute.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerRoute.setHasFixedSize(false);
+        adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), null, true);
         recyclerRoute.setAdapter(adapter);
     }
 
-    private class LoadData extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... params) {
-            prepareData();
-            return "Executed";
+    static class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = verticalSpaceHeight;
+            }
         }
     }
 }

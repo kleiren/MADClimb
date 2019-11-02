@@ -31,7 +31,6 @@
         <activity
             android:name="es.kleiren.madclimb.zone_activity.ZoneActivity"
             android:configChanges="orientation"
-            android:label="@string/title_activity_sector_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
