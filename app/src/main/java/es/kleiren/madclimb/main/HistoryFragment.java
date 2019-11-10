@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,8 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +45,7 @@ import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.sector_activity.RouteDataAdapter;
+import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -53,11 +57,22 @@ public class HistoryFragment extends Fragment {
 
     @BindView(R.id.card_route_view)
     RecyclerView recyclerRoute;
+    @BindView(R.id.history_emptyView)
+    View emptyView;
+    public ObservableArrayList observableArrayList;
     private RouteDataAdapter adapter;
     private ArrayList<Route> routesFromFirebase;
 
     public HistoryFragment() {
     }
+
+    private Observer doneRoutesChanged = new Observer() {
+        @Override
+        public void update(Observable o, Object newValue) {
+            prepareData();
+            initViews();
+        }
+    };
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -76,6 +91,7 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parentActivity = getActivity();
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -93,12 +109,14 @@ public class HistoryFragment extends Fragment {
         routesFromFirebase = new ArrayList<>();
         Gson gson = new Gson();
         String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("DONE_ROUTES", "");
-        ArrayList<Route> arRoutes;
+
         if (!json.isEmpty()) {
             Route[] obj = gson.fromJson(json, Route[].class);
-            arRoutes = new ArrayList<>(Arrays.asList(obj));
+            observableArrayList = new ObservableArrayList();
+            observableArrayList.arRoutes = new ArrayList<Route>(Arrays.asList(obj));
 
-            for (Route routeDone : arRoutes) {
+            ArrayList<Route> arRoutesCopy = observableArrayList.arRoutes;
+            for (Route routeDone :  arRoutesCopy ) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(routeDone.getRef());
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -108,9 +126,16 @@ public class HistoryFragment extends Fragment {
                         route.setSectorName(routeDone.getSectorName());
                         route.setZoneName(routeDone.getZoneName());
                         route.setDoneAttempt(routeDone.getDoneAttempt());
+                        route.setReference(routeDone.getRef());
                         routesFromFirebase.add(route);
                         if (adapter != null)
                             adapter.notifyDataSetChanged();
+                        if(routesFromFirebase.isEmpty())
+                            emptyView.setVisibility(View.VISIBLE);
+                        else
+                            emptyView.setVisibility(View.GONE);
+
+                        observableArrayList.addObserver(doneRoutesChanged);
                     }
 
                     @Override
@@ -132,7 +157,7 @@ public class HistoryFragment extends Fragment {
     private void initViews() {
         recyclerRoute.addItemDecoration( new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         recyclerRoute.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), null, true);
+        adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), null, true, this);
         recyclerRoute.setAdapter(adapter);
     }
 
@@ -152,5 +177,21 @@ public class HistoryFragment extends Fragment {
                 outRect.top = verticalSpaceHeight;
             }
         }
+    }
+
+    public class ObservableArrayList extends Observable {
+
+        public ArrayList<Route> getArRoutes() {
+            return arRoutes;
+        }
+
+        public void setArRoutes(ArrayList<Route> arRoutes) {
+            this.arRoutes = arRoutes;
+            this.setChanged();
+            this.notifyObservers(arRoutes);
+        }
+
+        ArrayList<Route> arRoutes;
+
     }
 }

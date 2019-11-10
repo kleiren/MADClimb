@@ -9,12 +9,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -37,6 +39,7 @@ import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
+import es.kleiren.madclimb.main.HistoryFragment;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -50,6 +53,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.ViewHolder> {
     private final Activity activity;
     private final Boolean isInHistoryFragment;
+    private final Fragment fragment;
     private ArrayList<Route> routes;
     private Sector sector;
     private Context context;
@@ -97,11 +101,12 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private String[] labels;
     private DatePickerDialog datePickerDialog;
 
-    public RouteDataAdapter(ArrayList<Route> routes, Activity activity, Sector sector, Boolean isInHistoryFragment) {
+    public RouteDataAdapter(ArrayList<Route> routes, Activity activity, Sector sector, Boolean isInHistoryFragment, Fragment fragment) {
         this.context = activity;
         this.activity = activity;
         this.routes = routes;
         this.sector = sector;
+        this.fragment = fragment;
         this.isInHistoryFragment = isInHistoryFragment;
     }
 
@@ -217,6 +222,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             for (Route route : arRoutes) {
                 if (route.getRef().equals(routeDone.getRef())) {
                     arRoutes.remove(route);
+                    ((HistoryFragment)fragment).observableArrayList.setArRoutes(arRoutes);
                     break;
                 }
             }
@@ -260,7 +266,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 Route[] obj = gson.fromJson(jsonSaved, Route[].class);
                 arRoutes = new ArrayList<>(Arrays.asList(obj));
             }
-            arRoutes.add(routes.get(i));
+            arRoutes.add(routeDone);
             String json = gson.toJson(arRoutes);
             prefsEditor.putString("DONE_ROUTES", json);
             prefsEditor.apply();

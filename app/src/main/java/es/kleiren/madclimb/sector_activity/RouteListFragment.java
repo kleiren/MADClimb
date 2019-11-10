@@ -153,7 +153,7 @@ public class RouteListFragment extends Fragment {
                         if (routeDone.getRef().equals(ref))
                             route = routeDone;
                     routesFromFirebase.add(route);
-                    adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector, false);
+                    adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector, false, null);
                 }
                 initViews();
             }
