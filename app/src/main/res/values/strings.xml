@@ -1,13 +1,10 @@
 <resources>
     <string name="app_name">MADClimb</string>
-    <string name="welcome">Bienvenido</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="information">Información</string>
     <string name="localization">Localización</string>
     <string name="description">Descripción</string>
-    <string name="open_in_maps">Abrir en Maps</string>
-    <string name="info">Info y\nUbicación</string>
     <string name="infoFrag_date">Fecha de última edición:</string>
     <string name="changelog_dialog_changelog">Últimos cambios</string>
     <string name="dev_email" translatable="false">madclimbapp@gmail.com</string>

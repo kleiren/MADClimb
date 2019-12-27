@@ -2,50 +2,40 @@ package es.kleiren.madclimb.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Rect;
-import android.os.AsyncTask;
-
-import androidx.fragment.app.Fragment;
-
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
-import com.google.android.gms.common.data.DataBufferObserver;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
-import es.kleiren.madclimb.root.GlideApp;
 import es.kleiren.madclimb.sector_activity.RouteDataAdapter;
-import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -111,31 +101,30 @@ public class HistoryFragment extends Fragment {
         String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("DONE_ROUTES", "");
 
         if (!json.isEmpty()) {
-            Route[] obj = gson.fromJson(json, Route[].class);
-            observableArrayList = new ObservableArrayList();
-            observableArrayList.arRoutes = new ArrayList<Route>(Arrays.asList(obj));
+            HashMap<String, Route> hmRoutes;
+            Type type = new TypeToken<HashMap<String, Route>>() {}.getType();
+            hmRoutes = gson.fromJson(json, type);
 
-            ArrayList<Route> arRoutesCopy = observableArrayList.arRoutes;
-            for (Route routeDone :  arRoutesCopy ) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(routeDone.getRef());
+
+            for (Map.Entry<String, Route> entry : hmRoutes.entrySet()) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(entry.getKey());
                 ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Route route = dataSnapshot.getValue(Route.class);
-                        route.setDoneDate(routeDone.getDoneDate());
-                        route.setSectorName(routeDone.getSectorName());
-                        route.setZoneName(routeDone.getZoneName());
-                        route.setDoneAttempt(routeDone.getDoneAttempt());
-                        route.setReference(routeDone.getRef());
+                        route.setDoneDate(entry.getValue().getDoneDate());
+                        route.setSectorName(entry.getValue().getSectorName());
+                        route.setZoneName(entry.getValue().getZoneName());
+                        route.setDoneAttempt(entry.getValue().getDoneAttempt());
+                        route.setReference(entry.getValue().getRef());
                         routesFromFirebase.add(route);
                         if (adapter != null)
                             adapter.notifyDataSetChanged();
-                        if(routesFromFirebase.isEmpty())
+                        if (routesFromFirebase.isEmpty())
                             emptyView.setVisibility(View.VISIBLE);
                         else
                             emptyView.setVisibility(View.GONE);
 
-                        observableArrayList.addObserver(doneRoutesChanged);
                     }
 
                     @Override
@@ -146,6 +135,7 @@ public class HistoryFragment extends Fragment {
             }
         }
     }
+
     private int getActionBarHeight() {
         TypedValue tv = new TypedValue();
         if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
@@ -155,7 +145,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void initViews() {
-        recyclerRoute.addItemDecoration( new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
+        recyclerRoute.addItemDecoration(new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         recyclerRoute.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), null, true, this);
         recyclerRoute.setAdapter(adapter);

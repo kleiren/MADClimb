@@ -23,7 +23,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -191,7 +193,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 viewHolder.txtDoneDate.setText(routes.get(i).getDoneDate());
                 viewHolder.txtZoneSector.setText(routes.get(i).getZoneName() + " > " + routes.get(i).getSectorName());
                 viewHolder.doneCheckBox.setChecked(true);
-            }else {
+            } else {
                 viewHolder.viewDoneDetailsInSector.setVisibility(View.VISIBLE);
                 viewHolder.txtDoneDateInSector.setText(routes.get(i).getDoneDate());
                 viewHolder.txtDoneAttemptInSector.setText(routes.get(i).getDoneAttempt());
@@ -214,21 +216,20 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
             Gson gson = new Gson();
             String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
-            ArrayList<Route> arRoutes = new ArrayList<>();
             if (!jsonSaved.isEmpty()) {
-                Route[] obj = gson.fromJson(jsonSaved, Route[].class);
-                arRoutes = new ArrayList<>(Arrays.asList(obj));
+
+                HashMap<String, Route> hmRoutes;
+                Type type = new TypeToken<HashMap<String, Route>>() {
+                }.getType();
+                hmRoutes = gson.fromJson(jsonSaved, type);
+
+                hmRoutes.remove(routeDone.getRef());
+
+                String json = gson.toJson(hmRoutes);
+                prefsEditor.putString("DONE_ROUTES", json);
+                prefsEditor.apply();
             }
-            for (Route route : arRoutes) {
-                if (route.getRef().equals(routeDone.getRef())) {
-                    arRoutes.remove(route);
-                    ((HistoryFragment)fragment).observableArrayList.setArRoutes(arRoutes);
-                    break;
-                }
-            }
-            String json = gson.toJson(arRoutes);
-            prefsEditor.putString("DONE_ROUTES", json);
-            prefsEditor.apply();
+
             dialog.dismiss();
         });
         builder.setNegativeButton("Cancelar", (dialog, which) -> {
@@ -256,18 +257,22 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             routeDone.setDoneDate((String) dateText.getText());
             routeDone.setSectorName(sector.getName());
             routeDone.setZoneName(sector.getZoneName());
-            routeDone.setDoneAttempt(((Spinner)doneView.findViewById(R.id.spinDoneRoute)).getSelectedItem().toString());
+            routeDone.setDoneAttempt(((Spinner) doneView.findViewById(R.id.spinDoneRoute)).getSelectedItem().toString());
             SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
             Gson gson = new Gson();
             String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
-            ArrayList<Route> arRoutes = new ArrayList<>();
+
+            HashMap<String, Route> hmRoutes = new HashMap<>();
+
             if (!jsonSaved.isEmpty()) {
-                Route[] obj = gson.fromJson(jsonSaved, Route[].class);
-                arRoutes = new ArrayList<>(Arrays.asList(obj));
+                java.lang.reflect.Type type = new TypeToken<HashMap<String, Route>>() {
+                }.getType();
+                hmRoutes = gson.fromJson(jsonSaved, type);
             }
-            arRoutes.add(routeDone);
-            String json = gson.toJson(arRoutes);
+
+            hmRoutes.put(routeDone.getRef(), routeDone);
+            String json = gson.toJson(hmRoutes);
             prefsEditor.putString("DONE_ROUTES", json);
             prefsEditor.apply();
             dialog.dismiss();

@@ -28,9 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -130,9 +133,10 @@ public class RouteListFragment extends Fragment {
         Gson gson = new Gson();
         String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("DONE_ROUTES", "");
         ArrayList<Route> arRoutes = new ArrayList<>();
+        HashMap<String, Route> hmRoutes = new HashMap<>();
         if (!json.isEmpty()) {
-            Route[] obj = gson.fromJson(json, Route[].class);
-            arRoutes = new ArrayList<>(Arrays.asList(obj));
+            Type type = new TypeToken<HashMap<String, Route>>() {}.getType();
+            hmRoutes = gson.fromJson(json, type);
         }
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -141,7 +145,7 @@ public class RouteListFragment extends Fragment {
             child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getParentSector() + "/sub_sectors/" + sector.getId() + "/routes");
         else
             child = mDatabase.child("zones/" + sector.getZone_id() + "/sectors/" + sector.getId() + "/routes");
-        ArrayList<Route> finalArRoutes = arRoutes;
+        HashMap<String, Route> finalHmRoutes = hmRoutes;
         child.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -149,9 +153,8 @@ public class RouteListFragment extends Fragment {
                     Route route = postSnapshot.getValue(Route.class);
                     String ref = postSnapshot.getRef().toString();
                     route.setReference(ref);
-                    for (Route routeDone : finalArRoutes)
-                        if (routeDone.getRef().equals(ref))
-                            route = routeDone;
+                    if (finalHmRoutes.containsKey(ref))
+                            route = finalHmRoutes.get(ref);
                     routesFromFirebase.add(route);
                     adapter = new RouteDataAdapter(routesFromFirebase, getActivity(), sector, false, null);
                 }
