@@ -7,20 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,7 +26,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,11 +34,10 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
-import es.kleiren.madclimb.main.HistoryFragment;
+import es.kleiren.madclimb.extra_activities.InfoActivity;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -372,12 +368,6 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         View details;
         @BindView(R.id.routeRow_cardView)
         ViewGroup recyclerView;
-        @BindView(R.id.routeRow_gradeChart)
-        ColumnChartView chart;
-        @BindView(R.id.routeRow_btnInfo)
-        ImageButton btnInfo;
-        @BindView(R.id.routeRow_infoLayout)
-        ConstraintLayout infoLayout;
         @BindView(R.id.routeRow_arrow)
         ImageView imageArrow;
         @BindView(R.id.routeRow_layoutExtras)
@@ -406,20 +396,19 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         View viewDoneDetails;
         @BindView(R.id.routeRow_doneDetailsInSector)
         View viewDoneDetailsInSector;
+        ColumnChartView chart;
+        ImageButton btnInfo;
 
         ViewHolder(View view, boolean first) {
             super(view);
             ButterKnife.bind(this, view);
-
-            if (!isInHistoryFragment) {
+            if (!isInHistoryFragment)
                 if (first) {
-                    chart.setZoomEnabled(false);
-                } else {
-                    infoLayout.setVisibility(View.GONE);
+                    ViewStub chartStub = view.findViewById(R.id.routeRow_infoLayout_stub);
+            View inflatedView =chartStub.inflate();
+                    chart = inflatedView.findViewById(R.id.routeRow_gradeChart);
+                    btnInfo = inflatedView.findViewById(R.id.routeRow_btnInfo);
                 }
-            } else {
-                infoLayout.setVisibility(View.GONE);
-            }
             details.setVisibility(View.GONE);
             imageArrow.setVisibility(View.GONE);
             viewDoneDetails.setVisibility(View.GONE);
