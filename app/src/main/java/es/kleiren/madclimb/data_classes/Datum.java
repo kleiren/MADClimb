@@ -12,6 +12,8 @@ public class Datum implements Serializable {
     private Integer position;
     private String parking;
     private String parkings;
+    public int numberOfSectors;
+    public int numberOfRoutes;
 
     public String getImg() {
         return img;

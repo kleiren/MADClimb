@@ -117,15 +117,17 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
     @Override
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
-        if (i == 0) {
-            generateData();
-            viewHolder.chart.setColumnChartData(data);
-            viewHolder.btnInfo.setOnClickListener(view -> {
-                Intent intent = new Intent(context, InfoActivity.class);
-                intent.putExtra("type", "sector");
-                intent.putExtra("datum", sector);
-                context.startActivity(intent);
-            });
+        if (!isInHistoryFragment) {
+            if (i == 0) {
+                generateData();
+                viewHolder.chart.setColumnChartData(data);
+                viewHolder.btnInfo.setOnClickListener(view -> {
+                    Intent intent = new Intent(context, InfoActivity.class);
+                    intent.putExtra("type", "sector");
+                    intent.putExtra("datum", sector);
+                    context.startActivity(intent);
+                });
+            }
         }
 
         viewHolder.txtName.setText(routes.get(i).getName());
@@ -405,7 +407,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             if (!isInHistoryFragment)
                 if (first) {
                     ViewStub chartStub = view.findViewById(R.id.routeRow_infoLayout_stub);
-            View inflatedView =chartStub.inflate();
+                    View inflatedView = chartStub.inflate();
                     chart = inflatedView.findViewById(R.id.routeRow_gradeChart);
                     btnInfo = inflatedView.findViewById(R.id.routeRow_btnInfo);
                 }

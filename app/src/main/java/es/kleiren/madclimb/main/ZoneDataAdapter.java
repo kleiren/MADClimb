@@ -67,7 +67,9 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
-        viewHolder.txtRouteName.setText(filteredZones.get(i).getName());
+        viewHolder.txtZoneName.setText(filteredZones.get(i).getName());
+        viewHolder.txtStats.setText(filteredZones.get(i).numberOfSectors + "S "+ filteredZones.get(i).numberOfRoutes + "V");
+
 
         final StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
         GlideApp.with(context)
@@ -86,7 +88,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
                         return false;
                     }
                 })
-                .into(viewHolder.imgSector);
+                .into(viewHolder.imgZone);
     }
 
     @Override
@@ -125,10 +127,12 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.zoneRow_txtRouteName)
-        TextView txtRouteName;
-        @BindView(R.id.zoneRow_imgSector)
-        ImageView imgSector;
+        @BindView(R.id.zoneRow_txtZoneName)
+        TextView txtZoneName;
+        @BindView(R.id.zoneRow_txtStats)
+        TextView txtStats;
+        @BindView(R.id.zoneRow_imgZone)
+        ImageView imgZone;
         @BindView(R.id.zoneRow_progressBar)
         ProgressBar progressBar;
 
@@ -137,6 +141,4 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
             ButterKnife.bind(this, view);
         }
     }
-
-
 }

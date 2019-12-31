@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <ViewStub
@@ -133,6 +134,7 @@
 
 
             <LinearLayout
+                android:animateLayoutChanges="true"
                 android:id="@+id/routeRow_viewDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -167,7 +169,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        tools:text="Redponit" />
+                        tools:text="Redpoint" />
                 </LinearLayout>
 
                 <LinearLayout

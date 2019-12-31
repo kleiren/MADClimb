@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class Sector extends Datum implements Serializable {
 
     private String zoneName;
-    private int numOfRoutes;
     private String zone_id;
     private String date;
     private String has_sub_sectors;
@@ -41,13 +40,6 @@ public class Sector extends Datum implements Serializable {
         this.zoneName = zoneName;
     }
 
-    public int getNumOfRoutes() {
-        return numOfRoutes;
-    }
-
-    public void setNumOfRoutes(int numOfRoutes) {
-        this.numOfRoutes = numOfRoutes;
-    }
 
     public void setHas_sub_sectors(String has_sub_sectors) {
         this.has_sub_sectors = has_sub_sectors;

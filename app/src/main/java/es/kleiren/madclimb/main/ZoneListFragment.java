@@ -81,6 +81,13 @@ public class ZoneListFragment extends Fragment {
                 zonesFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
+                    zone.numberOfSectors = ((int) postSnapshot.child("sectors").getChildrenCount());
+                    for (DataSnapshot sector : postSnapshot.child("sectors").getChildren()){
+                        zone.numberOfRoutes = zone.numberOfRoutes + ((int) sector.child("routes").getChildrenCount());
+                        for (DataSnapshot subSector : sector.child("sub_sectors").getChildren()){
+                            zone.numberOfRoutes = zone.numberOfRoutes + ((int) subSector.child("routes").getChildrenCount());
+                        }
+                    }
                     zonesFromFirebase.add(zone);
                 }
                 Collections.sort(zonesFromFirebase, (o1, o2) -> {

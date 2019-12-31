@@ -58,7 +58,8 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
     @Override
     public void onBindViewHolder(final SectorDataAdapter.ViewHolder viewHolder, int i) {
 
-        viewHolder.txt_name.setText(filteredSectors.get(i).getName());
+        viewHolder.txtSectorName.setText(filteredSectors.get(i).getName());
+        viewHolder.txtStats.setText(filteredSectors.get(i).numberOfRoutes + "V");
         final StorageReference load = mStorageRef.child(filteredSectors.get(i).getImg());
         GlideApp.with(context)
                 .load(load)
@@ -116,7 +117,9 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.sectorRow_txtSectorName)
-        TextView txt_name;
+        TextView txtSectorName;
+        @BindView(R.id.sectorRow_txtStats)
+        TextView txtStats;
         @BindView(R.id.sectorRow_imgSector)
         ImageView img;
         @BindView(R.id.sectorRow_progressBar)

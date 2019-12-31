@@ -80,8 +80,16 @@ public class ZoneListFavFragment extends Fragment {
                 zonesFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
-                    if (getActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE).getBoolean(zone.getId(), false))
+                    if (getActivity().getSharedPreferences("FAVOURITES", MODE_PRIVATE).getBoolean(zone.getId(), false)){
+                        zone.numberOfSectors = ((int) postSnapshot.child("sectors").getChildrenCount());
+                        for (DataSnapshot sector : postSnapshot.child("sectors").getChildren()){
+                            zone.numberOfRoutes = zone.numberOfRoutes + ((int) sector.child("routes").getChildrenCount());
+                            for (DataSnapshot subSector : sector.child("sub_sectors").getChildren()){
+                                zone.numberOfRoutes = zone.numberOfRoutes + ((int) subSector.child("routes").getChildrenCount());
+                            }
+                        }
                         zonesFromFirebase.add(zone);
+                    }
                 }
                 if(zonesFromFirebase.isEmpty())
                     emptyFavView.setVisibility(View.VISIBLE);

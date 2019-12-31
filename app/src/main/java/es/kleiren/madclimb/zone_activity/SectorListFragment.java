@@ -89,6 +89,10 @@ public class SectorListFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sector.setZoneName(zone.getName());
+                    sector.numberOfRoutes = ((int) postSnapshot.child("routes").getChildrenCount());
+                    for (DataSnapshot subSector : postSnapshot.child("sub_sectors").getChildren()){
+                        sector.numberOfRoutes = sector.numberOfRoutes + ((int) subSector.child("routes").getChildrenCount());
+                    }
                     sectorsFromFirebase.add(sector);
                 }
                 Collections.sort(sectorsFromFirebase, new Comparator<Sector>() {
