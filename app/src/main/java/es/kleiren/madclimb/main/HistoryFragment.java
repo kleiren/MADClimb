@@ -98,7 +98,7 @@ public class HistoryFragment extends Fragment {
     private void prepareData() {
         routesFromFirebase = new ArrayList<>();
         Gson gson = new Gson();
-        String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("DONE_ROUTES", "");
+        String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("ROUTES_DONE", "");
 
         if (!json.isEmpty()) {
             HashMap<String, Route> hmRoutes;

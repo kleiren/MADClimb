@@ -213,7 +213,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
             Gson gson = new Gson();
-            String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
+            String jsonSaved = mPrefs.getString("ROUTES_DONE", "");
             if (!jsonSaved.isEmpty()) {
 
                 HashMap<String, Route> hmRoutes;
@@ -224,7 +224,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 hmRoutes.remove(routeDone.getRef());
 
                 String json = gson.toJson(hmRoutes);
-                prefsEditor.putString("DONE_ROUTES", json);
+                prefsEditor.putString("ROUTES_DONE", json);
                 prefsEditor.apply();
             }
 
@@ -259,7 +259,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             SharedPreferences mPrefs = activity.getSharedPreferences("PREFERENCE", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
             Gson gson = new Gson();
-            String jsonSaved = mPrefs.getString("DONE_ROUTES", "");
+            String jsonSaved = mPrefs.getString("ROUTES_DONE", "");
 
             HashMap<String, Route> hmRoutes = new HashMap<>();
 
@@ -271,7 +271,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
             hmRoutes.put(routeDone.getRef(), routeDone);
             String json = gson.toJson(hmRoutes);
-            prefsEditor.putString("DONE_ROUTES", json);
+            prefsEditor.putString("ROUTES_DONE", json);
             prefsEditor.apply();
             dialog.dismiss();
         });

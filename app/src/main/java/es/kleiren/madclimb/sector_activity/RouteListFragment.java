@@ -131,7 +131,7 @@ public class RouteListFragment extends Fragment {
     private void prepareData() {
 
         Gson gson = new Gson();
-        String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("DONE_ROUTES", "");
+        String json = parentActivity.getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("ROUTES_DONE", "");
         ArrayList<Route> arRoutes = new ArrayList<>();
         HashMap<String, Route> hmRoutes = new HashMap<>();
         if (!json.isEmpty()) {
