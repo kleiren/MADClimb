@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="@+id/card_sectorIndex_view" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/route_cardViewCroquis"
+        android:id="@+id/sectorIndex_cardViewCroquis"
         android:layout_width="0dp"
         android:layout_height="250dp"
         android:layout_marginBottom="5dp"
@@ -70,7 +70,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/route_cardViewCroquis"
+        app:layout_constraintTop_toBottomOf="@+id/sectorIndex_cardViewCroquis"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 

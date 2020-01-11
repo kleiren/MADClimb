@@ -1,7 +1,10 @@
 package es.kleiren.madclimb.sector_activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +18,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +60,8 @@ public class SectorIndexListFragment extends Fragment {
     ProgressBar initialProgress;
     @BindView(R.id.sectorIndex_imgCroquis)
     ImageView imgCroquis;
+    @BindView(R.id.sectorIndex_cardViewCroquis)
+    View cardViewCroquis;
     @BindView(R.id.sectorIndex_btnInfo)
     ImageButton btnInfo;
 
@@ -108,6 +117,18 @@ public class SectorIndexListFragment extends Fragment {
         GlideApp.with(getActivity())
                 .load(load)
                 .placeholder(R.drawable.mountain_placeholder)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        cardViewCroquis.getLayoutParams().height = resource.getIntrinsicHeight();
+                        return false;
+                    }
+                })
                 .into(imgCroquis);
 
         imgCroquis.setOnClickListener(new View.OnClickListener() {
