@@ -24,11 +24,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,31 +41,20 @@ public class HistoryFragment extends Fragment {
 
 
     private Activity parentActivity;
-
     @BindView(R.id.card_route_view)
     RecyclerView recyclerRoute;
     @BindView(R.id.history_emptyView)
     View emptyView;
-    public ObservableArrayList observableArrayList;
     private RouteDataAdapter adapter;
     private ArrayList<Route> routesFromFirebase;
 
     public HistoryFragment() {
     }
 
-    private Observer doneRoutesChanged = new Observer() {
-        @Override
-        public void update(Observable o, Object newValue) {
-            prepareData();
-            initViews();
-        }
-    };
-
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
     }
 
-    private static final String ARG_SECTOR = "sector";
 
     public static HistoryFragment newInstance(Sector sector) {
         HistoryFragment fragment = new HistoryFragment();
@@ -90,6 +76,7 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View routeView = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, routeView);
+        emptyView.setVisibility(View.VISIBLE);
         prepareData();
         initViews();
         return routeView;
@@ -104,7 +91,8 @@ public class HistoryFragment extends Fragment {
             HashMap<String, Route> hmRoutes;
             Type type = new TypeToken<HashMap<String, Route>>() {}.getType();
             hmRoutes = gson.fromJson(json, type);
-
+            if (!hmRoutes.isEmpty())
+                emptyView.setVisibility(View.GONE);
 
             for (Map.Entry<String, Route> entry : hmRoutes.entrySet()) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(entry.getKey());
@@ -120,11 +108,6 @@ public class HistoryFragment extends Fragment {
                         routesFromFirebase.add(route);
                         if (adapter != null)
                             adapter.notifyDataSetChanged();
-                        if (routesFromFirebase.isEmpty())
-                            emptyView.setVisibility(View.VISIBLE);
-                        else
-                            emptyView.setVisibility(View.GONE);
-
                     }
 
                     @Override
@@ -134,6 +117,8 @@ public class HistoryFragment extends Fragment {
                 });
             }
         }
+        else
+            emptyView.setVisibility(View.VISIBLE);
     }
 
     private int getActionBarHeight() {
@@ -169,19 +154,4 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    public class ObservableArrayList extends Observable {
-
-        public ArrayList<Route> getArRoutes() {
-            return arRoutes;
-        }
-
-        public void setArRoutes(ArrayList<Route> arRoutes) {
-            this.arRoutes = arRoutes;
-            this.setChanged();
-            this.notifyObservers(arRoutes);
-        }
-
-        ArrayList<Route> arRoutes;
-
-    }
 }

@@ -17,6 +17,11 @@
     <string name="route_attempt">Intento</string>
     <string name="date">Fecha</string>
     <string name="date_done">Fecha de encadene</string>
+    <string name="route">Vía</string>
+    <string name="empty_fav_1">Esto parece vacío :(</string>
+    <string name="empty_fav_2">Busca el icono</string>
+    <string name="empty_fav_3">en las pantallas de zona</string>
+    <string name="empty_fav_4">en cada ruta</string>
 
     <string-array name="route_done_status">
         <item>-</item>

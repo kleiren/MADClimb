@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:textStyle="bold"
-            android:text="Vía" />
+            android:text="@string/route" />
 
         <TextView
             android:id="@+id/doneDialog_routeName"

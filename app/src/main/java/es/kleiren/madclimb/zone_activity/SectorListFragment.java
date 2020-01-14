@@ -103,8 +103,11 @@ public class SectorListFragment extends Fragment {
                             return o1.getName().compareTo(o2.getName());
                     }
                 });
-                if (adapter != null)
+                if (adapter != null) {
                     adapter.notifyDataSetChanged();
+                    initialProgress.setVisibility(View.GONE);
+                }
+
             }
 
             @Override
