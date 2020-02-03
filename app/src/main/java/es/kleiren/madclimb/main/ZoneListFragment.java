@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,9 +83,9 @@ public class ZoneListFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Zone zone = postSnapshot.getValue(Zone.class);
                     zone.numberOfSectors = ((int) postSnapshot.child("sectors").getChildrenCount());
-                    for (DataSnapshot sector : postSnapshot.child("sectors").getChildren()){
+                    for (DataSnapshot sector : postSnapshot.child("sectors").getChildren()) {
                         zone.numberOfRoutes = zone.numberOfRoutes + ((int) sector.child("routes").getChildrenCount());
-                        for (DataSnapshot subSector : sector.child("sub_sectors").getChildren()){
+                        for (DataSnapshot subSector : sector.child("sub_sectors").getChildren()) {
                             zone.numberOfRoutes = zone.numberOfRoutes + ((int) subSector.child("routes").getChildrenCount());
                         }
                     }
@@ -135,41 +136,9 @@ public class ZoneListFragment extends Fragment {
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
+        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity(), (AppCompatActivity) getActivity(), false);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-            });
-
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-
-                View child = rv.findChildViewUnder(e.getX(), e.getY());
-                if (child != null && gestureDetector.onTouchEvent(e)) {
-                    int position = rv.getChildAdapterPosition(child);
-                    zone = adapter.getZone(position);
-                    Intent intent = new Intent(getActivity(), ZoneActivity.class);
-                    intent.putExtra("zone", zone);
-                    startActivityForResult(intent, 1);
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-            }
-        });
     }
 
 

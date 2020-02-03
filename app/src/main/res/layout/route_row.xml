@@ -7,6 +7,12 @@
     android:orientation="vertical">
 
     <ViewStub
+        android:id="@+id/routeRow_restrictionLayout_stub"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout="@layout/route_row_restriction_layout"/>
+
+    <ViewStub
         android:id="@+id/routeRow_infoLayout_stub"
         android:layout_width="match_parent"
         android:layout_height="75dp"

@@ -29,9 +29,11 @@ import java.util.Comparator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.sector_activity.SectorIndexActivity;
+import es.kleiren.madclimb.util.InfoChartUtils;
 
 
 public class SectorListFragment extends Fragment {
@@ -89,19 +91,33 @@ public class SectorListFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
                     sector.setZoneName(zone.getName());
-                    sector.numberOfRoutes = ((int) postSnapshot.child("routes").getChildrenCount());
-                    for (DataSnapshot subSector : postSnapshot.child("sub_sectors").getChildren()){
-                        sector.numberOfRoutes = sector.numberOfRoutes + ((int) subSector.child("routes").getChildrenCount());
+                    Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
+                    ArrayList<Route> routes = new ArrayList<>();
+                    for (DataSnapshot myRoutes : postSnapshot.child("routes").getChildren()) {
+                        routes.add(myRoutes.getValue(Route.class));
                     }
+                    for (DataSnapshot subSector : postSnapshot.child("sub_sectors").getChildren()) {
+                        for (DataSnapshot myRoutes : subSector.child("routes").getChildren()) {
+                            routes.add(myRoutes.getValue(Route.class));
+                        }
+                    }
+                    ArrayList<String> grades = new ArrayList<>();
+
+                    for (Route route : routes) {
+                        grades.add(route.getGrade());
+                        try {
+                            gradesFiltered[InfoChartUtils.map.get(route.getGrade()) - 1]++;
+                        } catch (Exception e) {
+                        }
+                    }
+                    sector.routesFiltered = gradesFiltered;
                     sectorsFromFirebase.add(sector);
                 }
-                Collections.sort(sectorsFromFirebase, new Comparator<Sector>() {
-                    public int compare(Sector o1, Sector o2) {
-                        if (o1.getPosition() != null && o2.getPosition() != null)
-                            return o1.getPosition().compareTo(o2.getPosition());
-                        else
-                            return o1.getName().compareTo(o2.getName());
-                    }
+                Collections.sort(sectorsFromFirebase, (o1, o2) -> {
+                    if (o1.getPosition() != null && o2.getPosition() != null)
+                        return o1.getPosition().compareTo(o2.getPosition());
+                    else
+                        return o1.getName().compareTo(o2.getName());
                 });
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
