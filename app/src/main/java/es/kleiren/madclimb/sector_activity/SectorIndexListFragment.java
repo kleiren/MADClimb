@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -37,11 +38,13 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
+import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.root.GlideApp;
+import es.kleiren.madclimb.util.InfoChartUtils;
 import es.kleiren.madclimb.zone_activity.SectorDataAdapter;
 
 
@@ -131,24 +134,18 @@ public class SectorIndexListFragment extends Fragment {
                 })
                 .into(imgCroquis);
 
-        imgCroquis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-                intent.putExtra("image", sector.getImg());
-                intent.putExtra("title", sector.getName());
-                startActivityForResult(intent, 1);
-            }
+        imgCroquis.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
+            intent.putExtra("image", sector.getImg());
+            intent.putExtra("title", sector.getName());
+            startActivityForResult(intent, 1);
         });
 
-        btnInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), InfoActivity.class);
-                intent.putExtra("type", "sector_index");
-                intent.putExtra("datum", sector);
-                getActivity().startActivity(intent);
-            }
+        btnInfo.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), InfoActivity.class);
+            intent.putExtra("type", "sector_index");
+            intent.putExtra("datum", sector);
+            getActivity().startActivity(intent);
         });
 
         return zoneView;
@@ -164,13 +161,27 @@ public class SectorIndexListFragment extends Fragment {
                 sectorsFromFirebase.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Sector sector = postSnapshot.getValue(Sector.class);
-                    sector.numberOfRoutes = ((int) postSnapshot.child("routes").getChildrenCount());
+                    Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
+                    ArrayList<Route> routes = new ArrayList<>();
+                    for (DataSnapshot myRoutes : postSnapshot.child("routes").getChildren()) {
+                        routes.add(myRoutes.getValue(Route.class));
+                    }
+                    ArrayList<String> grades = new ArrayList<>();
+                    for (Route route : routes) {
+                        grades.add(route.getGrade());
+                        try {
+                            gradesFiltered[InfoChartUtils.map.get(route.getGrade()) - 1]++;
+                        } catch (Exception e) {
+                        }
+                    }
+                    sector.routesFiltered = gradesFiltered;
                     sector.setZoneName(zone.getName());
                     sectorsFromFirebase.add(sector);
                 }
                 if (adapter != null)
-                adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.i("FIREBASE", "The read failed: " + databaseError.getCode());
@@ -189,7 +200,6 @@ public class SectorIndexListFragment extends Fragment {
 
         recyclerSector.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
                     return true;

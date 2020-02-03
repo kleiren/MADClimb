@@ -30,7 +30,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,12 +37,12 @@ import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.extra_activities.InfoActivity;
+import es.kleiren.madclimb.util.InfoChartUtils;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -57,46 +56,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     private Context context;
     private int mExpandedPosition = -1;
     private ColumnChartData data;
-    private ArrayList<String> grades;
 
-    private Map<String, Integer> map = new HashMap<String, Integer>() {{
-        put("3", 1);
-        put("3+", 1);
-        put("IV-", 1);
-        put("IV", 1);
-        put("IV+", 1);
-        put("V-", 1);
-        put("V", 1);
-        put("V+", 1);
-        put("6a", 2);
-        put("6a+", 2);
-        put("6b", 2);
-        put("6b+", 2);
-        put("6c", 2);
-        put("6c+", 2);
-        put("7a", 3);
-        put("7a+", 3);
-        put("7b", 3);
-        put("7b+", 2);
-        put("7c", 3);
-        put("7c+", 3);
-        put("8a", 4);
-        put("8a+", 4);
-        put("8b", 4);
-        put("8b+", 4);
-        put("8c", 4);
-        put("8c+", 4);
-        put("9a", 4);
-        put("9a+", 4);
-        put("9b", 4);
-        put("9b+", 4);
-        put("9c", 4);
-        put("9c+", 4);
-    }};
-
-    private Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
-    private Integer[] colors;
-    private String[] labels;
     private DatePickerDialog datePickerDialog;
 
     public RouteDataAdapter(ArrayList<Route> routes, Activity activity, Sector sector, Boolean isInHistoryFragment, Fragment fragment) {
@@ -119,6 +79,9 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     public void onBindViewHolder(final RouteDataAdapter.ViewHolder viewHolder, final int i) {
         if (!isInHistoryFragment) {
             if (i == 0) {
+                if (sector.getRestriction_end() != null) {
+                    viewHolder.txtRestricted.setText(String.format(activity.getString(R.string.restricted_climbing), sector.getRestriction_start(), sector.getRestriction_end()));
+                }
                 generateData();
                 viewHolder.chart.setColumnChartData(data);
                 viewHolder.btnInfo.setOnClickListener(view -> {
@@ -133,7 +96,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         viewHolder.txtName.setText(routes.get(i).getName());
         viewHolder.txtGrade.setText(routes.get(i).getGrade());
         try {
-            viewHolder.txtGrade.setTextColor(colors[map.get(routes.get(i).getGrade()) - 1]);
+            viewHolder.txtGrade.setTextColor(InfoChartUtils.colors[InfoChartUtils.map.get(routes.get(i).getGrade()) - 1]);
         } catch (Exception e) {
             viewHolder.txtGrade.setTextColor(Color.GRAY);
         }
@@ -303,17 +266,13 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
     }
 
     private void generateData() {
-        grades = new ArrayList<>();
-        gradesFiltered = new Integer[]{0, 0, 0, 0};
-
-        colors = new Integer[]{ChartUtils.COLOR_GREEN, ChartUtils.COLOR_BLUE, ChartUtils.COLOR_VIOLET, ChartUtils.COLOR_RED};
-        labels = new String[]{"III - V+", "6a - 6c+", "7a - 7c+", "8a - 9c+"};
-        gradesFiltered = new Integer[]{0, 0, 0, 0};
+        ArrayList<String> grades = new ArrayList<>();
+        Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
 
         for (Route route : routes) {
             grades.add(route.getGrade());
             try {
-                gradesFiltered[map.get(route.getGrade()) - 1]++;
+                gradesFiltered[InfoChartUtils.map.get(route.getGrade()) - 1]++;
             } catch (Exception e) {
             }
         }
@@ -326,7 +285,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
 
             values = new ArrayList<>();
             for (int j = 0; j < numSubColumns; ++j) {
-                SubcolumnValue temp = new SubcolumnValue(gradesFiltered[i], colors[i]);
+                SubcolumnValue temp = new SubcolumnValue(gradesFiltered[i], InfoChartUtils.colors[i]);
                 values.add(temp);
             }
 
@@ -338,8 +297,8 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         data = new ColumnChartData(columns);
 
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
-        for (int i = 0; i < labels.length; i++) {
-            axisValues.add(new AxisValue(i, labels[i].toCharArray()));
+        for (int i = 0; i < InfoChartUtils.labels.length; i++) {
+            axisValues.add(new AxisValue(i, InfoChartUtils.labels[i].toCharArray()));
         }
         Axis axisX = new Axis(axisValues);
         data.setAxisXBottom(axisX);
@@ -400,16 +359,22 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         View viewDoneDetailsInSector;
         ColumnChartView chart;
         ImageButton btnInfo;
+        TextView txtRestricted;
 
         ViewHolder(View view, boolean first) {
             super(view);
             ButterKnife.bind(this, view);
             if (!isInHistoryFragment)
                 if (first) {
+                    if (sector.getRestriction_end() != null) {
+                        ViewStub restrictionStub = view.findViewById(R.id.routeRow_restrictionLayout_stub);
+                        View inflatedRestrictionStub = restrictionStub.inflate();
+                        txtRestricted = inflatedRestrictionStub.findViewById(R.id.routeRow_restrictionText);
+                    }
                     ViewStub chartStub = view.findViewById(R.id.routeRow_infoLayout_stub);
-                    View inflatedView = chartStub.inflate();
-                    chart = inflatedView.findViewById(R.id.routeRow_gradeChart);
-                    btnInfo = inflatedView.findViewById(R.id.routeRow_btnInfo);
+                    View inflatedChartStub = chartStub.inflate();
+                    chart = inflatedChartStub.findViewById(R.id.routeRow_gradeChart);
+                    btnInfo = inflatedChartStub.findViewById(R.id.routeRow_btnInfo);
                 }
             details.setVisibility(View.GONE);
             imageArrow.setVisibility(View.GONE);

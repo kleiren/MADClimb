@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -212,7 +213,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
+        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity(), (AppCompatActivity) getActivity(), false);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {

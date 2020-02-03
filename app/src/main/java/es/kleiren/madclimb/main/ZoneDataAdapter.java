@@ -1,12 +1,18 @@
 package es.kleiren.madclimb.main;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -30,6 +36,7 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.root.GlideApp;
+import es.kleiren.madclimb.zone_activity.ZoneActivity;
 
 public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Zone> zones;
@@ -37,12 +44,17 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     private Context context;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
+    private boolean isFiltered;
+    private boolean isFavFragment;
+    private AppCompatActivity activity;
 
 
-    ZoneDataAdapter(ArrayList<Zone> zones, Context context) {
+    ZoneDataAdapter(ArrayList<Zone> zones, Context context, AppCompatActivity activity, Boolean isFavFragment) {
         this.context = context;
         this.zones = zones;
         this.filteredZones = zones;
+        this.isFavFragment = isFavFragment;
+        this.activity = activity;
     }
 
     public Zone getZone(int i) {
@@ -67,8 +79,29 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ZoneDataAdapter.ViewHolder viewHolder, int i) {
 
+        if (i == 0 && !isFiltered && !isFavFragment) {
+            View inflatedMapShortcutStub = viewHolder.mapShortcutStub.inflate();
+            inflatedMapShortcutStub.findViewById(R.id.zoneRow_mapShortcutView).setOnClickListener(v -> {
+                ((MainActivity) activity).bottomNavigationView.setSelectedItemId(R.id.nav_map);
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, ZoneListMapFragment.newInstance())
+                        .commit();
+            });
+
+        } else {
+            viewHolder.mapShortcutStub.setVisibility(View.GONE);
+        }
+
+        viewHolder.zoneView.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ZoneActivity.class);
+            intent.putExtra("zone", zones.get(i));
+            activity.startActivityForResult(intent, 1);
+        });
+
+
+
         viewHolder.txtZoneName.setText(filteredZones.get(i).getName());
-        viewHolder.txtStats.setText(filteredZones.get(i).numberOfSectors + "S "+ filteredZones.get(i).numberOfRoutes + "V");
+        viewHolder.txtStats.setText(filteredZones.get(i).numberOfSectors + "S " + filteredZones.get(i).numberOfRoutes + "V");
 
 
         final StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
@@ -115,6 +148,7 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
                 }
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = filteredZones;
+                isFiltered = true;
                 return filterResults;
             }
 
@@ -135,10 +169,15 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
         ImageView imgZone;
         @BindView(R.id.zoneRow_progressBar)
         ProgressBar progressBar;
+        @BindView(R.id.zoneRow_zoneView)
+        View zoneView;
+        ViewStub mapShortcutStub;
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            mapShortcutStub = view.findViewById(R.id.zoneRow_map_shortcut_stub);
+
         }
     }
 }

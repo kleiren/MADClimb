@@ -8,5 +8,6 @@
     <color name="colorTranslucent">#af000000</color>
     <color name="launcherBackground">#CA1226</color>
     <color name="white">#FFFFFF</color>
+    <color name="safety_orange">#FF6700</color>
 
 </resources>

@@ -9,6 +9,9 @@ public class Sector extends Datum implements Serializable {
     private String date;
     private String has_sub_sectors;
     private String parentSector;
+    private String restriction_start;
+    private String restriction_end;
+    public Integer[] routesFiltered;
 
     public String getDate() {
         return date;
@@ -55,5 +58,29 @@ public class Sector extends Datum implements Serializable {
 
     public void setParentSector(String parentSector) {
         this.parentSector = parentSector;
+    }
+
+    public String getRestriction_start() {
+        return restriction_start;
+    }
+
+    public void setRestriction_start(String restriction_start) {
+        this.restriction_start = restriction_start;
+    }
+
+    public String getRestriction_end() {
+        return restriction_end;
+    }
+
+    public void setRestriction_end(String restriction_end) {
+        this.restriction_end = restriction_end;
+    }
+
+    public Integer[] getRoutesFiltered() {
+        return routesFiltered;
+    }
+
+    public void setRoutesFiltered(Integer[] routesFiltered) {
+        this.routesFiltered = routesFiltered;
     }
 }

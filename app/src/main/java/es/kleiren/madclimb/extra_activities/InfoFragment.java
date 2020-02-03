@@ -1,8 +1,10 @@
 package es.kleiren.madclimb.extra_activities;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,57 +26,22 @@ import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Datum;
 import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.data_classes.Sector;
+import es.kleiren.madclimb.util.InfoChartUtils;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class InfoFragment extends Fragment {
 
-    String type;
-    Datum datum;
+    private String type;
+    private Datum datum;
 
     private static final String ARG_TYPE = "type";
     private static final String ARG_DATUM = "datum";
     private ArrayList<Route> routes;
-
-    private Map<String, Integer> map = new HashMap<String, Integer>() {{
-        put("3", 1);
-        put("3+", 1);
-        put("IV-", 1);
-        put("IV", 1);
-        put("IV+", 1);
-        put("V-", 1);
-        put("V", 1);
-        put("V+", 1);
-        put("6a", 2);
-        put("6a+", 2);
-        put("6b", 2);
-        put("6b+", 2);
-        put("6c", 2);
-        put("6c+", 2);
-        put("7a", 3);
-        put("7a+", 3);
-        put("7b", 3);
-        put("7b+", 2);
-        put("7c", 3);
-        put("7c+", 3);
-        put("8a", 4);
-        put("8a+", 4);
-        put("8b", 4);
-        put("8b+", 4);
-        put("8c", 4);
-        put("8c+", 4);
-        put("9a", 4);
-        put("9a+", 4);
-        put("9b", 4);
-        put("9b+", 4);
-        put("9c", 4);
-        put("9c+", 4);
-    }};
 
     @BindView(R.id.infoFrag_gradeChart)
     ColumnChartView columnChartView;
@@ -154,7 +119,7 @@ public class InfoFragment extends Fragment {
         routes = new ArrayList<>();
         DatabaseReference child;
         if (((Sector) datum).getParentSector() != null)
-            child = mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + ((Sector) datum).getParentSector() + "/sub_sectors/" +  datum.getId() + "/routes");
+            child = mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + ((Sector) datum).getParentSector() + "/sub_sectors/" + datum.getId() + "/routes");
         else
             child = mDatabase.child("zones/" + ((Sector) datum).getZone_id() + "/sectors/" + datum.getId() + "/routes");
         child.addValueEventListener(new ValueEventListener() {
@@ -176,12 +141,10 @@ public class InfoFragment extends Fragment {
 
     private void generateData() {
         Integer[] gradesFiltered = new Integer[]{0, 0, 0, 0};
-        Integer[] colors = new Integer[]{ChartUtils.COLOR_GREEN, ChartUtils.COLOR_BLUE, ChartUtils.COLOR_VIOLET, ChartUtils.COLOR_RED};
-        String[] labels = new String[]{"III - V+", "6a - 6c+", "7a - 7c+", "8a - 9c+"};
 
         for (Route route : routes) {
             try {
-                gradesFiltered[map.get(route.getGrade()) - 1]++;
+                gradesFiltered[InfoChartUtils.map.get(route.getGrade()) - 1]++;
             } catch (Exception e) {
             }
         }
@@ -191,13 +154,11 @@ public class InfoFragment extends Fragment {
         List<Column> columns = new ArrayList<Column>();
         List<SubcolumnValue> values;
         for (int i = 0; i < numColumns; ++i) {
-
             values = new ArrayList<>();
             for (int j = 0; j < numSubColumns; ++j) {
-                SubcolumnValue temp = new SubcolumnValue(gradesFiltered[i], colors[i]);
+                SubcolumnValue temp = new SubcolumnValue(gradesFiltered[i], InfoChartUtils.colors[i]);
                 values.add(temp);
             }
-
             Column column = new Column(values);
             column.setHasLabelsOnlyForSelected(true);
             columns.add(column);
@@ -206,9 +167,8 @@ public class InfoFragment extends Fragment {
         ColumnChartData data = new ColumnChartData(columns);
 
         List<AxisValue> axisValues = new ArrayList<>();
-        for (int i = 0; i < labels.length; i++) {
-
-            axisValues.add(new AxisValue(i, labels[i].toCharArray()));
+        for (int i = 0; i < InfoChartUtils.labels.length; i++) {
+            axisValues.add(new AxisValue(i, InfoChartUtils.labels[i].toCharArray()));
         }
         Axis axisX = new Axis(axisValues);
         data.setAxisXBottom(axisX);

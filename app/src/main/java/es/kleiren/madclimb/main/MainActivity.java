@@ -18,11 +18,11 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,13 +32,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
-import es.kleiren.madclimb.data_classes.Route;
 import es.kleiren.madclimb.util.ThemeHelper;
 
 
@@ -81,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sideNavigationView.setNavigationItemSelectedListener(this);
         bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryBackground));
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
         checkFirstRun();
     }
 

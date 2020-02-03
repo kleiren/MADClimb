@@ -2,8 +2,14 @@ package es.kleiren.madclimb.zone_activity;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +35,7 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.root.GlideApp;
+import es.kleiren.madclimb.util.InfoChartUtils;
 
 public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.ViewHolder> implements Filterable {
     private ArrayList<Sector> sectors;
@@ -36,7 +43,6 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
     private Context context;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
-
 
     public SectorDataAdapter(ArrayList<Sector> sectors, Context context) {
         this.context = context;
@@ -59,7 +65,17 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
     public void onBindViewHolder(final SectorDataAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.txtSectorName.setText(filteredSectors.get(i).getName());
-        viewHolder.txtStats.setText(filteredSectors.get(i).numberOfRoutes + "V");
+
+
+        Spannable spannable = new SpannableString(" " + filteredSectors.get(i).routesFiltered[0] + "  " + filteredSectors.get(i).routesFiltered[1] + "  " + filteredSectors.get(i).routesFiltered[2] + "  " + filteredSectors.get(i).routesFiltered[3] + " ");
+        int length = 0;
+        for (int j = 0; j < filteredSectors.get(i).routesFiltered.length; j++) {
+            spannable.setSpan(new ForegroundColorSpan(InfoChartUtils.colors[j]), length, length + filteredSectors.get(i).routesFiltered[j].toString().length() + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            length += filteredSectors.get(i).routesFiltered[j].toString().length() + 2;
+        }
+        viewHolder.txtStats.setText(spannable);
+
+
         final StorageReference load = mStorageRef.child(filteredSectors.get(i).getImg());
         GlideApp.with(context)
                 .load(load)
@@ -71,6 +87,7 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
                         viewHolder.progressBar.setVisibility(View.GONE);
                         return false;
                     }
+
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         viewHolder.progressBar.setVisibility(View.GONE);

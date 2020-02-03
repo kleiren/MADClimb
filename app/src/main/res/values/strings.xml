@@ -22,6 +22,7 @@
     <string name="empty_fav_2">Busca el icono</string>
     <string name="empty_fav_3">en las pantallas de zona</string>
     <string name="empty_fav_4">en cada ruta</string>
+    <string name="restricted_climbing">Escalada phohibida desde el %s al %s</string>
 
     <string-array name="route_done_status">
         <item>-</item>

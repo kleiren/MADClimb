@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -135,7 +137,7 @@ public class ZoneListFavFragment extends Fragment {
         recyclerView.addItemDecoration( new VerticalSpaceItemDecoration(getActionBarHeight() + 40));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity());
+        adapter = new ZoneDataAdapter(zonesFromFirebase, getActivity(), (AppCompatActivity) getActivity(), true);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
