@@ -15,4 +15,10 @@
     <string name="route_attempt">Attempt</string>
     <string name="date">Date</string>
     <string name="date_done">Done date</string>
+    <string name="route">Route</string>
+    <string name="empty_fav_1">This looks empty :(</string>
+    <string name="empty_fav_2">Look for the icon</string>
+    <string name="empty_fav_3">in the zone screens</string>
+    <string name="empty_fav_4">in each route</string>
+    <string name="restricted_climbing">Forbidden climbing  from %s to %s</string>
 </resources>
