@@ -5,46 +5,51 @@
     <item
         android:id="@+id/nav_share"
         android:icon="@drawable/ic_menu_share"
-        android:title="Compartir" />
+        android:title="@string/share" />
     <item
         android:id="@+id/nav_send"
         android:icon="@drawable/ic_menu_send"
-        android:title="e-mail" />
+        android:title="@string/e_mail" />
 
     <item
         android:id="@+id/nav_twitter"
         android:icon="@drawable/ic_menu_twitter"
-        android:title="Twitter" />
+        android:title="@string/twitter" />
 
     <item
         android:id="@+id/nav_rate"
         android:icon="@drawable/ic_star"
-        android:title="Puntuar" />
+        android:title="@string/review" />
 
     <item
         android:id="@+id/nav_github"
         android:icon="@drawable/ic_github"
-        android:title="Código Fuente" />
+        android:title="@string/source_code" />
 
     <item
         android:id="@+id/nav_news"
         android:icon="@drawable/ic_new_box"
-        android:title="Últimos cambios" />
+        android:title="@string/latest_changes" />
+
+    <item
+        android:id="@+id/nav_restrictions"
+        android:icon="@drawable/cancel"
+        android:title="@string/bocm_restrictions" />
 
     <item
         android:id="@+id/nav_dark"
         app:actionLayout="@layout/action_view_switch"
         android:icon="@drawable/ic_dark"
-        android:title="Modo oscuro" />
+        android:title="@string/dark_mode" />
 
     <item
         android:id="@+id/nav_about"
         android:icon="@drawable/ic_info_black"
-        android:title="Sobre la app" />
+        android:title="@string/about" />
 
     <item
         android:id="@+id/nav_policy"
         android:icon="@drawable/clipboard_text"
-        android:title="Política de privacidad" />
+        android:title="@string/privacy_policy" />
 
 </menu>

@@ -20,5 +20,15 @@
     <string name="empty_fav_2">Look for the icon</string>
     <string name="empty_fav_3">in the zone screens</string>
     <string name="empty_fav_4">in each route</string>
-    <string name="restricted_climbing">Forbidden climbing  from %s to %s</string>
+    <string name="restricted_climbing">Possible restriction from %s to %s</string>
+    <string name="latest_changes">Latest changes</string>
+    <string name="source_code">Source code</string>
+    <string name="review">Rate</string>
+    <string name="share">Share</string>
+    <string name="bocm_restrictions">BOCM Climbing Restrictions</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="about">About</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="sectors">Sectors</string>
+    <string name="routes">Routes</string>
 </resources>

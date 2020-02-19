@@ -138,6 +138,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showChangelog();
                 return true;
 
+            case R.id.nav_restrictions:
+                Intent goToRestrictions = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.bocm.es/boletin/CM_Orden_BOCM/2020/02/17/BOCM-20200217-19.PDF"));
+                startActivity(goToRestrictions);
+                return true;
+
             case R.id.nav_dark:
                 switcher.setChecked(!switcher.isChecked());
                 setDarkModePreference(switcher.isChecked());

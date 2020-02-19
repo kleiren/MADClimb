@@ -22,7 +22,20 @@
     <string name="empty_fav_2">Busca el icono</string>
     <string name="empty_fav_3">en las pantallas de zona</string>
     <string name="empty_fav_4">en cada vía</string>
-    <string name="restricted_climbing">Escalada prohibida desde el %s al %s</string>
+    <string name="restricted_climbing">Posible prohibición desde el %s al %s</string>
+    <string name="latest_changes">Últimos cambios</string>
+    <string name="source_code">Código Fuente</string>
+    <string name="review">Puntuar</string>
+    <string name="share">Compartir</string>
+    <string name="e_mail" translatable="false">e-mail</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="bocm_restrictions">BOCM Restricciones Escalada</string>
+    <string name="dark_mode">Modo oscuro</string>
+    <string name="about">Sobre la app</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="sectors">Sectores</string>
+    <string name="routes">Vías</string>
+
 
     <string-array name="route_done_status">
         <item>-</item>

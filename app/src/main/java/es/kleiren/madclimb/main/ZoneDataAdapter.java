@@ -101,7 +101,8 @@ public class ZoneDataAdapter extends RecyclerView.Adapter<ZoneDataAdapter.ViewHo
 
 
         viewHolder.txtZoneName.setText(filteredZones.get(i).getName());
-        viewHolder.txtStats.setText(filteredZones.get(i).numberOfSectors + "S " + filteredZones.get(i).numberOfRoutes + "V");
+        viewHolder.txtStats.setText(filteredZones.get(i).numberOfSectors + " " + context.getString(R.string.sectors) + "\n"+ filteredZones.get(i).numberOfRoutes
+                + " " +context.getString(R.string.routes));
 
 
         final StorageReference load = mStorageRef.child(filteredZones.get(i).getImg());
