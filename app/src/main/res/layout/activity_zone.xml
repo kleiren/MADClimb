@@ -54,7 +54,7 @@
                 android:background="@null"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/abc_ic_ab_back_material" />
+                app:navigationIcon="@drawable/arrow_left" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_gravity="bottom"
-            android:background="@color/colorTranslucent"
+            android:background="@color/colorPrimaryBackground"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:tabIndicatorHeight="4dp"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />

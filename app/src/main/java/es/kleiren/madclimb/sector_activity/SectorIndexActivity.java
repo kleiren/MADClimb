@@ -29,11 +29,11 @@ import es.kleiren.madclimb.util.SlidingTabLayout;
 public class SectorIndexActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
 
-    @BindView(R.id.sectorIndexAct_tabLayout)
+    @BindView(R.id.sectorAct_tabLayout)
     SlidingTabLayout tabLayout;
-    @BindView(R.id.sectorIndexAct_toolbar)
+    @BindView(R.id.sectorAct_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.sectorIndexAct_pager)
+    @BindView(R.id.sectorAct_pager)
     ViewPager viewPager;
 
     private NavigationAdapter mSectionsPagerAdapter;
@@ -48,7 +48,7 @@ public class SectorIndexActivity extends AppCompatActivity implements ViewPager.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sector_index);
+        setContentView(R.layout.activity_sector);
 
         ButterKnife.bind(this);
 

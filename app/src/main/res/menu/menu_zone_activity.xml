@@ -9,4 +9,10 @@
         android:title="favourite"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/info"
+        android:icon="@drawable/ic_info_white"
+        android:title="favourite"
+        app:showAsAction="always" />
+
 </menu>

@@ -10,7 +10,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/error"
-        android:icon="@android:drawable/stat_notify_error"
+        android:icon="@drawable/alert_outline"
         android:title="info"
         app:showAsAction="always" />
 

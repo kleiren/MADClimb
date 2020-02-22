@@ -34,10 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_gravity="bottom"
-            android:background="@color/colorTranslucent"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            app:tabIndicatorHeight="4dp"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+            android:background="@color/colorPrimaryBackground"
+            app:tabIndicatorHeight="4dp"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

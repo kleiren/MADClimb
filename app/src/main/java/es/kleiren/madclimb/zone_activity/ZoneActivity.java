@@ -1,8 +1,14 @@
 package es.kleiren.madclimb.zone_activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+import androidx.annotation.ColorLong;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -13,12 +19,18 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -38,6 +50,7 @@ import butterknife.ButterKnife;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
+import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.root.GlideApp;
 
@@ -67,6 +80,17 @@ public class ZoneActivity extends AppCompatActivity
     private Zone zone;
     private NavigationAdapter navigationAdapter;
     private boolean isFavourite;
+    int statusBarHeight = 0;
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +99,60 @@ public class ZoneActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+
+        Window w = getWindow();
+        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        TypedValue tv = new TypedValue();
+        int actionBarHeight = 0;
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+
+
         zone = (Zone) getIntent().getSerializableExtra("zone");
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        CollapsingToolbarLayout.LayoutParams lp = new CollapsingToolbarLayout.LayoutParams(CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                actionBarHeight);
+        lp.setMargins(0, statusBarHeight, 0, 0);
+        toolbar.setLayoutParams(lp);
+
+        ViewGroup.LayoutParams params2 = toolbar.getLayoutParams();
+        CollapsingToolbarLayout.LayoutParams newParams;
+        if (params2 instanceof CollapsingToolbarLayout.LayoutParams) {
+            newParams = (CollapsingToolbarLayout.LayoutParams) params2;
+        } else {
+            newParams = new CollapsingToolbarLayout.LayoutParams(params2);
+        }
+        newParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
+        toolbar.setLayoutParams(newParams);
+        toolbar.requestLayout();
+
+
         collapsingAppbar.addOnOffsetChangedListener(this);
         mCollapsing.setTitle(zone.getName());
         navigationAdapter = new NavigationAdapter(getSupportFragmentManager());
         viewPager.setAdapter(navigationAdapter);
         tabLayout.setupWithViewPager(viewPager);
+        int[] textColorAttr = new int[]{android.R.attr.textColorPrimary};
+        int indexOfAttrTextSize = 0;
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = this.obtainStyledAttributes(typedValue.data, textColorAttr);
+        ColorStateList b = a.getColorStateList(indexOfAttrTextSize);
+        a.recycle();
+        tabLayout.setTabTextColors(b);
+        tabLayout.getTabAt(0).setCustomView(R.layout.tab_indicator_icon);
+      //  ((ImageView)tabLayout.getTabAt(0).getCustomView().findViewById(R.id.icon)).setImageResource(R.drawable.zones_icon);
+      //  ((ImageView)tabLayout.getTabAt(0).getCustomView().findViewById(R.id.text)).setImageResource(R.drawable.zones_icon);
+       // tabLayout.getTabAt(0).setIcon(R.drawable.zones_icon);
+//        tabLayout.getTabAt(0).setText(R.string.sectors);
+//        tabLayout.getTabAt(1).setIcon(R.drawable.map_marker);
         viewPager.addOnPageChangeListener(this);
 
         isFavourite = getSharedPreferences("FAVOURITES", MODE_PRIVATE).getBoolean(zone.getId(), false);
@@ -112,6 +177,7 @@ public class ZoneActivity extends AppCompatActivity
                         progressBar.setVisibility(View.GONE);
                         return false;
                     }
+
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
@@ -186,10 +252,17 @@ public class ZoneActivity extends AppCompatActivity
             setFavouriteStar(item, isFavourite);
             return true;
         }
+        if (id == R.id.info) {
+            Intent intent = new Intent(this, InfoActivity.class);
+            intent.putExtra("type", "zone");
+            intent.putExtra("datum", zone);
+            startActivity(intent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean setFavourite(boolean add){
+    private boolean setFavourite(boolean add) {
         getSharedPreferences("FAVOURITES", MODE_PRIVATE)
                 .edit()
                 .putBoolean(zone.getId(), add)
@@ -197,7 +270,7 @@ public class ZoneActivity extends AppCompatActivity
         return add;
     }
 
-    private void setFavouriteStar(MenuItem item, boolean isFavourite){
+    private void setFavouriteStar(MenuItem item, boolean isFavourite) {
         if (isFavourite)
             item.setIcon(R.drawable.ic_star);
         else
@@ -206,12 +279,12 @@ public class ZoneActivity extends AppCompatActivity
 
     private class NavigationAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = new String[]{"Sectores", "Mapa", "Información"};
+        private final String[] TITLES = new String[]{getString(R.string.sectors), getString(R.string.map)};
         private Map<Integer, String> mFragmentTags;
         private FragmentManager mFragmentManager;
 
-        public NavigationAdapter(FragmentManager fm) {
-            super(fm);
+        NavigationAdapter(FragmentManager fm) {
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mFragmentManager = fm;
             mFragmentTags = new HashMap<>();
         }
@@ -227,9 +300,6 @@ public class ZoneActivity extends AppCompatActivity
                     break;
                 case 1:
                     f = SectorListMapFragment.newInstance(zone);
-                    break;
-                case 2:
-                    f = InfoFragment.newInstance("zone", zone);
                     break;
             }
             return f;
