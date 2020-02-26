@@ -5,7 +5,7 @@ android {
     buildToolsVersion '29.0.2'
     defaultConfig {
         applicationId "es.kleiren.madclimb"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 108
         versionName "1.08"
@@ -33,7 +33,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha04'
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha01'
@@ -47,9 +47,9 @@ dependencies {
     // Allows zooming on imageViews
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
-    implementation('com.github.bumptech.glide:recyclerview-integration:4.10.0') {
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation('com.github.bumptech.glide:recyclerview-integration:4.11.0') {
         transitive = false
     }
     // Needed for glide
@@ -57,8 +57,8 @@ dependencies {
     // Charts
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     // Butter
-    implementation 'com.jakewharton:butterknife:10.2.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     // About libraries
     implementation "com.mikepenz:aboutlibraries:7.0.1"
     // Gson

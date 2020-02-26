@@ -31,7 +31,7 @@
                 card_view:layout_constraintLeft_toLeftOf="parent"
                 card_view:layout_constraintRight_toRightOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/mountain_placeholder" />
+                card_view:srcCompat="@drawable/placeholder_mountain" />
 
             <ProgressBar
                 android:id="@+id/zoneRow_progressBar"

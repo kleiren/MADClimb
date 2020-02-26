@@ -25,7 +25,7 @@
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/mountain_placeholder"
+            app:srcCompat="@drawable/placeholder_mountain"
             android:tint="@android:color/darker_gray" />
 
         <TextView

@@ -231,7 +231,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                 if (hasParkings && markers.indexOf(marker) < parkings.length) return null;
                 GlideApp.with(getContext())
                         .load(FirebaseStorage.getInstance().getReference().child(sectorsFromFirebase.get(hasParkings ? markers.indexOf(marker) - parkings.length : markers.indexOf(marker)).getImg()))
-                        .placeholder(R.drawable.mountain_placeholder_small)
+                        .placeholder(R.drawable.placeholder_mountain)
                         .override(400, 200)
                         .centerCrop()
                         .listener(new RequestListener<Drawable>() {
@@ -247,7 +247,7 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
                                 return false;
                             }
                         })
-                        .into((ImageView) v.findViewById(R.id.imageView3));
+                        .into((ImageView) v.findViewById(R.id.zoneImageView));
                 return v;
             }
         });

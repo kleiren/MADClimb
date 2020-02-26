@@ -1,14 +1,11 @@
 package es.kleiren.madclimb.zone_activity;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.ColorLong;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -27,10 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -51,7 +46,6 @@ import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Zone;
 import es.kleiren.madclimb.extra_activities.ImageViewerActivity;
 import es.kleiren.madclimb.extra_activities.InfoActivity;
-import es.kleiren.madclimb.extra_activities.InfoFragment;
 import es.kleiren.madclimb.root.GlideApp;
 
 public class ZoneActivity extends AppCompatActivity
@@ -63,7 +57,7 @@ public class ZoneActivity extends AppCompatActivity
     Toolbar toolbar;
     @BindView(R.id.zoneAct_appbar)
     AppBarLayout collapsingAppbar;
-    @BindView(R.id.zoneAct_collapTollbarLayout)
+    @BindView(R.id.zoneAct_collapsingToolbarLayout)
     CollapsingToolbarLayout mCollapsing;
     @BindView(R.id.zoneAct_pager)
     ViewPager viewPager;
@@ -80,17 +74,6 @@ public class ZoneActivity extends AppCompatActivity
     private Zone zone;
     private NavigationAdapter navigationAdapter;
     private boolean isFavourite;
-    int statusBarHeight = 0;
-    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,29 +82,21 @@ public class ZoneActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
-
-        Window w = getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
-        }
-        TypedValue tv = new TypedValue();
-        int actionBarHeight = 0;
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-        }
+        makeStatusBarTransparent();
 
 
         zone = (Zone) getIntent().getSerializableExtra("zone");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        CollapsingToolbarLayout.LayoutParams lp = new CollapsingToolbarLayout.LayoutParams(CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
-                actionBarHeight);
-        lp.setMargins(0, statusBarHeight, 0, 0);
-        toolbar.setLayoutParams(lp);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+
+            CollapsingToolbarLayout.LayoutParams lp = new CollapsingToolbarLayout.LayoutParams(CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                    getActionBarHeight());
+            lp.setMargins(0, getStatusBarHeight(), 0, 0);
+            toolbar.setLayoutParams(lp);
+        }
 
         ViewGroup.LayoutParams params2 = toolbar.getLayoutParams();
         CollapsingToolbarLayout.LayoutParams newParams;
@@ -134,25 +109,11 @@ public class ZoneActivity extends AppCompatActivity
         toolbar.setLayoutParams(newParams);
         toolbar.requestLayout();
 
-
         collapsingAppbar.addOnOffsetChangedListener(this);
         mCollapsing.setTitle(zone.getName());
         navigationAdapter = new NavigationAdapter(getSupportFragmentManager());
         viewPager.setAdapter(navigationAdapter);
         tabLayout.setupWithViewPager(viewPager);
-        int[] textColorAttr = new int[]{android.R.attr.textColorPrimary};
-        int indexOfAttrTextSize = 0;
-        TypedValue typedValue = new TypedValue();
-        TypedArray a = this.obtainStyledAttributes(typedValue.data, textColorAttr);
-        ColorStateList b = a.getColorStateList(indexOfAttrTextSize);
-        a.recycle();
-        tabLayout.setTabTextColors(b);
-        tabLayout.getTabAt(0).setCustomView(R.layout.tab_indicator_icon);
-      //  ((ImageView)tabLayout.getTabAt(0).getCustomView().findViewById(R.id.icon)).setImageResource(R.drawable.zones_icon);
-      //  ((ImageView)tabLayout.getTabAt(0).getCustomView().findViewById(R.id.text)).setImageResource(R.drawable.zones_icon);
-       // tabLayout.getTabAt(0).setIcon(R.drawable.zones_icon);
-//        tabLayout.getTabAt(0).setText(R.string.sectors);
-//        tabLayout.getTabAt(1).setIcon(R.drawable.map_marker);
         viewPager.addOnPageChangeListener(this);
 
         isFavourite = getSharedPreferences("FAVOURITES", MODE_PRIVATE).getBoolean(zone.getId(), false);
@@ -195,6 +156,32 @@ public class ZoneActivity extends AppCompatActivity
                 startActivityForResult(intent, 1);
             }
         });
+    }
+
+    private void makeStatusBarTransparent() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            // Necessary for transparent statusBar
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        }
+    }
+
+    private int getActionBarHeight() {
+        TypedValue tv = new TypedValue();
+        int actionBarHeight = 0;
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
+    }
+
+    private int getStatusBarHeight() {
+        int statusBarHeight = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        return statusBarHeight;
     }
 
     public void disableScroll() {

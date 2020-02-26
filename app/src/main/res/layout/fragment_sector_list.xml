@@ -4,22 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/sector_initial_progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        card_view:layout_constraintBottom_toBottomOf="parent"
-        card_view:layout_constraintEnd_toEndOf="parent"
-        card_view:layout_constraintStart_toStartOf="parent"
-        card_view:layout_constraintTop_toTopOf="@+id/linearLayout"
-        card_view:layout_constraintVertical_bias="0.0" />
-
     <LinearLayout
         card_view:layout_constraintTop_toTopOf="parent"
         android:id="@+id/linearLayout"

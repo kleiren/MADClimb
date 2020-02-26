@@ -28,4 +28,17 @@
         <item name="android:background">@color/colorPrimaryBackground</item>
     </style>
 
+    <style name="TabWidgetZone">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/tab_indicator_text</item>
+    </style>
+
+    <style name="TabWidgetSector" parent="TabWidgetZone">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TransparentStatusBar" parent="AppTheme.NoActionBar">
+    </style>
+
 </resources>

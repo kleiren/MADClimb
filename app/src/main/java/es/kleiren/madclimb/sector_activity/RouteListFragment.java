@@ -105,7 +105,7 @@ public class RouteListFragment extends Fragment {
 
         GlideApp.with(parentActivity)
                 .load(load)
-                .placeholder(R.drawable.mountain_placeholder)
+                .placeholder(R.drawable.placeholder_mountain)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

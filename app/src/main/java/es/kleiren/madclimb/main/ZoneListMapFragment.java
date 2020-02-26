@@ -208,7 +208,7 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                                 return false;
                             }
                         })
-                        .into((ImageView) v.findViewById(R.id.imageView3));
+                        .into((ImageView) v.findViewById(R.id.zoneImageView));
                 return v;
             }
         });

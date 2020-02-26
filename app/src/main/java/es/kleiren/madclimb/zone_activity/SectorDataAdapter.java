@@ -79,7 +79,7 @@ public class SectorDataAdapter extends RecyclerView.Adapter<SectorDataAdapter.Vi
         final StorageReference load = mStorageRef.child(filteredSectors.get(i).getImg());
         GlideApp.with(context)
                 .load(load)
-                .placeholder(R.drawable.mountain_placeholder)
+                .placeholder(R.drawable.placeholder_mountain)
                 .centerCrop()
                 .listener(new RequestListener<Drawable>() {
                     @Override

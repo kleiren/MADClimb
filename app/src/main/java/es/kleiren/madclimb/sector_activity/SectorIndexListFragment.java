@@ -59,8 +59,6 @@ public class SectorIndexListFragment extends Fragment {
 
     @BindView(R.id.card_sectorIndex_view)
     RecyclerView recyclerSector;
-    @BindView(R.id.sectorIndex_initial_progress)
-    ProgressBar initialProgress;
     @BindView(R.id.sectorIndex_imgCroquis)
     ImageView imgCroquis;
     @BindView(R.id.sectorIndex_cardViewCroquis)
@@ -70,20 +68,6 @@ public class SectorIndexListFragment extends Fragment {
 
     public SectorIndexListFragment() {
     }
-
-    private ArrayList<Sector> sectors;
-    private Observer sectorListChanged = new Observer() {
-        @Override
-        public void update(Observable o, Object newValue) {
-
-            sectors = (ArrayList<Sector>) newValue;
-            adapter = new SectorDataAdapter(sectors, getActivity());
-            recyclerSector.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-            initialProgress.setVisibility(View.GONE);
-
-        }
-    };
 
     public static SectorIndexListFragment newInstance(Zone zone, Sector sector) {
         SectorIndexListFragment fragment = new SectorIndexListFragment();
@@ -119,7 +103,7 @@ public class SectorIndexListFragment extends Fragment {
 
         GlideApp.with(getActivity())
                 .load(load)
-                .placeholder(R.drawable.mountain_placeholder)
+                .placeholder(R.drawable.placeholder_mountain)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

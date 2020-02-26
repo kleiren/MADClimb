@@ -1,15 +1,12 @@
 package es.kleiren.madclimb.root;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import androidx.multidex.MultiDexApplication;
+import android.app.Application;
 
 import com.google.firebase.database.FirebaseDatabase;
 
 import es.kleiren.madclimb.util.ThemeHelper;
 
-public class MyApp extends MultiDexApplication {
+public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

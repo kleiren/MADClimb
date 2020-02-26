@@ -45,8 +45,6 @@ public class SectorListFragment extends Fragment {
 
     @BindView(R.id.card_sector_view)
     RecyclerView recyclerSector;
-    @BindView(R.id.sector_initial_progress)
-    ProgressBar initialProgress;
 
     public SectorListFragment() {
     }
@@ -119,11 +117,8 @@ public class SectorListFragment extends Fragment {
                     else
                         return o1.getName().compareTo(o2.getName());
                 });
-                if (adapter != null) {
+                if (adapter != null)
                     adapter.notifyDataSetChanged();
-                    initialProgress.setVisibility(View.GONE);
-                }
-
             }
 
             @Override

@@ -9,5 +9,7 @@
     <color name="launcherBackground">#CA1226</color>
     <color name="white">#FFFFFF</color>
     <color name="safety_orange">#FF6700</color>
+    <color name="tab_text_selected">#000000</color>
+    <color name="tab_text">#808080</color>
 
 </resources>

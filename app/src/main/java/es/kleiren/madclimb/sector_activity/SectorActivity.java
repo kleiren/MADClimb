@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +29,6 @@ import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
-import es.kleiren.madclimb.util.SlidingTabLayout;
 
 public class SectorActivity extends AppCompatActivity {
 
@@ -37,7 +37,7 @@ public class SectorActivity extends AppCompatActivity {
     @BindView(R.id.sectorAct_toolbar)
     Toolbar toolbar;
     @BindView(R.id.sectorAct_tabLayout)
-    SlidingTabLayout tabLayout;
+    TabLayout tabLayout;
 
     private NavigationAdapter mSectionsPagerAdapter;
     private ArrayList<Sector> sectorsFromFirebase;
@@ -73,10 +73,7 @@ public class SectorActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mSectionsPagerAdapter);
         viewPager.setCurrentItem(currentSectorPosition);
-        tabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-        tabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorAccent));
-        tabLayout.setDistributeEvenly(true);
-        tabLayout.setViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

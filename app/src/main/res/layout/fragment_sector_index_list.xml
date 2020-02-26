@@ -6,21 +6,6 @@
     android:animateLayoutChanges="true"
     tools:context="es.kleiren.madclimb.main.ZoneListFragment">
 
-    <ProgressBar
-        android:id="@+id/sectorIndex_initial_progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/card_sectorIndex_view"
-        app:layout_constraintEnd_toEndOf="@+id/route_cardViewCroquis"
-        app:layout_constraintStart_toStartOf="@+id/route_cardViewCroquis"
-        app:layout_constraintTop_toTopOf="@+id/card_sectorIndex_view" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/sectorIndex_cardViewCroquis"
         android:layout_width="0dp"

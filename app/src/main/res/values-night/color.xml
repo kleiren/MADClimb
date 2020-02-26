@@ -2,5 +2,7 @@
 <resources>
 
     <color name="colorPrimaryBackground">#000000</color>
+    <color name="tab_text_selected">#FFFFFF</color>
+    <color name="tab_text">#808080</color>
 
 </resources>

@@ -29,12 +29,14 @@
             android:theme="@style/AppTheme.PopupOverlay"
             app:navigationIcon="?attr/homeAsUpIndicator" />
 
-        <es.kleiren.madclimb.util.SlidingTabLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/sectorAct_tabLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center_horizontal"
             android:background="@color/colorPrimaryBackground"
+            app:tabTextAppearance="@style/TabWidgetSector"
+            app:tabMode="scrollable"
             app:tabIndicatorHeight="4dp"/>
 
     </com.google.android.material.appbar.AppBarLayout>
