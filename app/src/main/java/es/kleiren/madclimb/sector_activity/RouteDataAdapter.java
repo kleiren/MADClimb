@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -116,7 +118,7 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             extras = true;
             viewHolder.layoutTxtQuickDraws.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.layoutTxtQuickDraws.setVisibility(View.GONE);
+            viewHolder.layoutTxtQuickDraws.setVisibility(View.INVISIBLE);
         }
 
         if (routes.get(i).getHeight() != 0) {
@@ -125,7 +127,15 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
             extras = true;
             viewHolder.layoutTxtRouteHeight.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.layoutTxtRouteHeight.setVisibility(View.GONE);
+            viewHolder.layoutTxtRouteHeight.setVisibility(View.INVISIBLE);
+        }
+
+        if (!routes.get(i).getEightADotNu().isEmpty()) {
+            expandable = true;
+            extras = true;
+            viewHolder.btnEightADotNu.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.btnEightADotNu.setVisibility(View.GONE);
         }
 
         if (!extras)
@@ -166,6 +176,11 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
                 showDeleteDoneDialog(i, viewHolder.doneCheckBox);
             else
                 showDoneDialog(i, viewHolder.doneCheckBox);
+        });
+
+        viewHolder.btnEightADotNu.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(routes.get(i).getEightADotNu()));
+            context.startActivity(browserIntent);
         });
     }
 
@@ -337,6 +352,8 @@ public class RouteDataAdapter extends RecyclerView.Adapter<RouteDataAdapter.View
         TextView txtRouteHeight;
         @BindView(R.id.routeRow_txtQuickDraws)
         TextView txtQuickDraws;
+        @BindView(R.id.routeRow_btnEightADotNu)
+        Button btnEightADotNu;
         @BindView(R.id.routeRow_layoutTxtQuickDraws)
         View layoutTxtQuickDraws;
         @BindView(R.id.routeRow_layoutTxtRouteHeight)

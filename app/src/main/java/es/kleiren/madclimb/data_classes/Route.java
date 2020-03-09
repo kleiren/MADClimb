@@ -15,6 +15,16 @@ public class Route implements Serializable {
     private String description;
     private String ref;
     private String doneDate;
+    private String eightADotNu = "";
+
+    public String getEightADotNu() {
+        return eightADotNu;
+    }
+
+    public void setEightADotNu(String eightADotNu) {
+        this.eightADotNu = eightADotNu;
+    }
+
 
     public String getName() {
         return name;

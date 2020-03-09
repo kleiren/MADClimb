@@ -36,6 +36,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -195,6 +196,9 @@ public class SectorListMapFragment extends Fragment implements OnMapReadyCallbac
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                        getActivity(), R.raw.maps_style));
         mMap.setOnInfoWindowClickListener(this);
         parkings = zone.getParkings();
         if (parkings != null) {

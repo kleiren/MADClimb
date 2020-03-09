@@ -3,8 +3,10 @@ package es.kleiren.madclimb.extra_activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +18,14 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import es.kleiren.madclimb.R;
 
 import static es.kleiren.madclimb.util.IconUtils.getBitmapDescriptor;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback {
+public class MapsFragment extends Fragment {
 
 
     MapView mMapView;
@@ -70,49 +73,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                try {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
-                        mMap.addMarker(new MarkerOptions().position(loc).icon(getBitmapDescriptor(getActivity(), R.drawable.map_marker_colored)));
-                    else
-                        mMap.addMarker(new MarkerOptions().position(loc));
-                } catch (Exception e) {
-                }
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
-
-        view.findViewById(R.id.openMaps).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("geo:0,0?q=" + loc.latitude + "," + loc.longitude + " (" + name + ")");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
-
-        view.findViewById(R.id.changeMode).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
-                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMapView.getMapAsync(googleMap -> {
+            mMap = googleMap;
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            getActivity(), R.raw.maps_style));
+            try {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+                    mMap.addMarker(new MarkerOptions().position(loc).icon(getBitmapDescriptor(getActivity(), R.drawable.map_marker_colored)));
                 else
-                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    mMap.addMarker(new MarkerOptions().position(loc));
+            } catch (Exception e) {
             }
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(12).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        });
+
+        view.findViewById(R.id.openMaps).setOnClickListener(v -> {
+            Uri uri = Uri.parse("geo:0,0?q=" + loc.latitude + "," + loc.longitude + " (" + name + ")");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+
+        view.findViewById(R.id.changeMode).setOnClickListener(v -> {
+            if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            else
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+
         });
 
         return view;
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 
     @Override

@@ -10,13 +10,13 @@
         android:id="@+id/routeRow_restrictionLayout_stub"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout="@layout/route_row_restriction_layout"/>
+        android:layout="@layout/route_row_restriction_layout" />
 
     <ViewStub
         android:id="@+id/routeRow_infoLayout_stub"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout="@layout/route_row_info_layout"/>
+        android:layout="@layout/route_row_info_layout" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/routeRow_cardView"
@@ -140,10 +140,10 @@
 
 
             <LinearLayout
-                android:animateLayoutChanges="true"
                 android:id="@+id/routeRow_viewDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -178,20 +178,25 @@
                         tools:text="Redpoint" />
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/routeRow_layoutExtras"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:id="@+id/routeRow_layoutTxtRouteHeight"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:layout_toEndOf="@+id/routeRow_layoutTxtQuickDraws"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -206,14 +211,16 @@
                             android:layout_gravity="center"
                             android:textSize="18sp"
                             tools:text="15m" />
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/routeRow_layoutTxtQuickDraws"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -232,7 +239,16 @@
                             tools:text="8" />
                     </LinearLayout>
 
-                </LinearLayout>
+                    <Button
+                        android:id="@+id/routeRow_btnEightADotNu"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/eight_a_nu_info"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/routeRow_txtDetails"

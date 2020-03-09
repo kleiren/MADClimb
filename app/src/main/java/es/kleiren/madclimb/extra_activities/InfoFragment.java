@@ -1,5 +1,7 @@
 package es.kleiren.madclimb.extra_activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -51,6 +53,8 @@ public class InfoFragment extends Fragment {
     TextView textViewDate;
     @BindView(R.id.infoFrag_layoutDate)
     View layoutDate;
+    @BindView(R.id.infoFrag_btnEightADotNu)
+    View btnEightADotNu;
     @BindView(R.id.infoFrag_txtInfo)
     TextView txtInfo;
     @BindView(R.id.infoFrag_layoutDescription)
@@ -86,30 +90,37 @@ public class InfoFragment extends Fragment {
                 .commit();
 
         layoutDate.setVisibility(View.GONE);
+        btnEightADotNu.setVisibility(View.GONE);
         layoutDescription.setVisibility(View.GONE);
-
-        if (type.equals("sector"))
-            try {
-                if (!((Sector) datum).getDate().isEmpty()) {
-                    layoutDate.setVisibility(View.VISIBLE);
-                    textViewDate.setText(((Sector) datum).getDate());
-                }
-                if (!(datum).getDescription().isEmpty()) {
-                    layoutDescription.setVisibility(View.VISIBLE);
-                    txtInfo.setText((datum).getDescription());
-                }
-            } catch (Exception e) {
-            }
+        columnChartView.setVisibility(View.GONE);
 
         textViewLatLon.setText(datum.getLoc());
 
-        if (type.equals("sector")) {
-            prepareData();
-            view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.VISIBLE);
-        } else {
-            view.findViewById(R.id.infoFrag_chartLayout).setVisibility(View.GONE);
+        if (!(datum).getDescription().isEmpty()) {
+            layoutDescription.setVisibility(View.VISIBLE);
+            txtInfo.setText((datum).getDescription());
         }
 
+        if (type.equals("zone")) {
+            if (!(datum).getEightADotNu().isEmpty()) {
+                btnEightADotNu.setVisibility(View.VISIBLE);
+            }
+            view.findViewById(R.id.infoFrag_infoLayout).setVisibility(View.VISIBLE);
+        }
+        if (type.equals("sector")) {
+            if (!((Sector) datum).getDate().isEmpty()) {
+                layoutDate.setVisibility(View.VISIBLE);
+                textViewDate.setText(((Sector) datum).getDate());
+            }
+            prepareData();
+            columnChartView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.infoFrag_infoLayout).setVisibility(View.VISIBLE);
+        }
+
+        btnEightADotNu.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse((datum).getEightADotNu()));
+            startActivity(browserIntent);
+        });
         return view;
     }
 

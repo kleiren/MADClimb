@@ -6,7 +6,7 @@ public class Sector extends Datum implements Serializable {
 
     private String zoneName;
     private String zone_id;
-    private String date;
+    private String date = "";
     private String has_sub_sectors;
     private String parentSector;
     private String restriction_start;

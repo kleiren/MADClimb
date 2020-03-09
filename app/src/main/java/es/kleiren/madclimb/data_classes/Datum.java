@@ -9,11 +9,21 @@ public class Datum implements Serializable {
     private String description;
     private String loc;
     private String img;
-    private Integer position;
+    private Integer position = 999;
     private String parking;
     private String parkings;
     public int numberOfSectors;
     public int numberOfRoutes;
+    private String eightADotNu = "";
+
+    public String getEightADotNu() {
+        return eightADotNu;
+    }
+
+    public void setEightADotNu(String eightADotNu) {
+        this.eightADotNu = eightADotNu;
+    }
+
 
     public String getImg() {
         return img;

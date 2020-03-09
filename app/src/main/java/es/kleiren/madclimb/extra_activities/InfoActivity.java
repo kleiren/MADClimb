@@ -32,12 +32,7 @@ public class InfoActivity extends AppCompatActivity {
         type = getIntent().getStringExtra("type");
         Datum datum = (Datum) this.getIntent().getSerializableExtra("datum");
         setTitle(datum.getName());
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, InfoFragment.newInstance(type, datum))
                 .commit();

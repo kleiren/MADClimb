@@ -92,10 +92,10 @@ public class ZoneListFragment extends Fragment {
                     zonesFromFirebase.add(zone);
                 }
                 Collections.sort(zonesFromFirebase, (o1, o2) -> {
-                    if (o1.getPosition() != null && o2.getPosition() != null)
+                    if (o1.getPosition() != null && o2.getPosition() != null && !(o1.getPosition() == 999 && o2.getPosition() == 999)) {
                         return o1.getPosition().compareTo(o2.getPosition());
-                    else
-                        return o1.getName().compareTo(o2.getName());
+                    }
+                    return o1.getName().compareTo(o2.getName());
                 });
                 if (adapter != null)
                     adapter.notifyDataSetChanged();

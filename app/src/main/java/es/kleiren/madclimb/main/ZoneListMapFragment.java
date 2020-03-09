@@ -38,6 +38,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -173,6 +174,9 @@ public class ZoneListMapFragment extends Fragment implements OnMapReadyCallback,
                 70,
                 getResources().getDisplayMetrics()
         );
+        mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                        getActivity(), R.raw.maps_style));
         mMap.setPadding(0, px, 0, 0);
         if (ActivityCompat.checkSelfPermission(parentActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             mMap.setMyLocationEnabled(true);
