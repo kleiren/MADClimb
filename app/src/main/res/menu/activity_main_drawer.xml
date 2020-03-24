@@ -12,9 +12,9 @@
         android:title="@string/e_mail" />
 
     <item
-        android:id="@+id/nav_twitter"
-        android:icon="@drawable/ic_menu_twitter"
-        android:title="@string/twitter" />
+        android:id="@+id/nav_report"
+        android:icon="@drawable/alert_outline"
+        android:title="@string/report" />
 
     <item
         android:id="@+id/nav_rate"

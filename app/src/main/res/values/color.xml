@@ -11,5 +11,6 @@
     <color name="safety_orange">#FF6700</color>
     <color name="tab_text_selected">#000000</color>
     <color name="tab_text">#808080</color>
+    <color name="text">#000000</color>
 
 </resources>

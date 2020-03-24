@@ -29,6 +29,7 @@ import es.kleiren.madclimb.extra_activities.InfoActivity;
 import es.kleiren.madclimb.R;
 import es.kleiren.madclimb.data_classes.Sector;
 import es.kleiren.madclimb.data_classes.Zone;
+import es.kleiren.madclimb.util.Miscellaneous;
 
 public class SectorActivity extends AppCompatActivity {
 
@@ -97,10 +98,7 @@ public class SectorActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.error) {
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto", "madclimbapp@gmail.com", null));
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MADClimb error");
-            startActivity(Intent.createChooser(emailIntent, "Send email..."));
+            Miscellaneous.sendReport(this, "SectorActivity " + zone.getName());
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -35,8 +35,8 @@
     <string name="privacy_policy">Política de privacidad</string>
     <string name="sectors">Sectores</string>
     <string name="routes">Vías</string>
-    <string name="eight_a_nu_info">8a.nu info</string>
-
+    <string name="eight_a_nu_info" translatable="false">8a.nu info</string>
+    <string name="report">Reportar error/Proponer mejora</string>
 
     <string-array name="route_done_status">
         <item>-</item>
